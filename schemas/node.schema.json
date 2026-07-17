@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UPI Node",
+  "type": "object",
+  "required": [
+    "address",
+    "title",
+    "status"
+  ],
+  "properties": {
+    "address": {
+      "type": "object",
+      "required": [
+        "domain",
+        "generation",
+        "torus",
+        "node"
+      ],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "torus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "node": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "EST",
+        "DER",
+        "HYP",
+        "STOP",
+        "ERR",
+        "SYM"
+      ]
+    },
+    "quantities": {
+      "type": "object"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confusion_guard": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "stop_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
