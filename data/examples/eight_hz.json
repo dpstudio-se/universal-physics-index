@@ -1,0 +1,26 @@
+{
+  "address": {
+    "domain": "BASE",
+    "generation": "G0",
+    "torus": "T_REFERENCE",
+    "node": "N_8HZ"
+  },
+  "title": "8 Hz reference coordinate",
+  "status": "DER",
+  "quantities": {
+    "frequency_hz": 8.0,
+    "period_s": 0.125,
+    "energy_j": 5.30085612e-33,
+    "mass_kg": 5.897997859e-50,
+    "index_8hz": 1.0
+  },
+  "assumptions": [
+    "f is used as the declared frequency coordinate"
+  ],
+  "evidence": [],
+  "confusion_guard": [
+    "This node does not establish 8 Hz as a universal physical constant.",
+    "A cavity frequency is not automatically a rest-mass frequency."
+  ],
+  "stop_reason": null
+}
