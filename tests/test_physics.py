@@ -26,3 +26,17 @@ def test_normalized_match() -> None:
 def test_invalid_reference() -> None:
     with pytest.raises(ZeroDivisionError):
         normalize_signal(1 + 0j, 0 + 0j)
+
+
+def test_negative_frequency_is_rejected() -> None:
+    with pytest.raises(ValueError):
+        mass_from_frequency(-1.0)
+
+
+def test_zero_frequency_is_valid_zero_equivalent() -> None:
+    assert mass_from_frequency(0.0) == 0.0
+
+
+def test_dimensional_relation_numerically() -> None:
+    # h [J s] * f [s^-1] / c^2 [m^2 s^-2] has dimension kg.
+    assert mass_from_frequency(1.0) == pytest.approx(6.62607015e-34 / 299792458.0**2)

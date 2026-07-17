@@ -42,3 +42,9 @@ jobs:
 
       - name: Test
         run: pytest -q
+
+      - name: Validate schema
+        run: python -c "import json; from pathlib import Path; from jsonschema import Draft202012Validator; Draft202012Validator.check_schema(json.loads(Path('schemas/node.schema.json').read_text()))"
+
+      - name: Build package
+        run: python -m build

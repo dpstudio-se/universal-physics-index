@@ -8,6 +8,9 @@ from .physics import (
     index8_from_frequency,
     index8_from_mass,
     normalize_signal,
+    normalize_value,
+    normalized_match,
+    propagated_mass_uncertainty,
 )
 
 __all__ = [
@@ -15,4 +18,5 @@ __all__ = [
     "energy_from_frequency", "mass_from_frequency",
     "frequency_from_mass", "index8_from_frequency",
     "index8_from_mass", "normalize_signal",
+    "normalize_value", "normalized_match", "propagated_mass_uncertainty",
 ]

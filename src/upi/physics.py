@@ -38,6 +38,30 @@ def index8_from_frequency(frequency_hz: float) -> float:
     return _finite_nonnegative(frequency_hz, "frequency_hz") / REFERENCE_FREQUENCY_HZ
 
 
+def normalize_value(value: float, reference: float) -> float:
+    """Return Z = value/reference for finite values and a non-zero reference."""
+    finite_value = _finite_nonnegative(value, "value")
+    finite_reference = _finite_nonnegative(reference, "reference")
+    if finite_reference == 0:
+        raise ZeroDivisionError("reference must not be zero")
+    return finite_value / finite_reference
+
+
+def normalized_match(value: float, reference: float, tolerance: float = 1e-9) -> bool:
+    """Compare a normalized value with one; this is not evidence of physical identity."""
+    if tolerance < 0 or not math.isfinite(tolerance):
+        raise ValueError("tolerance must be finite and non-negative")
+    return abs(normalize_value(value, reference) - 1.0) <= tolerance
+
+
+def propagated_mass_uncertainty(frequency_uncertainty_hz: float) -> float:
+    """Propagate frequency standard uncertainty through m = h f / c².
+
+    In SI, h and c are exact; this function assumes frequency is the only uncertain input.
+    """
+    return mass_from_frequency(frequency_uncertainty_hz)
+
+
 def index8_from_mass(mass_kg: float) -> float:
     """Return N8 = m c^2 / (8 h)."""
     return index8_from_frequency(frequency_from_mass(mass_kg))

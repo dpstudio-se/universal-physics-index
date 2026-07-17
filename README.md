@@ -5,6 +5,7 @@
 [![Project Status: Experimental](https://img.shields.io/badge/status-experimental-orange.svg)](#project-status)
 [![Default Language: English](https://img.shields.io/badge/language-English-blue.svg)](#language-policy)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/dpstudio-se/universal-physics-index/actions/workflows/ci.yml/badge.svg)](https://github.com/dpstudio-se/universal-physics-index/actions/workflows/ci.yml)
 
 ---
 
@@ -80,10 +81,10 @@ where:
 
 | Symbol | Meaning | Description |
 |---|---|---|
-| `D` | Domain | The scientific or conceptual domain |
-| `G` | Generation | Derivation lineage, version, or historical generation |
-| `T` | Torus | A complete feedback-bounded system |
-| `N` | Node | A theory, event, equation, object, mode, or patch |
+| `D` | Domain | Physical system or scientific domain |
+| `G` | Governing context | Governing relation, geometry or transformation |
+| `T` | Type | Evidence and scientific-status layer |
+| `N` | Normalization | Reference frame, notation or normalization context |
 
 Extended form:
 
@@ -356,7 +357,7 @@ Current status:
 
 ```text
 8 Hz as reference coordinate: DER
-8 Hz as navigation clock: DESIGN
+8 Hz as navigation clock: SYM
 8 Hz as universal physical base mode: HYP
 8 Hz as proven mass quantum: STOP
 ```
