@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it."
+title: "Universal Physics Index"
+type: software
+version: 0.1.0-alpha
+date-released: 2026-07-16
+license: MIT
+repository-code: "https://github.com/dpstudio-se/universal-physics-index"
+authors:
+  - name: "Universal Physics Index Contributors"
