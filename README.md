@@ -821,6 +821,11 @@ Research papers, official datasets, standards, and direct experimental reports s
 
 Philosophical, visual, mythological, or symbolic mappings are allowed, but must use `SYM`.
 
+Functional DNA and Vortex-DNA collaboration concepts are documented in
+[docs/FUNCTIONAL_DNA.md](docs/FUNCTIONAL_DNA.md) and
+[docs/VORTEX_DNA.md](docs/VORTEX_DNA.md). They are symbolic workflow architectures, not physical
+or biological claims and not hidden software authority.
+
 ---
 
 ## Contribution format

@@ -11,3 +11,5 @@ All notable changes are documented here.
 - Falsification, symbolic-boundary and configurable-normalization safeguards.
 - Validation, inspection, conversion, discovery, schema and version CLI commands.
 - Scientific-boundary documentation, Swedish overview and JSON examples.
+- Functional DNA and Vortex-DNA symbolic collaboration architecture.
+- Boundary validation for reference frames, normalization claims, causation and verification type.

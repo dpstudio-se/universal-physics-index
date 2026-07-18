@@ -12,5 +12,9 @@
 | UPI-E008 | Unsupported evidence promotion |
 | UPI-E009 | Duplicate identifier |
 | UPI-E010 | Cyclic dependency |
+| UPI-E011 | Reference-frame ambiguity |
+| UPI-E012 | Normalization presented as physical equivalence |
+| UPI-E013 | Correlation or association presented as causation without a causal test |
+| UPI-E014 | Software test presented as experimental verification |
 
-Errors are stable machine-readable identifiers; messages and paths provide human context. v0.1.0-alpha implements structural guards and reserves E006/E008 for expanded validation.
+Errors are stable machine-readable identifiers; messages and paths provide human context. v0.1.0-alpha implements structural and boundary guards and reserves E006/E008 for expanded validation.

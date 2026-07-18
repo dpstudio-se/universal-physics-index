@@ -53,6 +53,21 @@ def validate_node(node: PhysicsNode) -> list[ValidationIssue]:
         )
     if node.status in {Status.EST, Status.DER, Status.HYP} and not node.provenance:
         issues.append(ValidationIssue("UPI-E007", "missing provenance", "$.provenance"))
+    if node.normalization_method and not node.reference_frame:
+        issues.append(ValidationIssue("UPI-E011", "normalization reference frame unspecified"))
+    if node.normalization_claim == "physical_equivalence" and not node.test_method:
+        issues.append(
+            ValidationIssue("UPI-E012", "normalization presented as physical equivalence")
+        )
+    if node.causal_claim and not node.causal_test_method:
+        issues.append(ValidationIssue("UPI-E013", "causal claim lacks a causal test method"))
+    if (
+        node.claims_experimental_verification
+        and node.verification_type.value == "software_test"
+    ):
+        issues.append(
+            ValidationIssue("UPI-E014", "software test presented as experimental verification")
+        )
     return issues
 
 
@@ -118,6 +133,23 @@ def validate_record(record: dict[str, Any]) -> list[ValidationIssue]:
         issues.append(ValidationIssue("UPI-E005", "symbolic statement marked as established"))
     if status in {"EST", "DER", "HYP"} and not record.get("provenance"):
         issues.append(ValidationIssue("UPI-E007", "missing provenance"))
+    if record.get("normalization_method") and not record.get("reference_frame"):
+        issues.append(ValidationIssue("UPI-E011", "normalization reference frame unspecified"))
+    if record.get("normalization_claim") == "physical_equivalence" and not record.get(
+        "test_method"
+    ):
+        issues.append(
+            ValidationIssue("UPI-E012", "normalization presented as physical equivalence")
+        )
+    if record.get("causal_claim") is True and not record.get("causal_test_method"):
+        issues.append(ValidationIssue("UPI-E013", "causal claim lacks a causal test method"))
+    if (
+        record.get("claims_experimental_verification") is True
+        and record.get("verification_type") == "software_test"
+    ):
+        issues.append(
+            ValidationIssue("UPI-E014", "software test presented as experimental verification")
+        )
     return issues
 
 

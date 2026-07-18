@@ -52,6 +52,23 @@ class SourceStatus(str, Enum):
     UNKNOWN = "unknown"
 
 
+class InformationLayer(str, Enum):
+    """Intended disclosure/formality context, not scientific evidence status."""
+
+    PRIVATE = "PRIVATE"
+    PUBLIC = "PUBLIC"
+    ACADEMIC = "ACADEMIC"
+
+
+class VerificationType(str, Enum):
+    SOFTWARE_TEST = "software_test"
+    SIMULATION = "simulation"
+    MATHEMATICAL_CHECK = "mathematical_check"
+    EXPERIMENTAL_OBSERVATION = "experimental_observation"
+    REPLICATION = "replication"
+    NONE = "none"
+
+
 @dataclass(frozen=True, slots=True)
 class Address:
     domain: str
@@ -129,12 +146,23 @@ class PhysicsNode:
     superseded_by: list[str] = field(default_factory=list)
     evidence_links: list[str] = field(default_factory=list)
     normalization_method: str | None = None
+    reference_frame: str | None = None
+    normalization_claim: str | None = None
     uncertainty: str | None = None
     test_method: str | None = None
     predicted_observation: str | None = None
     falsification_condition: str | None = None
     required_dataset: str | None = None
     measurable_variable: str | None = None
+    null_model: str | None = None
+    control_condition: str | None = None
+    statistical_method: str | None = None
+    confounders: list[str] = field(default_factory=list)
+    replication_rule: str | None = None
+    causal_claim: bool = False
+    causal_test_method: str | None = None
+    verification_type: VerificationType = VerificationType.NONE
+    claims_experimental_verification: bool = False
     testability: str | None = None
     symbolic_interpretation: str | None = None
     notes: list[str] = field(default_factory=list)
