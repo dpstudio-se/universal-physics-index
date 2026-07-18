@@ -33,7 +33,7 @@ AMPLITUDE_TOLERANCE_DEFAULT: Final[float] = 1e-10
 
 def validate_constant(value: float, name: str) -> None:
     """Validate that a constant is a valid number.
-    
+
     Raises:
         ValueError: If value is NaN, infinite, or otherwise invalid.
     """

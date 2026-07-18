@@ -3,19 +3,17 @@
 import json
 import sys
 from pathlib import Path
-from typing import Optional
 
 from . import (
+    __version__,
     energy_from_frequency,
-    mass_from_frequency,
     frequency_from_mass,
     index8_from_frequency,
     index8_from_mass,
-    normalize_signal,
+    mass_from_frequency,
     signal_match,
-    validate_node_json,
     validate_bridge_json,
-    __version__,
+    validate_node_json,
 )
 from .models import Address
 
@@ -80,7 +78,7 @@ def normalize_cmd(args):
     observed = float(args.observed)
     reference = float(args.reference)
     result_obj = signal_match(observed, reference, epsilon=float(args.epsilon) if args.epsilon else 1e-10)
-    
+
     result = {
         "operation": "normalize_signal",
         "observed": observed,
@@ -97,24 +95,24 @@ def normalize_cmd(args):
 def validate_cmd(args):
     """Validate a JSON file against schema."""
     file_path = Path(args.file)
-    
+
     if not file_path.exists():
         print(f"Error: File not found: {file_path}", file=sys.stderr)
         sys.exit(1)
-    
+
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
         print(f"Error: Invalid JSON: {e}", file=sys.stderr)
         sys.exit(1)
-    
+
     # Try to determine if it's a node or bridge based on content
     schema_dir = Path(__file__).parent.parent.parent / "schemas"
-    
+
     is_node = "address" in data and "status" in data and "title" in data
     is_bridge = "source" in data and "target" in data and "relation" in data
-    
+
     if is_node:
         schema_path = schema_dir / "node.schema.json"
         is_valid, errors = validate_node_json(data, schema_path)
@@ -126,7 +124,7 @@ def validate_cmd(args):
     else:
         print("Error: Cannot determine if object is node or bridge", file=sys.stderr)
         sys.exit(1)
-    
+
     result = {
         "file": str(file_path),
         "type": obj_type,
@@ -134,7 +132,7 @@ def validate_cmd(args):
         "errors": errors if not is_valid else []
     }
     print_json(result)
-    
+
     if not is_valid:
         sys.exit(1)
 
@@ -182,48 +180,48 @@ def address_cmd(args):
 def main():
     """Main CLI entry point."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         prog="upi",
         description="Universal Physics Index CLI"
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
-    
+
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
-    
+
     # frequency-to-mass
     fm = subparsers.add_parser("frequency-to-mass", help="Convert frequency to mass")
     fm.add_argument("frequency", type=float, help="Frequency in Hertz")
     fm.set_defaults(func=frequency_to_mass)
-    
+
     # mass-to-frequency
     mf = subparsers.add_parser("mass-to-frequency", help="Convert mass to frequency")
     mf.add_argument("mass", type=float, help="Mass in kilograms")
     mf.set_defaults(func=mass_to_frequency)
-    
+
     # index8
     i8 = subparsers.add_parser("index8", help="Calculate 8 Hz dimensionless index")
     i8.add_argument("--frequency", type=float, help="Frequency in Hertz")
     i8.add_argument("--mass", type=float, help="Mass in kilograms")
     i8.set_defaults(func=index8_cmd)
-    
+
     # energy-from-frequency
     ef = subparsers.add_parser("energy-from-frequency", help="Calculate energy from frequency")
     ef.add_argument("frequency", type=float, help="Frequency in Hertz")
     ef.set_defaults(func=energy_from_freq_cmd)
-    
+
     # normalize
     norm = subparsers.add_parser("normalize", help="Normalize signal Z = z / z_ref")
     norm.add_argument("--observed", type=float, required=True, help="Observed signal")
     norm.add_argument("--reference", type=float, required=True, help="Reference signal")
     norm.add_argument("--epsilon", type=float, help="Match tolerance")
     norm.set_defaults(func=normalize_cmd)
-    
+
     # validate
     val = subparsers.add_parser("validate", help="Validate JSON against schema")
     val.add_argument("file", help="JSON file to validate")
     val.set_defaults(func=validate_cmd)
-    
+
     # address
     addr = subparsers.add_parser("address", help="Parse or create UPI address")
     addr.add_argument("--parse", help="Parse UPI address string")
@@ -232,13 +230,13 @@ def main():
     addr.add_argument("--torus", help="Torus (for creation)")
     addr.add_argument("--node", help="Node identifier (for creation)")
     addr.set_defaults(func=address_cmd)
-    
+
     args = parser.parse_args()
-    
+
     if not hasattr(args, "func"):
         parser.print_help()
         sys.exit(1)
-    
+
     try:
         args.func(args)
     except Exception as e:

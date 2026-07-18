@@ -1,22 +1,28 @@
 """Physics functions implementing core UPI equations."""
 
 import math
-from typing import Tuple
+from typing import cast
 
-from .constants import H, C, K_B, E, N_A, N8_REFERENCE_HZ, N8_DENOMINATOR
-from .constants import EPSILON_Z_DEFAULT, AMPLITUDE_TOLERANCE_DEFAULT, PHASE_TOLERANCE_DEFAULT
+from .constants import (
+    AMPLITUDE_TOLERANCE_DEFAULT,
+    EPSILON_Z_DEFAULT,
+    N8_DENOMINATOR,
+    PHASE_TOLERANCE_DEFAULT,
+    C,
+    H,
+)
 from .models import RuntimeMatchResult
 
 
 def energy_from_frequency(frequency_hz: float) -> float:
     """Calculate energy from frequency using E = h*f.
-    
+
     Args:
         frequency_hz: Frequency in Hertz
-        
+
     Returns:
         Energy in Joules
-        
+
     Raises:
         ValueError: If frequency is invalid (NaN, zero, negative, infinity)
     """
@@ -31,13 +37,13 @@ def energy_from_frequency(frequency_hz: float) -> float:
 
 def mass_from_frequency(frequency_hz: float) -> float:
     """Calculate rest mass from frequency using m = h*f / c^2.
-    
+
     Args:
         frequency_hz: Frequency in Hertz
-        
+
     Returns:
         Rest mass in kilograms
-        
+
     Raises:
         ValueError: If frequency is invalid
     """
@@ -52,13 +58,13 @@ def mass_from_frequency(frequency_hz: float) -> float:
 
 def frequency_from_mass(mass_kg: float) -> float:
     """Calculate rest-mass frequency from mass using f = m*c^2 / h.
-    
+
     Args:
         mass_kg: Rest mass in kilograms
-        
+
     Returns:
         Rest-mass frequency in Hertz
-        
+
     Raises:
         ValueError: If mass is invalid
     """
@@ -73,13 +79,13 @@ def frequency_from_mass(mass_kg: float) -> float:
 
 def index8_from_frequency(frequency_hz: float) -> float:
     """Calculate 8 Hz dimensionless index N8 = f / (8 Hz).
-    
+
     Args:
         frequency_hz: Frequency in Hertz
-        
+
     Returns:
         Dimensionless index N8
-        
+
     Raises:
         ValueError: If frequency is invalid
     """
@@ -94,13 +100,13 @@ def index8_from_frequency(frequency_hz: float) -> float:
 
 def index8_from_mass(mass_kg: float) -> float:
     """Calculate 8 Hz dimensionless index N8 = m*c^2 / (8*h).
-    
+
     Args:
         mass_kg: Rest mass in kilograms
-        
+
     Returns:
         Dimensionless index N8
-        
+
     Raises:
         ValueError: If mass is invalid
     """
@@ -118,14 +124,14 @@ def relativistic_total_frequency(
     rest_mass_frequency_hz: float
 ) -> float:
     """Calculate total temporal frequency using nu^2 = (c/lambda)^2 + f^2.
-    
+
     Args:
         momentum_wavelength_m: Momentum wavelength (de Broglie wavelength) in meters
         rest_mass_frequency_hz: Invariant rest-mass frequency in Hertz
-        
+
     Returns:
         Total temporal frequency in Hertz
-        
+
     Raises:
         ValueError: If inputs are invalid
     """
@@ -137,34 +143,40 @@ def relativistic_total_frequency(
         raise ValueError(f"Wavelength must be positive, got {momentum_wavelength_m}")
     if rest_mass_frequency_hz < 0:
         raise ValueError(f"Frequency cannot be negative, got {rest_mass_frequency_hz}")
-    
+
     c_over_lambda = C / momentum_wavelength_m
     sum_of_squares = (c_over_lambda ** 2) + (rest_mass_frequency_hz ** 2)
     return math.sqrt(sum_of_squares)
 
 
-def normalize_signal(observed: float, reference: float) -> float:
+class ZeroReferenceError(ZeroDivisionError, ValueError):
+    """A zero normalization reference, compatible with legacy callers."""
+
+
+def normalize_signal(
+    observed: float | complex, reference: float | complex
+) -> float | complex:
     """Normalize signal Z(t,x) = z(t,x) / z_ref(t,x).
-    
+
     Args:
         observed: Observed signal value
         reference: Reference signal value
-        
+
     Returns:
         Normalized signal Z
-        
+
     Raises:
         ValueError: If reference is zero, NaN, or infinity
     """
     if reference != reference:  # NaN
         raise ValueError("Reference is NaN")
     if reference == 0:
-        raise ValueError("Reference signal cannot be zero")
-    if not (-1e308 < reference < 1e308):
+        raise ZeroReferenceError("Reference signal cannot be zero")
+    if abs(reference) >= 1e308:
         raise ValueError(f"Reference is infinite or out of bounds: {reference}")
     if observed != observed:  # NaN
         raise ValueError("Observed signal is NaN")
-    
+
     return observed / reference
 
 
@@ -174,21 +186,21 @@ def signal_match(
     epsilon: float = EPSILON_Z_DEFAULT
 ) -> RuntimeMatchResult:
     """Check if normalized signal matches reference within tolerance.
-    
+
     Implements: abs(Z - 1) <= epsilon where Z = z / z_ref
-    
+
     Args:
         observed: Observed signal value
         reference: Reference signal value
         epsilon: Tolerance for match (unitless)
-        
+
     Returns:
         RuntimeMatchResult with match outcome
     """
-    normalized = normalize_signal(observed, reference)
+    normalized = cast(float, normalize_signal(observed, reference))
     error = abs(normalized - 1.0)
     matches = error <= epsilon
-    
+
     return RuntimeMatchResult(
         normalized_value=normalized,
         observed=observed,
@@ -208,7 +220,7 @@ def complex_signal_match(
     phase_tolerance: float = PHASE_TOLERANCE_DEFAULT
 ) -> RuntimeMatchResult:
     """Check if complex signal (amplitude, phase) matches reference.
-    
+
     Args:
         observed_amplitude: Magnitude of observed signal
         observed_phase: Phase of observed signal (radians)
@@ -216,10 +228,10 @@ def complex_signal_match(
         reference_phase: Phase of reference signal (radians)
         amplitude_tolerance: Amplitude tolerance (unitless)
         phase_tolerance: Phase tolerance (radians)
-        
+
     Returns:
         RuntimeMatchResult with match outcome
-        
+
     Raises:
         ValueError: If amplitudes are invalid
     """
@@ -227,19 +239,19 @@ def complex_signal_match(
         raise ValueError("Reference amplitude cannot be zero")
     if observed_amplitude != observed_amplitude or reference_amplitude != reference_amplitude:
         raise ValueError("Amplitude is NaN")
-    
+
     # Normalize amplitude
     normalized_amplitude = observed_amplitude / reference_amplitude
     amplitude_error = abs(normalized_amplitude - 1.0)
     amplitude_matches = amplitude_error <= amplitude_tolerance
-    
+
     # Phase difference (wrap to [-pi, pi])
     phase_diff = observed_phase - reference_phase
     phase_diff = (phase_diff + math.pi) % (2 * math.pi) - math.pi
     phase_matches = abs(phase_diff) <= phase_tolerance
-    
+
     matches = amplitude_matches and phase_matches
-    
+
     return RuntimeMatchResult(
         normalized_value=normalized_amplitude,
         observed=observed_amplitude,

@@ -103,3 +103,8 @@ MIT - See LICENSE file
 **Status**: Alpha v0.1.0 — API subject to change
 
 For full documentation, see `docs/`
+
+Functional DNA and Vortex-DNA collaboration concepts are documented in
+[`docs/FUNCTIONAL_DNA.md`](docs/FUNCTIONAL_DNA.md) and
+[`docs/VORTEX_DNA.md`](docs/VORTEX_DNA.md). Both are `SYM` architectures;
+they do not provide independent scientific evidence or hidden authority.

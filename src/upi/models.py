@@ -2,13 +2,11 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
-from datetime import datetime
 
 
 class ScientificStatus(str, Enum):
     """Scientific status labels for nodes and bridges.
-    
+
     EST = established within the declared scientific domain
     DER = derived from explicitly declared assumptions
     HYP = falsifiable but unverified hypothesis
@@ -22,6 +20,25 @@ class ScientificStatus(str, Enum):
     STOP = "STOP"
     ERR = "ERR"
     SYM = "SYM"
+
+
+class InformationLayer(str, Enum):
+    """Disclosure/formality context; never a scientific evidence rank."""
+
+    PRIVATE = "PRIVATE"
+    PUBLIC = "PUBLIC"
+    ACADEMIC = "ACADEMIC"
+
+
+class VerificationType(str, Enum):
+    """What kind of check or observation supports a record."""
+
+    SOFTWARE_TEST = "software_test"
+    SIMULATION = "simulation"
+    MATHEMATICAL_CHECK = "mathematical_check"
+    EXPERIMENTAL_OBSERVATION = "experimental_observation"
+    REPLICATION = "replication"
+    NONE = "none"
 
 
 class EdgeType(str, Enum):
@@ -47,7 +64,7 @@ class EdgeType(str, Enum):
 @dataclass
 class Address:
     """UPI address: UPI<D,G,T,N>.
-    
+
     D = Domain (e.g., physics, mathematics, chemistry)
     G = Generation or derivation lineage
     T = Torus (complete feedback-bounded system)
@@ -75,7 +92,7 @@ class Address:
         try:
             generation = int(gen_str)
         except ValueError:
-            raise ValueError(f"Generation must be an integer, got {gen_str}")
+            raise ValueError(f"Generation must be an integer, got {gen_str}") from None
         return cls(domain, generation, torus, node)
 
 
@@ -85,8 +102,8 @@ class Quantity:
     name: str
     value: float
     unit: str
-    uncertainty: Optional[float] = None
-    reference: Optional[str] = None
+    uncertainty: float | None = None
+    reference: str | None = None
 
 
 @dataclass
@@ -94,9 +111,9 @@ class EvidenceRecord:
     """Record of evidence supporting or refuting a claim."""
     type: str  # e.g., "experiment", "observation", "calculation"
     source: str
-    date: Optional[str] = None
-    confidence: Optional[float] = None  # 0.0 to 1.0
-    notes: Optional[str] = None
+    date: str | None = None
+    confidence: float | None = None  # 0.0 to 1.0
+    notes: str | None = None
 
 
 @dataclass
@@ -106,23 +123,36 @@ class PhysicsNode:
     title: str
     description: str
     status: ScientificStatus
-    quantities: List[Quantity] = field(default_factory=list)
-    definitions: List[str] = field(default_factory=list)
-    equations: List[str] = field(default_factory=list)
-    assumptions: List[str] = field(default_factory=list)
-    mechanism: Optional[str] = None
-    evidence: List[EvidenceRecord] = field(default_factory=list)
-    primary_sources: List[str] = field(default_factory=list)
-    predictions: List[str] = field(default_factory=list)
-    falsification_conditions: List[str] = field(default_factory=list)
-    confusion_guard: Optional[str] = None
-    stop_reason: Optional[str] = None  # Required if status == STOP
-    tags: List[str] = field(default_factory=list)
+    quantities: list[Quantity] = field(default_factory=list)
+    definitions: list[str] = field(default_factory=list)
+    equations: list[str] = field(default_factory=list)
+    assumptions: list[str] = field(default_factory=list)
+    mechanism: str | None = None
+    evidence: list[EvidenceRecord] = field(default_factory=list)
+    primary_sources: list[str] = field(default_factory=list)
+    predictions: list[str] = field(default_factory=list)
+    falsification_conditions: list[str] = field(default_factory=list)
+    information_layer: InformationLayer = InformationLayer.PRIVATE
+    reference_frame: str | None = None
+    normalization_method: str | None = None
+    normalization_claim: str | None = None
+    null_model: str | None = None
+    control_condition: str | None = None
+    statistical_method: str | None = None
+    confounders: list[str] = field(default_factory=list)
+    replication_rule: str | None = None
+    causal_claim: bool = False
+    causal_test_method: str | None = None
+    verification_type: VerificationType = VerificationType.NONE
+    claims_experimental_verification: bool = False
+    confusion_guard: str | None = None
+    stop_reason: str | None = None  # Required if status == STOP
+    tags: list[str] = field(default_factory=list)
     version: str = "0.1.0"
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: str | None = None
+    updated_at: str | None = None
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate node consistency. Returns list of error strings."""
         errors = []
         if self.status == ScientificStatus.STOP and not self.stop_reason:
@@ -140,18 +170,18 @@ class Bridge:
     source: Address
     target: Address
     relation: EdgeType
-    equations: List[str] = field(default_factory=list)
-    assumptions: List[str] = field(default_factory=list)
-    mechanism: Optional[str] = None
-    evidence: List[EvidenceRecord] = field(default_factory=list)
+    equations: list[str] = field(default_factory=list)
+    assumptions: list[str] = field(default_factory=list)
+    mechanism: str | None = None
+    evidence: list[EvidenceRecord] = field(default_factory=list)
     status: ScientificStatus = ScientificStatus.HYP
-    confusion_guard: Optional[str] = None
-    stop_reason: Optional[str] = None
+    confusion_guard: str | None = None
+    stop_reason: str | None = None
     version: str = "0.1.0"
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: str | None = None
+    updated_at: str | None = None
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate bridge consistency. Returns list of error strings."""
         errors = []
         if not self.relation:
@@ -170,13 +200,13 @@ class TheoryNode:
     status: ScientificStatus
     domain: str
     scope: str  # e.g., "classical", "quantum", "relativistic"
-    key_concepts: List[str] = field(default_factory=list)
-    fundamental_equations: List[str] = field(default_factory=list)
-    scope_limits: Optional[str] = None
-    related_theories: List[Address] = field(default_factory=list)
+    key_concepts: list[str] = field(default_factory=list)
+    fundamental_equations: list[str] = field(default_factory=list)
+    scope_limits: str | None = None
+    related_theories: list[Address] = field(default_factory=list)
     version: str = "0.1.0"
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: str | None = None
+    updated_at: str | None = None
 
 
 @dataclass
@@ -188,5 +218,5 @@ class RuntimeMatchResult:
     epsilon: float
     matches: bool  # abs(Z - 1) <= epsilon
     error: float  # abs(normalized_value - 1)
-    profile_active: Optional[str] = None
-    notes: Optional[str] = None
+    profile_active: str | None = None
+    notes: str | None = None
