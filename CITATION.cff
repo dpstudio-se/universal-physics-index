@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: Universal Physics Index
+message: If you use this software, please cite it as below.
+type: software
+authors:
+  - name: "UPI Contributors"
+    family-names: Contributors
+    given-names: UPI
+repository-code: "https://github.com/dpstudio-se/universal-physics-index"
+url: "https://github.com/dpstudio-se/universal-physics-index"
+abstract: "Machine-readable, typed scientific knowledge graph for physics, mathematics, chemistry, and related disciplines. Supports explicit status tracking (EST, DER, HYP, STOP, ERR, SYM) and 16 edge types for capturing scientific relations."
+keywords:
+  - physics
+  - knowledge-graph
+  - science
+  - mathematics
+  - scientific-knowledge
+license: MIT
+version: 0.1.0-alpha
+date-released: 2024-01-01

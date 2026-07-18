@@ -1,0 +1,43 @@
+{
+  "address": "UPI<physics,1,open-problem,dark_matter>",
+  "title": "Dark Matter",
+  "description": "Unseen matter comprising ~85% of matter in the universe. Inferred from gravitational effects on galaxies and large-scale structure.",
+  "status": "STOP",
+  "stop_reason": "Composition unknown. Particle candidates (WIMPs, axions, sterile neutrinos) undetected. Direct detection experiments remain inconclusive. Alternative theories (MOND, TeVeS) not universally accepted.",
+  "quantities": [
+    {
+      "name": "Matter density parameter (Ω_DM)",
+      "value": 0.27,
+      "unit": "unitless",
+      "reference": "Planck 2018"
+    }
+  ],
+  "definitions": [
+    "Non-luminous matter inferred from gravitational effects",
+    "Comprises ~85% of matter in observable universe"
+  ],
+  "assumptions": [
+    "General relativity describes gravity correctly",
+    "Dark matter is particle-like",
+    "No exotic equation of state"
+  ],
+  "mechanism": "TBD: Unknown particle or field responsible for gravitational effects",
+  "primary_sources": [
+    "Planck Collaboration papers",
+    "Dark Energy Survey",
+    "LUX and XENON dark matter experiments"
+  ],
+  "predictions": [
+    "Direct detection signal in underground detectors",
+    "Anomalies in collider experiments",
+    "Gravitational lensing signatures"
+  ],
+  "falsification_conditions": [
+    "Consistent detection of dark matter particle",
+    "Alternative theory (MOND) validated in all regimes",
+    "Universe's gravitational structure explained without dark matter"
+  ],
+  "confusion_guard": "Dark matter is not antimatter, dark energy, or ordinary matter in unknown form. These are three distinct phenomena.",
+  "tags": ["cosmology", "particle-physics", "open-problem", "observational-evidence"],
+  "version": "0.1.0"
+}

@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Lint with ruff
+        run: ruff check src tests
+      
+      - name: Type check with mypy
+        run: mypy src/upi --ignore-missing-imports
+      
+      - name: Run tests with pytest
+        run: pytest tests/ -v --tb=short
+      
+      - name: Validate JSON schemas
+        run: |
+          python -c "
+          import json
+          from pathlib import Path
+          from jsonschema import Draft7Validator
+          
+          schemas_dir = Path('schemas')
+          for schema_file in schemas_dir.glob('*.json'):
+              with open(schema_file) as f:
+                  schema = json.load(f)
+              Draft7Validator.check_schema(schema)
+              print(f'✓ {schema_file.name} is valid')
+          "
+      
+      - name: Validate example JSON files
+        run: |
+          python -c "
+          import json
+          from pathlib import Path
+          from jsonschema import validate
+          
+          # Load schemas
+          with open('schemas/node.schema.json') as f:
+              node_schema = json.load(f)
+          
+          # Validate example data files
+          for example in Path('data').rglob('*.json'):
+              with open(example) as f:
+                  data = json.load(f)
+              validate(instance=data, schema=node_schema)
+              print(f'✓ {example.relative_to(\"data\")} is valid')
+          "
+      
+      - name: Build package
+        run: python -m pip install --no-build-isolation -e .
+
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run trivy on source
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: 'src'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
