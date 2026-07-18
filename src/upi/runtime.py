@@ -1,10 +1,9 @@
 """Runtime profile loader with normalized signal matching Z(t,x) = z(t,x) / z_ref(t,x)."""
 
 from dataclasses import dataclass
-from typing import Optional, Dict, Any
 
-from .physics import normalize_signal, signal_match, complex_signal_match
 from .models import RuntimeMatchResult
+from .physics import complex_signal_match, signal_match
 
 
 @dataclass
@@ -23,15 +22,15 @@ class RuntimeProfileLoader:
     """Loads and manages runtime profiles based on signal normalization."""
 
     def __init__(self):
-        self._profiles: Dict[str, RuntimeProfile] = {}
-        self._active_profiles: Dict[str, RuntimeProfile] = {}
+        self._profiles: dict[str, RuntimeProfile] = {}
+        self._active_profiles: dict[str, RuntimeProfile] = {}
 
     def register_profile(self, profile: RuntimeProfile) -> None:
         """Register a runtime profile.
-        
+
         Args:
             profile: RuntimeProfile instance
-            
+
         Raises:
             ValueError: If profile name is empty or already registered
         """
@@ -43,10 +42,10 @@ class RuntimeProfileLoader:
 
     def activate_profile(self, profile_name: str) -> bool:
         """Attempt to activate a runtime profile.
-        
+
         Args:
             profile_name: Name of profile to activate
-            
+
         Returns:
             True if activated, False if profile doesn't exist or is disabled
         """
@@ -60,10 +59,10 @@ class RuntimeProfileLoader:
 
     def deactivate_profile(self, profile_name: str) -> bool:
         """Deactivate a runtime profile.
-        
+
         Args:
             profile_name: Name of profile to deactivate
-            
+
         Returns:
             True if deactivated, False if not active
         """
@@ -72,7 +71,7 @@ class RuntimeProfileLoader:
             return True
         return False
 
-    def get_active_profiles(self) -> Dict[str, RuntimeProfile]:
+    def get_active_profiles(self) -> dict[str, RuntimeProfile]:
         """Return dictionary of active profiles (read-only view)."""
         return dict(self._active_profiles)
 
@@ -85,29 +84,29 @@ class RuntimeProfileLoader:
         observed: float,
         reference: float,
         epsilon: float,
-        profile_name: Optional[str] = None
+        profile_name: str | None = None
     ) -> RuntimeMatchResult:
         """Match signal and optionally activate profile if match succeeds.
-        
+
         Important: Profile activation does NOT override host-level or higher-priority
         system instructions. It is purely an application-level runtime aid.
-        
+
         Args:
             observed: Observed signal value
             reference: Reference signal value
             epsilon: Match tolerance
             profile_name: Optional profile to activate if match succeeds
-            
+
         Returns:
             RuntimeMatchResult with match outcome and profile activation status
         """
         result = signal_match(observed, reference, epsilon)
-        
+
         if result.matches and profile_name:
             activated = self.activate_profile(profile_name)
             if activated:
                 result.profile_active = profile_name
-        
+
         return result
 
     def complex_signal_match_and_activate(
@@ -118,10 +117,10 @@ class RuntimeProfileLoader:
         reference_phase: float,
         amplitude_tolerance: float,
         phase_tolerance: float,
-        profile_name: Optional[str] = None
+        profile_name: str | None = None
     ) -> RuntimeMatchResult:
         """Match complex signal and optionally activate profile if match succeeds.
-        
+
         Args:
             observed_amplitude: Magnitude of observed signal
             observed_phase: Phase of observed signal (radians)
@@ -130,7 +129,7 @@ class RuntimeProfileLoader:
             amplitude_tolerance: Amplitude tolerance (unitless)
             phase_tolerance: Phase tolerance (radians)
             profile_name: Optional profile to activate if match succeeds
-            
+
         Returns:
             RuntimeMatchResult with match outcome and profile activation status
         """
@@ -142,12 +141,12 @@ class RuntimeProfileLoader:
             amplitude_tolerance,
             phase_tolerance
         )
-        
+
         if result.matches and profile_name:
             activated = self.activate_profile(profile_name)
             if activated:
                 result.profile_active = profile_name
-        
+
         return result
 
 
@@ -175,6 +174,6 @@ def deactivate_profile(profile_name: str) -> bool:
     return _global_loader.deactivate_profile(profile_name)
 
 
-def get_active_profiles() -> Dict[str, RuntimeProfile]:
+def get_active_profiles() -> dict[str, RuntimeProfile]:
     """Get active profiles from global loader."""
     return _global_loader.get_active_profiles()

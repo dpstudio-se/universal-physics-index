@@ -60,17 +60,22 @@ jobs:
           import json
           from pathlib import Path
           from jsonschema import validate
-          
-          # Load schemas
-          with open('schemas/node.schema.json') as f:
-              node_schema = json.load(f)
-          
-          # Validate example data files
+
+          schemas = {
+              name: json.loads(Path(f'schemas/{name}.schema.json').read_text())
+              for name in ('node', 'bridge', 'theory')
+          }
+
           for example in Path('data').rglob('*.json'):
-              with open(example) as f:
-                  data = json.load(f)
-              validate(instance=data, schema=node_schema)
-              print(f'✓ {example.relative_to(\"data\")} is valid')
+              data = json.loads(example.read_text())
+              if {'source', 'target', 'relation'} <= data.keys():
+                  record_type = 'bridge'
+              elif {'domain', 'scope'} <= data.keys():
+                  record_type = 'theory'
+              else:
+                  record_type = 'node'
+              validate(instance=data, schema=schemas[record_type])
+              print(f'✓ {example.relative_to(\"data\")} is valid as {record_type}')
           "
       
       - name: Build package

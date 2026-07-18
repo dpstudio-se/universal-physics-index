@@ -112,6 +112,26 @@
       "type": "array",
       "items": {"type": "string"}
     },
+    "information_layer": {
+      "type": "string",
+      "enum": ["PRIVATE", "PUBLIC", "ACADEMIC"],
+      "description": "Disclosure/formality context, not evidence strength"
+    },
+    "reference_frame": {"type": "string"},
+    "normalization_method": {"type": "string"},
+    "normalization_claim": {"type": "string"},
+    "null_model": {"type": "string"},
+    "control_condition": {"type": "string"},
+    "statistical_method": {"type": "string"},
+    "confounders": {"type": "array", "items": {"type": "string"}},
+    "replication_rule": {"type": "string"},
+    "causal_claim": {"type": "boolean"},
+    "causal_test_method": {"type": "string"},
+    "verification_type": {
+      "type": "string",
+      "enum": ["software_test", "simulation", "mathematical_check", "experimental_observation", "replication", "none"]
+    },
+    "claims_experimental_verification": {"type": "boolean"},
     "confusion_guard": {
       "type": "string",
       "description": "Warning about common misinterpretations"

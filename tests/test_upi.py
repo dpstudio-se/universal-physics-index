@@ -1,33 +1,35 @@
 """Test suite for UPI physics, models, and validation."""
 
-import pytest
 import math
+import sys
 from pathlib import Path
 
-import sys
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from upi import (
-    H, C, K_B, N8_REFERENCE_HZ,
+    K_B,
+    N8_REFERENCE_HZ,
     Address,
-    ScientificStatus,
-    EdgeType,
-    PhysicsNode,
     Bridge,
-    Quantity,
+    C,
+    EdgeType,
+    H,
+    PhysicsNode,
+    RuntimeProfile,
+    RuntimeProfileLoader,
+    ScientificStatus,
+    UPIGraph,
+    complex_signal_match,
     energy_from_frequency,
-    mass_from_frequency,
     frequency_from_mass,
     index8_from_frequency,
     index8_from_mass,
-    relativistic_total_frequency,
+    mass_from_frequency,
     normalize_signal,
+    relativistic_total_frequency,
     signal_match,
-    complex_signal_match,
-    EPSILON_Z_DEFAULT,
-    UPIGraph,
-    RuntimeProfile,
-    RuntimeProfileLoader,
 )
 
 
@@ -99,7 +101,7 @@ class TestPhysicsFunctions:
         wavelength_m = 1e-6
         rest_freq_hz = 1e15
         nu = relativistic_total_frequency(wavelength_m, rest_freq_hz)
-        
+
         c_over_lambda = C / wavelength_m
         expected = math.sqrt((c_over_lambda ** 2) + (rest_freq_hz ** 2))
         assert nu == pytest.approx(expected)
@@ -305,7 +307,7 @@ class TestGraph:
         graph = UPIGraph()
         source_addr = Address("physics", 1, "classical", "force")
         target_addr = Address("physics", 1, "classical", "acceleration")
-        
+
         source_node = PhysicsNode(
             address=source_addr,
             title="Force",
@@ -318,10 +320,10 @@ class TestGraph:
             description="Rate of change of velocity",
             status=ScientificStatus.EST
         )
-        
+
         graph.add_node(source_node)
         graph.add_node(target_node)
-        
+
         bridge = Bridge(
             source=source_addr,
             target=target_addr,
@@ -329,7 +331,7 @@ class TestGraph:
             equations=["a = F/m"]
         )
         graph.add_bridge(bridge)
-        
+
         assert graph.get_bridge_count() == 1
 
     def test_graph_get_outgoing_bridges(self):
@@ -338,21 +340,21 @@ class TestGraph:
         source_addr = Address("physics", 1, "quantum", "photon")
         target1_addr = Address("physics", 1, "quantum", "energy")
         target2_addr = Address("physics", 1, "quantum", "frequency")
-        
+
         source = PhysicsNode(source_addr, "Photon", "Light particle", ScientificStatus.EST)
         target1 = PhysicsNode(target1_addr, "Energy", "Energy", ScientificStatus.EST)
         target2 = PhysicsNode(target2_addr, "Frequency", "Frequency", ScientificStatus.EST)
-        
+
         graph.add_node(source)
         graph.add_node(target1)
         graph.add_node(target2)
-        
+
         bridge1 = Bridge(source=source_addr, target=target1_addr, relation=EdgeType.CAUSES)
         bridge2 = Bridge(source=source_addr, target=target2_addr, relation=EdgeType.CAUSES)
-        
+
         graph.add_bridge(bridge1)
         graph.add_bridge(bridge2)
-        
+
         outgoing = graph.get_outgoing_bridges(source_addr)
         assert len(outgoing) == 2
 
@@ -365,7 +367,7 @@ class TestRuntimeProfile:
         loader = RuntimeProfileLoader()
         profile = RuntimeProfile("test_profile", "Test profile", priority=1)
         loader.register_profile(profile)
-        
+
         active = loader.get_active_profiles()
         assert len(active) == 0  # Not active yet
 
@@ -374,10 +376,10 @@ class TestRuntimeProfile:
         loader = RuntimeProfileLoader()
         profile = RuntimeProfile("test_profile", "Test profile", priority=1, enabled=True)
         loader.register_profile(profile)
-        
+
         activated = loader.activate_profile("test_profile")
         assert activated
-        
+
         active = loader.get_active_profiles()
         assert "test_profile" in active
 
@@ -387,10 +389,10 @@ class TestRuntimeProfile:
         profile = RuntimeProfile("test_profile", "Test profile", enabled=True)
         loader.register_profile(profile)
         loader.activate_profile("test_profile")
-        
+
         deactivated = loader.deactivate_profile("test_profile")
         assert deactivated
-        
+
         active = loader.get_active_profiles()
         assert len(active) == 0
 
@@ -399,10 +401,10 @@ class TestRuntimeProfile:
         loader = RuntimeProfileLoader()
         profile = RuntimeProfile("signal_profile", "Activated on match", enabled=True)
         loader.register_profile(profile)
-        
+
         # Match signals exactly
         result = loader.signal_match_and_activate(4.0, 4.0, epsilon=1e-10, profile_name="signal_profile")
-        
+
         assert result.matches
         assert result.profile_active == "signal_profile"
         assert "signal_profile" in loader.get_active_profiles()
