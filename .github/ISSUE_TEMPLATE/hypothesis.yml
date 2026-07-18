@@ -1,0 +1,42 @@
+name: Hypothesis or candidate bridge
+description: Propose a falsifiable node or bridge
+title: "[HYP] "
+labels: ["hypothesis"]
+body:
+  - type: textarea
+    id: claim
+    attributes:
+      label: Claim
+      description: State the claim in one falsifiable sentence.
+    validations:
+      required: true
+  - type: textarea
+    id: equations
+    attributes:
+      label: Equations and definitions
+    validations:
+      required: true
+  - type: textarea
+    id: mechanism
+    attributes:
+      label: Physical mechanism
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and primary sources
+    validations:
+      required: true
+  - type: textarea
+    id: falsification
+    attributes:
+      label: Failure condition
+    validations:
+      required: true
+  - type: textarea
+    id: guard
+    attributes:
+      label: Confusion guard
+    validations:
+      required: true
