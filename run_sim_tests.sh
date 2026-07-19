@@ -21,7 +21,13 @@ echo "Starting VR-ASI-1 simulator tests..."
 echo "Checking service health..."
 MAX_RETRIES=24
 RETRY_INTERVAL=5
-for service_url in +    "http://localhost:8080/health" +    "http://localhost:4000" +    "http://localhost:8081" +    "http://localhost:8082"; do
+SERVICE_URLS=(
+    "http://localhost:8080/health"
+    "http://localhost:4000"
+    "http://localhost:8081"
+    "http://localhost:8082"
+)
+for service_url in "${SERVICE_URLS[@]}"; do
     retries=0
     until curl --fail --silent --show-error "$service_url" >/dev/null; do
         retries=$((retries + 1))
@@ -34,6 +40,7 @@ for service_url in +    "http://localhost:8080/health" +    "http://localhost:40
 done
 
 echo "Running BVR scenario: agent hand-off..."
-curl --fail --silent --show-error +    -X POST +    -H "Content-Type: application/json" +    --data-binary @oden.json +    http://localhost:8080/plugins/register >/dev/null
+curl --fail --silent --show-error -X POST -H "Content-Type: application/json" \
+    --data-binary @oden.json http://localhost:8080/plugins/register >/dev/null
 
 echo "Simulator tests finished."

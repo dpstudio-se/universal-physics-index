@@ -37,7 +37,7 @@ jobs:
         run: mypy src/upi angelica_loader.py angelica_simulator.py repo_audit.py --ignore-missing-imports
       
       - name: Run tests with pytest
-        run: pytest tests/ -v --tb=short
+        run: python -m pytest tests/ -v --tb=short
       
       - name: Validate JSON schemas
         run: |
