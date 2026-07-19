@@ -84,6 +84,11 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install --no-build-isolation -e .
 
+      - name: Autonomous workflow hardening gate
+        run: |
+          python repo_audit.py --output report.json
+          python -m upi.cli workflow-engine --report report.json --min-score 0.75 --max-risk 0.35
+
   security:
     name: Security Checks
     runs-on: ubuntu-latest

@@ -16,6 +16,7 @@ from . import (
     validate_node_json,
 )
 from .models import Address
+from .workflow_engine import WorkflowEngine
 
 
 def print_json(data):
@@ -177,6 +178,15 @@ def address_cmd(args):
     print_json(result)
 
 
+def workflow_engine_cmd(args):
+    """Run autonomous workflow engine from a repo audit report."""
+    engine = WorkflowEngine(min_score=float(args.min_score), max_risk=float(args.max_risk))
+    result = engine.run_from_report_file(args.report)
+    print_json(result)
+    if not result["summary"]["release_ready"]:
+        sys.exit(2)
+
+
 def main():
     """Main CLI entry point."""
     import argparse
@@ -230,6 +240,16 @@ def main():
     addr.add_argument("--torus", help="Torus (for creation)")
     addr.add_argument("--node", help="Node identifier (for creation)")
     addr.set_defaults(func=address_cmd)
+
+    # workflow-engine
+    wf = subparsers.add_parser(
+        "workflow-engine",
+        help="Run autonomous crew workflow and optimal release gate from report JSON",
+    )
+    wf.add_argument("--report", required=True, help="Path to repo audit report JSON")
+    wf.add_argument("--min-score", default=0.75, help="Minimum score required for release")
+    wf.add_argument("--max-risk", default=0.35, help="Maximum risk allowed for release")
+    wf.set_defaults(func=workflow_engine_cmd)
 
     args = parser.parse_args()
 

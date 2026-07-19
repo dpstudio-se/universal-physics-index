@@ -59,6 +59,13 @@ from .validation import (
     validate_scientific_boundaries,
     validate_status_enum,
 )
+from .workflow_engine import (
+    CandidatePlan,
+    CrewRole,
+    IssueSeverity,
+    WorkflowEngine,
+    WorkflowIssue,
+)
 
 __all__ = [
     # Version
@@ -110,4 +117,10 @@ __all__ = [
     "validate_bridge_json",
     "validate_scientific_boundaries",
     "validate_record_boundaries",
+    # Workflow engine
+    "WorkflowEngine",
+    "WorkflowIssue",
+    "CandidatePlan",
+    "IssueSeverity",
+    "CrewRole",
 ]

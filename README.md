@@ -75,6 +75,24 @@ This repository is preconfigured for GitHub Codespaces via
    - `ruff check src tests`
    - `mypy src/upi --ignore-missing-imports`
 
+## Autonomous Workflow Engine (UPI)
+
+UPI now includes a deterministic workflow engine for autonomous
+analyze -> plan -> debug/patch candidate -> release gate decisions.
+
+Run it from a repo audit report:
+
+```bash
+python repo_audit.py --output report.json
+upi workflow-engine --report report.json --min-score 0.75 --max-risk 0.35
+```
+
+Behavior:
+- Converts audit findings into normalized issues.
+- Builds ranked patch candidates (crew role: patcher).
+- Applies an optimal release gate.
+- Fails closed when any candidate is below score/risk threshold.
+
 ## Repository Structure
 
 - `src/upi/` — Core modules (physics, models, validation, CLI)
