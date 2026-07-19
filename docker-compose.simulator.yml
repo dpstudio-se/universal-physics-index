@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   angelica:
     build: .
@@ -10,19 +9,43 @@ services:
       - .:/app
 
   puter-mock:
-    image: alpine
-    command: nc -lk -p 4000 -e echo "HTTP/1.1 200 OK\n\nMock Puter Response"
+    image: python:3.9-slim
+    command: >
+      python3 -c "
+      from http.server import BaseHTTPRequestHandler, HTTPServer;
+      class MockHandler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Puter Response OK')
+          def do_POST(self):
+              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Puter POST OK')
+      HTTPServer(('0.0.0.0', 4000), MockHandler).serve_forever()"
     ports:
       - "4000:4000"
 
   oden-mock:
-    image: alpine
-    command: nc -lk -p 8081 -e echo "HTTP/1.1 200 OK\n\nMock Oden Response"
+    image: python:3.9-slim
+    command: >
+      python3 -c "
+      from http.server import BaseHTTPRequestHandler, HTTPServer;
+      class MockHandler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Oden Response OK')
+          def do_POST(self):
+              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Oden POST OK')
+      HTTPServer(('0.0.0.0', 8081), MockHandler).serve_forever()"
     ports:
       - "8081:8081"
 
   odens-eye-mock:
-    image: alpine
-    command: nc -lk -p 8082 -e echo "HTTP/1.1 200 OK\n\nMock Eye Response"
+    image: python:3.9-slim
+    command: >
+      python3 -c "
+      from http.server import BaseHTTPRequestHandler, HTTPServer;
+      class MockHandler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Eye Response OK')
+          def do_POST(self):
+              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Eye POST OK')
+      HTTPServer(('0.0.0.0', 8082), MockHandler).serve_forever()"
     ports:
       - "8082:8082"
