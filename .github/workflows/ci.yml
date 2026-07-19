@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          pip install -e ".[dev]"
+          python -m pip install -e ".[dev]"
       
       - name: Lint with ruff
         run: ruff check src tests angelica_loader.py angelica_simulator.py mock_server.py repo_audit.py

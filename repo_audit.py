@@ -46,7 +46,9 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
         if len(port_values) != len(set(port_values)):
             report["port_conflicts"].append("Duplicate ports found in config/ports.json")
     except (OSError, ValueError, AttributeError) as error:
-        report["critical_conflicts"].append(f"Error reading ports.json: {error}")
+        report["critical_conflicts"].append(
+            f"Error reading config/ports.json: {error}"
+        )
 
     try:
         schema = json.loads((root / "plugin.schema.json").read_text(encoding="utf-8"))

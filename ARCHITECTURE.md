@@ -12,7 +12,8 @@ VR-ASI-1 är en integrerad AI/Web-OS-plattform designad för autonom orkestrerin
 ## Systemdesign
 ### 1. Plugin-plattform & Sandboxing
 Alla plugins körs i isolerade containrar (Docker/Process-isolation). 
-- **Manifest-validering**: Varje plugin måste ha en `plugin.json` som deklarerar permissions.
+- **Manifest-validering**: Varje plugin måste ha ett JSON-manifest, exempelvis
+  `oden.json` eller `odens_eye.json`, som följer `plugin.schema.json` och deklarerar permissions.
 - **Resursbegränsningar**: CPU och RAM definieras i manifestet för att förhindra "noisy neighbor"-problem.
 - **Permission-model**:
   - `file: false`: Kör containern med ett skrivskyddat filsystem.
@@ -28,7 +29,7 @@ Ingen kritisk state lagras i RAM.
 ### 3. CI/CD & Kvalitetskontroll
 - **Linter**: ESLint/Prettier (TS), Black/Flake8 (Py).
 - **Säkerhet**: Trivy-scanning av container-images.
-- **Validering**: Automatisk validering av `plugin.json` mot `plugin.schema.json`.
+- **Validering**: Automatisk validering av varje pluginmanifest mot `plugin.schema.json`.
 
 ## Simulator-miljö (BVR)
 För att säkerställa reproducerbarhet körs systemet i en simulatormiljö:

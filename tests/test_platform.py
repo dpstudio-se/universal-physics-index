@@ -134,6 +134,31 @@ def test_mock_server_supports_get_and_post() -> None:
         thread.join(timeout=5)
 
 
+def test_simulator_script_has_bounded_requests_and_cleanup() -> None:
+    script = (REPOSITORY_ROOT / "run_sim_tests.sh").read_text(encoding="utf-8")
+
+    assert "trap cleanup EXIT" in script
+    assert "--connect-timeout 2 --max-time 5" in script
+    assert 'Content-Type: application/json' in script
+    assert "--data-binary @oden.json" in script
+
+
+def test_architecture_uses_repository_manifest_names() -> None:
+    architecture = (REPOSITORY_ROOT / "ARCHITECTURE.md").read_text(encoding="utf-8")
+
+    assert "`plugin.json`" not in architecture
+    assert "`oden.json`" in architecture
+    assert "`odens_eye.json`" in architecture
+
+
+def test_audit_error_names_full_ports_path(tmp_path: Path) -> None:
+    report = audit_repo(tmp_path)
+
+    assert any(
+        "config/ports.json" in message for message in report["critical_conflicts"]
+    )
+
+
 def test_repository_platform_audit_is_clean() -> None:
     report = audit_repo(REPOSITORY_ROOT)
 

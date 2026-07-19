@@ -29,7 +29,8 @@ SERVICE_URLS=(
 )
 for service_url in "${SERVICE_URLS[@]}"; do
     retries=0
-    until curl --fail --silent --show-error "$service_url" >/dev/null; do
+    until curl --fail --silent --show-error --connect-timeout 2 --max-time 5 \
+        "$service_url" >/dev/null; do
         retries=$((retries + 1))
         if [ "$retries" -ge "$MAX_RETRIES" ]; then
             echo "Service at $service_url did not become ready in time" >&2
