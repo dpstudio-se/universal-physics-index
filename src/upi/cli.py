@@ -185,7 +185,7 @@ def debug_index_cmd(args):
         print(f"Error: Path not found: {root}", file=sys.stderr)
         sys.exit(1)
 
-    report = generate_debug_report(root)
+    report = generate_debug_report(root, odins_eye=args.odins_eye)
     rendered = (
         render_debug_markdown(report)
         if args.format == "markdown"
@@ -262,6 +262,11 @@ def main():
     debug.add_argument("path", nargs="?", default="data", help="Directory of UPI JSON records")
     debug.add_argument("--output", help="Write the report to a file")
     debug.add_argument("--format", choices=("json", "markdown"), default="json")
+    debug.add_argument(
+        "--odins-eye",
+        action="store_true",
+        help="Find hidden paths, conflicting identities, and mirrored records",
+    )
     debug.add_argument(
         "--strict",
         action="store_true",

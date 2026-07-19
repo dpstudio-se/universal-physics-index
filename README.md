@@ -58,6 +58,7 @@ upi normalize --observed 4.5 --reference 4.0
 upi validate data/constants/planck.json
 upi debug-index data --output upi-debug-report.json
 upi debug-index data --format markdown --output upi-debug-report.md
+upi debug-index data --odins-eye --output upi-odins-eye.json
 
 # Python API
 from upi import mass_from_frequency, UPIGraph, PhysicsNode
@@ -117,6 +118,11 @@ The scanner:
 
 Shared equations or software functions across different time and length scales are mapped as
 relationships, not treated as proof of a shared physical mechanism.
+
+Add `--odins-eye` for a local, read-only inspection layer. It reports exact-content mirrors,
+conflicting records that reuse one UPI identity, hidden JSON paths, and possible semantic mirrors.
+Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. Reports contain paths
+and hashes, never source values, and the scanner does not access networks or mutate index records.
 
 ## License
 
