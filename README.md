@@ -62,6 +62,19 @@ from upi import mass_from_frequency, UPIGraph, PhysicsNode
 mass = mass_from_frequency(1e20)
 ```
 
+## Codespaces
+
+This repository is preconfigured for GitHub Codespaces via
+`.devcontainer/devcontainer.json`.
+
+1. Open the repository in GitHub.
+2. Click **Code** -> **Codespaces** -> **Create codespace on main**.
+3. Wait for container initialization (dependencies are installed automatically).
+4. Run:
+   - `pytest tests/ -v`
+   - `ruff check src tests`
+   - `mypy src/upi --ignore-missing-imports`
+
 ## Repository Structure
 
 - `src/upi/` — Core modules (physics, models, validation, CLI)
