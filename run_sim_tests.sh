@@ -33,6 +33,8 @@ for service_url in "${SERVICE_URLS[@]}"; do
         retries=$((retries + 1))
         if [ "$retries" -ge "$MAX_RETRIES" ]; then
             echo "Service at $service_url did not become ready in time" >&2
+            "${COMPOSE[@]}" -f docker-compose.simulator.yml ps >&2
+            "${COMPOSE[@]}" -f docker-compose.simulator.yml logs --no-color --tail 100 >&2
             exit 1
         fi
         sleep "$RETRY_INTERVAL"

@@ -6,7 +6,7 @@ COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
 RUN python -m pip install --no-cache-dir .
 
-COPY plugin.schema.json angelica_loader.py angelica_simulator.py ./
+COPY plugin.schema.json angelica_loader.py angelica_simulator.py mock_server.py ./
 
 USER 65534:65534
 EXPOSE 8080

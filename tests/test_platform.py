@@ -8,6 +8,7 @@ import pytest
 
 from angelica_loader import AngelicaPluginLoader, validate_manifest
 from angelica_simulator import create_server
+from mock_server import create_server as create_mock_server
 from repo_audit import audit_failed, audit_repo
 
 REPOSITORY_ROOT = Path(__file__).parents[1]
@@ -108,6 +109,25 @@ def test_simulator_rejects_wrong_content_type() -> None:
         with pytest.raises(urllib.error.HTTPError) as captured:
             urllib.request.urlopen(request)
         assert captured.value.code == 415
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+
+
+def test_mock_server_supports_get_and_post() -> None:
+    server = create_mock_server(0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base_url = f"http://127.0.0.1:{server.server_port}"
+
+    try:
+        with urllib.request.urlopen(base_url) as response:
+            assert response.status == 200
+
+        request = urllib.request.Request(base_url, data=b"{}", method="POST")
+        with urllib.request.urlopen(request) as response:
+            assert response.status == 201
     finally:
         server.shutdown()
         server.server_close()

@@ -17,6 +17,7 @@ CRITICAL_FILES = (
     "Dockerfile.simulator",
     "docker-compose.simulator.yml",
     "angelica_simulator.py",
+    "mock_server.py",
 )
 PLUGIN_MANIFESTS = ("oden.json", "odens_eye.json")
 IGNORED_DIRECTORIES = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".venv", "build", "dist"}

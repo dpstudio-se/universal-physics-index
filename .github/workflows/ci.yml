@@ -31,10 +31,10 @@ jobs:
           pip install -e ".[dev]"
       
       - name: Lint with ruff
-        run: ruff check src tests angelica_loader.py angelica_simulator.py repo_audit.py
+        run: ruff check src tests angelica_loader.py angelica_simulator.py mock_server.py repo_audit.py
       
       - name: Type check with mypy
-        run: mypy src/upi angelica_loader.py angelica_simulator.py repo_audit.py --ignore-missing-imports
+        run: mypy src/upi angelica_loader.py angelica_simulator.py mock_server.py repo_audit.py --ignore-missing-imports
       
       - name: Run tests with pytest
         run: python -m pytest tests/ -v --tb=short
