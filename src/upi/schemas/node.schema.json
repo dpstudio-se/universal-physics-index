@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UPI Physics Node Schema",
+  "description": "Schema for UPI physics and mathematics nodes with status tracking",
+  "type": "object",
+  "required": [
+    "address",
+    "title",
+    "description",
+    "status"
+  ],
+  "properties": {
+    "address": {
+      "type": "string",
+      "pattern": "^UPI<[^,]+,[0-9]+,[^,]+,[^,>]+>$",
+      "description": "UPI address: UPI<Domain,Generation,Torus,Node>"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Concept title"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Detailed description"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["EST", "DER", "HYP", "STOP", "ERR", "SYM"],
+      "description": "Scientific status: EST=established, DER=derived, HYP=hypothesis, STOP=missing, ERR=error, SYM=symbolic"
+    },
+    "quantities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value", "unit"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "number",
+            "not": {"const": null}
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uncertainty": {
+            "type": "number"
+          },
+          "reference": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "definitions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "equations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "mechanism": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "source"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["experiment", "observation", "calculation", "simulation", "other"]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "date": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "primary_sources": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "predictions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "falsification_conditions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "information_layer": {
+      "type": "string",
+      "enum": ["PRIVATE", "PUBLIC", "ACADEMIC"],
+      "description": "Disclosure/formality context, not evidence strength"
+    },
+    "reference_frame": {"type": "string"},
+    "normalization_method": {"type": "string"},
+    "normalization_claim": {"type": "string"},
+    "null_model": {"type": "string"},
+    "control_condition": {"type": "string"},
+    "statistical_method": {"type": "string"},
+    "confounders": {"type": "array", "items": {"type": "string"}},
+    "replication_rule": {"type": "string"},
+    "causal_claim": {"type": "boolean"},
+    "causal_test_method": {"type": "string"},
+    "verification_type": {
+      "type": "string",
+      "enum": ["software_test", "simulation", "mathematical_check", "experimental_observation", "replication", "none"]
+    },
+    "claims_experimental_verification": {"type": "boolean"},
+    "confusion_guard": {
+      "type": "string",
+      "description": "Warning about common misinterpretations"
+    },
+    "stop_reason": {
+      "type": "string",
+      "description": "Required if status='STOP': what is missing or unresolved"
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "version": {
+      "type": "string",
+      "default": "0.1.0"
+    }
+  },
+  "additionalProperties": false,
+  "if": {
+    "properties": {
+      "status": {"const": "STOP"}
+    }
+  },
+  "then": {
+    "required": ["stop_reason"]
+  }
+}
