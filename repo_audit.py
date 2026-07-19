@@ -36,7 +36,8 @@ def audit_repo():
 
     # File scan
     for path in glob.glob("**/*", recursive=True):
-        report["files_scanned"] += 1
+        if os.path.isfile(path):
+            report["files_scanned"] += 1
 
     return report
 

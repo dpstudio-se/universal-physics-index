@@ -10,19 +10,19 @@ services:
       - .:/app
 
   puter-mock:
-    image: alpine
-    command: nc -lk -p 4000 -e echo "HTTP/1.1 200 OK\n\nMock Puter Response"
+    image: python:3.11-alpine
+    command: python -m http.server 4000
     ports:
       - "4000:4000"
 
   oden-mock:
-    image: alpine
-    command: nc -lk -p 8081 -e echo "HTTP/1.1 200 OK\n\nMock Oden Response"
+    image: python:3.11-alpine
+    command: python -m http.server 8081
     ports:
       - "8081:8081"
 
   odens-eye-mock:
-    image: alpine
-    command: nc -lk -p 8082 -e echo "HTTP/1.1 200 OK\n\nMock Eye Response"
+    image: python:3.11-alpine
+    command: python -m http.server 8082
     ports:
       - "8082:8082"

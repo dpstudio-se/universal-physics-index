@@ -17,10 +17,11 @@ class AngelicaPluginLoader:
             if field not in self.manifest:
                 raise ValueError(f"Missing required field: {field}")
 
-        if (
-            self.manifest['permissions'].get('network') == 'host'
-            or self.manifest['permissions'].get('mounts') == '/'
-        ):
+        # Deny host-level access: network must not be 'host' (string mode) and
+        # mounts must not be root '/' (only relevant when specified as a string path).
+        network_val = self.manifest['permissions'].get('network')
+        mounts_val = self.manifest['permissions'].get('mounts')
+        if network_val == 'host' or mounts_val == '/':
             raise PermissionError("Forbidden: network=host or mounts=/ is not allowed")
 
     def spawn(self):
