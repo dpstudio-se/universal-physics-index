@@ -4,7 +4,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from angelica_loader import AngelicaPluginLoader
+from upi.plugin_loader import AngelicaPluginLoader
 
 ROOT = Path(__file__).parents[1]
 
@@ -34,4 +34,4 @@ def test_executable_manifest_requires_local_entrypoint(tmp_path: Path) -> None:
     path.write_text(json.dumps(manifest), encoding="utf-8")
 
     with pytest.raises(FileNotFoundError, match="entryPoint not found"):
-        AngelicaPluginLoader(path)
+        AngelicaPluginLoader(path, ROOT / "plugin.schema.json")

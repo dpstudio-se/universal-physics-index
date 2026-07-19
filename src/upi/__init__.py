@@ -41,6 +41,7 @@ from .physics import (
     relativistic_total_frequency,
     signal_match,
 )
+from .plugin_loader import AngelicaPluginLoader
 from .runtime import (
     RuntimeProfile,
     RuntimeProfileLoader,
@@ -90,6 +91,7 @@ __all__ = [
     "RuntimeMatchResult",
     "InformationLayer",
     "VerificationType",
+    "AngelicaPluginLoader",
     # Physics
     "energy_from_frequency",
     "mass_from_frequency",
