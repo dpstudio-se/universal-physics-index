@@ -272,8 +272,8 @@ def generate_debug_report(
         exact_mirror_paths = {path for group in mirror_groups for path in group["paths"]}
         for group in _group_by(inspection_records, "semantic_signature"):
             paths = sorted(item["path"] for item in group)
-            hashes = {item["content_hash"] for item in group}
-            if len(hashes) < 2 or set(paths) <= exact_mirror_paths:
+            semantic_hashes = {item["content_hash"] for item in group}
+            if len(semantic_hashes) < 2 or set(paths) <= exact_mirror_paths:
                 continue
             semantic_groups.append({"paths": paths})
             findings.append(
@@ -330,18 +330,18 @@ def generate_debug_report(
         record_nodes_by_path = {
             record["path"]: f"record:{index}" for index, record in enumerate(records)
         }
-        relation_groups = [
+        relation_groups: list[tuple[str, str, list[dict[str, Any]]]] = [
             ("mirror", "FORM_SIMILAR", mirror_groups),
             ("shadow", "CONTRADICTS", shadow_groups),
             ("mirror", "FORM_SIMILAR", semantic_groups),
         ]
         relation_index = 0
         for layer, relation, groups in relation_groups:
-            for group in groups:
+            for relation_group in groups:
                 relation_node = f"{layer}:{relation_index}"
                 relation_index += 1
-                map_nodes.append({"id": relation_node, "layer": layer, **group})
-                for path in group["paths"]:
+                map_nodes.append({"id": relation_node, "layer": layer, **relation_group})
+                for path in relation_group["paths"]:
                     if path in record_nodes_by_path:
                         map_edges.append(
                             {
