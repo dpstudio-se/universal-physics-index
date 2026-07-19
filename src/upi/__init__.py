@@ -60,6 +60,14 @@ from .validation import (
     validate_scientific_boundaries,
     validate_status_enum,
 )
+from .workflow import (
+    WorkflowState,
+    validate_result,
+    validate_task,
+    validate_task_result_pair,
+    validate_transition,
+    validate_workflow,
+)
 
 __all__ = [
     # Version
@@ -104,6 +112,13 @@ __all__ = [
     "UPIGraph",
     "generate_debug_report",
     "render_debug_markdown",
+    # Declarative workflows
+    "WorkflowState",
+    "validate_task",
+    "validate_result",
+    "validate_workflow",
+    "validate_transition",
+    "validate_task_result_pair",
     # Validation
     "validate_json_schema",
     "validate_node_status",

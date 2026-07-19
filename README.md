@@ -125,6 +125,15 @@ Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. In 
 redact source values and contain relative paths plus hashes. The scanner does not access networks or
 mutate index records.
 
+## Declarative agent workflows
+
+UPI includes schemas for bounded agent tasks, terminal results and workflow specifications. The
+contracts model transport, independent review and reversible quarantine under default-deny
+capabilities. See `docs/AGENT_CIRCULATION.md` and `examples/workflows/`.
+
+This is a validation and audit layer, not a scheduler or autonomous agent runtime. Biological terms
+such as circulation and immunity are `SYM` architecture metaphors only.
+
 ## License
 
 MIT - See LICENSE file

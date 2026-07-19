@@ -146,7 +146,14 @@ def test_odins_eye_marks_hidden_paths_and_semantic_mirrors(tmp_path: Path) -> No
 def test_bundled_schemas_match_repository_schemas() -> None:
     repository_schemas = Path(__file__).parents[1] / "schemas"
 
-    for name in ("node.schema.json", "bridge.schema.json", "theory.schema.json"):
+    for name in (
+        "node.schema.json",
+        "bridge.schema.json",
+        "theory.schema.json",
+        "agent-task.schema.json",
+        "agent-result.schema.json",
+        "workflow.schema.json",
+    ):
         assert (schemas_dir() / name).read_bytes() == (repository_schemas / name).read_bytes()
 
 

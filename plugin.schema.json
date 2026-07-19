@@ -2,51 +2,52 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "VR-ASI-1 Plugin Manifest",
   "type": "object",
+  "required": ["pluginId", "version", "name", "runtime", "mode", "enabled", "permissions", "resources"],
   "properties": {
-    "pluginId": {
-      "type": "string",
-      "description": "Unique identifier for the plugin (e.g., 'oden-core')"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "description": "Semantic version of the plugin"
-    },
-    "name": {
-      "type": "string",
-      "description": "Human-readable name of the plugin"
-    },
-    "description": {
-      "type": "string",
-      "description": "Brief description of the plugin's purpose"
-    },
-    "entryPoint": {
-      "type": "string",
-      "description": "The main file or command to start the plugin"
-    },
-    "runtime": {
-      "type": "string",
-      "enum": ["node", "python", "docker"],
-      "description": "The execution environment required"
-    },
+    "pluginId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "name": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "runtime": {"type": "string", "enum": ["node", "python", "docker"]},
+    "mode": {"type": "string", "enum": ["simulation", "executable"]},
+    "enabled": {"type": "boolean"},
+    "entryPoint": {"type": "string", "minLength": 1},
     "permissions": {
       "type": "object",
+      "required": ["defaultDeny", "capabilities"],
       "properties": {
-        "file": { "type": "boolean", "description": "Access to the filesystem" },
-        "network": { "type": "boolean", "description": "Allow network access" },
-        "exec": { "type": "boolean", "description": "Allow execution of shell commands" },
-        "kv": { "type": "boolean", "description": "Access to the key-value store" },
-        "models": { "type": "boolean", "description": "Access to LLM models" }
+        "defaultDeny": {"const": true},
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["resource", "actions", "scopes"],
+            "properties": {
+              "resource": {"type": "string", "enum": ["filesystem", "network", "exec", "kv", "model"]},
+              "actions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+              "scopes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+            },
+            "additionalProperties": false
+          }
+        }
       },
-      "required": ["file", "network", "exec", "kv", "models"]
+      "additionalProperties": false
     },
     "resources": {
       "type": "object",
+      "required": ["cpu", "memory"],
       "properties": {
-        "cpu": { "type": "string", "description": "CPU limit (e.g., '0.5')" },
-        "memory": { "type": "string", "description": "Memory limit (e.g., '512Mi')" }
-      }
+        "cpu": {"type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$"},
+        "memory": {"type": "string", "pattern": "^[0-9]+(Mi|Gi)$"}
+      },
+      "additionalProperties": false
     }
   },
-  "required": ["pluginId", "version", "name", "entryPoint", "runtime", "permissions"]
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "executable"}}},
+      "then": {"required": ["entryPoint"]}
+    }
+  ]
 }

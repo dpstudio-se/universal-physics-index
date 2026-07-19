@@ -1,33 +1,55 @@
-import os
-import subprocess
+"""Validate plugin manifests without executing them."""
+
+from __future__ import annotations
+
 import json
-from typing import Dict
+from pathlib import Path
+from typing import Any
+
+import jsonschema
+
 
 class AngelicaPluginLoader:
-    def __init__(self, manifest_path: str):
-        with open(manifest_path, 'r') as f:
-            self.manifest = json.load(f)
+    """Load and validate a default-deny plugin manifest."""
+
+    def __init__(self, manifest_path: str | Path):
+        self.manifest_path = Path(manifest_path).resolve()
+        self.manifest: dict[str, Any] = json.loads(
+            self.manifest_path.read_text(encoding="utf-8")
+        )
         self.validate()
 
-    def validate(self):
-        # In a real impl, use jsonschema
-        required = ["pluginId", "version", "entryPoint", "runtime", "permissions"]
-        for field in required:
-            if field not in self.manifest:
-                raise ValueError(f"Missing required field: {field}")
-        
-        if self.manifest['permissions'].get('network') == 'host' or self.manifest['permissions'].get('mounts') == '/':
-            raise PermissionError("Forbidden: network=host or mounts=/ is not allowed")
+    def validate(self) -> None:
+        """Validate schema, mode and executable entrypoint boundaries."""
+        schema_path = Path(__file__).resolve().parent / "plugin.schema.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        jsonschema.Draft7Validator(schema).validate(self.manifest)
 
-    def spawn(self):
-        print(f"Spawning sandboxed container for {self.manifest['pluginId']}...")
-        # Mocking container spawn
-        cmd = ["docker", "run", "-d", "--name", self.manifest['pluginId'], 
-               "--memory", self.manifest.get('resources', {}).get('memory', '512m'),
-               "vrasi1-plugin-base"]
-        print(f"Executing: {' '.join(cmd)}")
-        # subprocess.run(cmd) # Disabled for scaffold
+        if self.manifest["mode"] != "executable":
+            return
+
+        entrypoint = (self.manifest_path.parent / self.manifest["entryPoint"]).resolve()
+        if not entrypoint.is_relative_to(self.manifest_path.parent):
+            raise PermissionError("Plugin entryPoint must remain inside the manifest directory")
+        if not entrypoint.is_file():
+            raise FileNotFoundError(f"Plugin entryPoint not found: {entrypoint.name}")
+
+    def build_spawn_command(self) -> list[str]:
+        """Build, but never execute, a command for an enabled executable plugin."""
+        if self.manifest["mode"] != "executable" or not self.manifest["enabled"]:
+            raise RuntimeError("Simulation or disabled plugin cannot be spawned")
+        return [
+            "docker",
+            "run",
+            "--rm",
+            "--name",
+            self.manifest["pluginId"],
+            "--memory",
+            self.manifest["resources"]["memory"],
+            "vrasi1-plugin-base",
+        ]
+
 
 if __name__ == "__main__":
     loader = AngelicaPluginLoader("oden.json")
-    loader.spawn()
+    print(f"Validated {loader.manifest['pluginId']} in {loader.manifest['mode']} mode")

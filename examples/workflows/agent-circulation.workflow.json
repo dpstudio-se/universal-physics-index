@@ -1,0 +1,29 @@
+{
+  "workflow_id": "agent-circulation-v1",
+  "version": "0.1.0",
+  "status": "SYM",
+  "roles": [
+    {"role_id": "coordinator", "agent_class": "coordinator", "default_deny": true, "capabilities": ["task:lease", "task:cancel", "result:accept"]},
+    {"role_id": "transporter", "agent_class": "transport", "default_deny": true, "capabilities": ["task:read", "result:write"]},
+    {"role_id": "immune-reviewer", "agent_class": "reviewer", "default_deny": true, "capabilities": ["task:read", "finding:write", "quarantine:request"]},
+    {"role_id": "quarantine-gate", "agent_class": "quarantine", "default_deny": true, "capabilities": ["quarantine:read", "release:request"]}
+  ],
+  "states": ["QUEUED", "LEASED", "RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "QUARANTINED", "CANCELLED"],
+  "transitions": [
+    {"from": "QUEUED", "to": "LEASED", "condition": "bounded lease acquired"},
+    {"from": "LEASED", "to": "RUNNING", "condition": "worker acknowledges immutable payload hash"},
+    {"from": "RUNNING", "to": "SUCCEEDED", "condition": "one terminal result accepted", "independent_review": true},
+    {"from": "RUNNING", "to": "FAILED", "condition": "worker reports bounded failure"},
+    {"from": "RUNNING", "to": "QUARANTINED", "condition": "reviewer reports high-risk finding", "independent_review": true},
+    {"from": "FAILED", "to": "QUEUED", "condition": "attempt remains below max_attempts"},
+    {"from": "LEASED", "to": "TIMED_OUT", "condition": "lease expires without heartbeat"}
+  ],
+  "invariants": [
+    "transport does not mutate payload or scientific status",
+    "all capabilities are explicit and default-deny",
+    "terminal result is accepted at most once",
+    "quarantine has no execution or network capability",
+    "agent agreement is not independent evidence"
+  ],
+  "confusion_guard": "This is a declarative software workflow and symbolic biological mapping, not a running agent cluster or biological model."
+}
