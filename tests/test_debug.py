@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from upi import generate_debug_report, render_debug_markdown
+from upi.schema_resources import schemas_dir
 
 
 def write_json(path: Path, data: object) -> None:
@@ -140,3 +141,67 @@ def test_odins_eye_marks_hidden_paths_and_semantic_mirrors(tmp_path: Path) -> No
 
     assert {"UPI-O003", "UPI-O004"} <= codes
     assert report["exploded_map"]["layers"][-2:] == ["shadow", "mirror"]
+
+
+def test_bundled_schemas_match_repository_schemas() -> None:
+    repository_schemas = Path(__file__).parents[1] / "schemas"
+
+    for name in ("node.schema.json", "bridge.schema.json", "theory.schema.json"):
+        assert (schemas_dir() / name).read_bytes() == (repository_schemas / name).read_bytes()
+
+
+def test_odins_eye_distinguishes_bridge_relation_types(tmp_path: Path) -> None:
+    base = {
+        "source": "UPI<physics,1,test,source>",
+        "target": "UPI<physics,1,test,target>",
+        "status": "DER",
+    }
+    write_json(tmp_path / "causes.json", {**base, "relation": "CAUSES"})
+    write_json(tmp_path / "contradicts.json", {**base, "relation": "CONTRADICTS"})
+
+    report = generate_debug_report(tmp_path, odins_eye=True)
+
+    assert not any(finding["code"] == "UPI-O002" for finding in report["findings"])
+
+
+def test_odins_eye_redacts_source_values(tmp_path: Path) -> None:
+    secret = "TOKEN_DO_NOT_REPORT"
+    record = {
+        "address": f"UPI<physics,1,test,{secret}>",
+        "title": "Redaction test",
+        "description": secret,
+        "status": secret,
+        "scope": secret,
+    }
+    write_json(tmp_path / "secret.json", record)
+    write_json(tmp_path / "shadow.json", {**record, "description": "Changed payload."})
+
+    report = generate_debug_report(tmp_path, odins_eye=True)
+    serialized = json.dumps(report)
+
+    assert secret not in serialized
+    assert report["root"] == "."
+    assert report["odins_eye"]["source_values_redacted"] is True
+    assert report["odins_eye"]["shadow_groups"]
+
+
+def test_exploded_map_only_derives_from_present_evidence(tmp_path: Path) -> None:
+    write_json(
+        tmp_path / "node.json",
+        {
+            "address": "UPI<physics,1,classical,no-evidence>",
+            "title": "No evidence",
+            "description": "A graph-edge regression test.",
+            "status": "EST",
+        },
+    )
+
+    report = generate_debug_report(tmp_path, odins_eye=True)
+    record_node = next(
+        node for node in report["exploded_map"]["nodes"] if node["layer"] == "record"
+    )
+
+    assert "identity_hash" in record_node
+    assert not any(
+        edge["relation"] == "DERIVED_FROM" for edge in report["exploded_map"]["edges"]
+    )

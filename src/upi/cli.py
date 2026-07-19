@@ -17,6 +17,7 @@ from . import (
 )
 from .debug import generate_debug_report, render_debug_markdown
 from .models import Address
+from .schema_resources import schema_path
 
 
 def print_json(data):
@@ -109,18 +110,16 @@ def validate_cmd(args):
         sys.exit(1)
 
     # Try to determine if it's a node or bridge based on content
-    schema_dir = Path(__file__).parent.parent.parent / "schemas"
-
     is_node = "address" in data and "status" in data and "title" in data
     is_bridge = "source" in data and "target" in data and "relation" in data
 
     if is_node:
-        schema_path = schema_dir / "node.schema.json"
-        is_valid, errors = validate_node_json(data, schema_path)
+        node_schema_path = schema_path("node")
+        is_valid, errors = validate_node_json(data, node_schema_path)
         obj_type = "node"
     elif is_bridge:
-        schema_path = schema_dir / "bridge.schema.json"
-        is_valid, errors = validate_bridge_json(data, schema_path)
+        bridge_schema_path = schema_path("bridge")
+        is_valid, errors = validate_bridge_json(data, bridge_schema_path)
         obj_type = "bridge"
     else:
         print("Error: Cannot determine if object is node or bridge", file=sys.stderr)

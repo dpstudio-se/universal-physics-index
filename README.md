@@ -121,8 +121,9 @@ relationships, not treated as proof of a shared physical mechanism.
 
 Add `--odins-eye` for a local, read-only inspection layer. It reports exact-content mirrors,
 conflicting records that reuse one UPI identity, hidden JSON paths, and possible semantic mirrors.
-Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. Reports contain paths
-and hashes, never source values, and the scanner does not access networks or mutate index records.
+Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. In this mode, reports
+redact source values and contain relative paths plus hashes. The scanner does not access networks or
+mutate index records.
 
 ## License
 

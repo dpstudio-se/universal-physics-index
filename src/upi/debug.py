@@ -8,6 +8,7 @@ from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
+from .schema_resources import schemas_dir as packaged_schemas_dir
 from .validation import validate_record_boundaries
 
 CORRECTIONS = {
@@ -24,10 +25,7 @@ CORRECTIONS = {
     "UPI-O003": "Review whether the hidden path is intentional and document its purpose.",
     "UPI-O004": "Review the semantic overlap; merge, distinguish, or link the records explicitly.",
 }
-
-
-def _schemas_dir() -> Path:
-    return Path(__file__).resolve().parents[2] / "schemas"
+VALID_STATUSES = {"EST", "DER", "HYP", "STOP", "ERR", "SYM"}
 
 
 def _record_type(data: dict[str, Any]) -> str | None:
@@ -54,6 +52,16 @@ def _scale_signature(data: dict[str, Any]) -> dict[str, Any]:
         "units": units,
         "time_scale": data.get("time_scale", "unspecified"),
         "length_scale": data.get("length_scale", "unspecified"),
+    }
+
+
+def _redacted_scale_signature(data: dict[str, Any]) -> dict[str, Any]:
+    scale = _scale_signature(data)
+    return {
+        "scope_declared": scale["scope"] != "unspecified",
+        "unit_count": len(scale["units"]),
+        "time_scale_declared": scale["time_scale"] != "unspecified",
+        "length_scale_declared": scale["length_scale"] != "unspecified",
     }
 
 
@@ -84,8 +92,12 @@ def _semantic_signature(data: dict[str, Any]) -> str | None:
 
 def _record_identity(data: dict[str, Any], record_type: str) -> str:
     if record_type == "bridge":
-        return f"{data.get('source')}->{data.get('target')}"
+        return f"{data.get('source')}->{data.get('target')}:{data.get('relation')}"
     return str(data.get("address"))
+
+
+def _text_hash(value: str) -> str:
+    return sha256(value.encode("utf-8")).hexdigest()
 
 
 def _group_by(items: list[dict[str, Any]], key: str) -> list[list[dict[str, Any]]]:
@@ -129,7 +141,10 @@ def _schema_errors(data: dict[str, Any], record_type: str, schemas_dir: Path) ->
 
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     validator = jsonschema.Draft7Validator(schema)
-    return [error.message for error in sorted(validator.iter_errors(data), key=str)]
+    return [
+        f"{error.json_path or '$'} failed {error.validator} validation."
+        for error in sorted(validator.iter_errors(data), key=str)
+    ]
 
 
 def generate_debug_report(
@@ -144,7 +159,7 @@ def generate_debug_report(
     never upgrades software validation to experimental evidence.
     """
     root = root.resolve()
-    schemas_dir = (schemas_dir or _schemas_dir()).resolve()
+    schemas_dir = (schemas_dir or packaged_schemas_dir()).resolve()
     findings: list[dict[str, Any]] = []
     records: list[dict[str, Any]] = []
     status_counts: Counter[str] = Counter()
@@ -188,17 +203,20 @@ def generate_debug_report(
             continue
 
         status = str(data.get("status", "STOP"))
-        status_counts[status] += 1
+        reported_status = status if not odins_eye or status in VALID_STATUSES else "INVALID"
+        status_counts[reported_status] += 1
         type_counts[record_type] += 1
-        record_id = str(data.get("address") or f"{data.get('source')}->{data.get('target')}")
+        identity = _record_identity(data, record_type)
         content_hash = _canonical_hash(data)
         records.append(
             {
-                "id": record_id,
+                "identity_hash": _text_hash(identity),
                 "path": relative_path,
                 "record_type": record_type,
-                "status": status,
-                "scale": _scale_signature(data),
+                "status": reported_status,
+                "scale": (
+                    _redacted_scale_signature(data) if odins_eye else _scale_signature(data)
+                ),
                 "evidence_count": _list_count(data.get("evidence")),
                 "equation_count": _list_count(
                     data.get("equations", data.get("fundamental_equations"))
@@ -208,7 +226,7 @@ def generate_debug_report(
         inspection_records.append(
             {
                 "path": relative_path,
-                "identity": _record_identity(data, record_type),
+                "identity": identity,
                 "content_hash": content_hash,
                 "semantic_signature": _semantic_signature(data),
             }
@@ -258,14 +276,17 @@ def generate_debug_report(
             if len(hashes) < 2:
                 continue
             paths = sorted(item["path"] for item in group)
-            identity = group[0]["identity"]
-            shadow_groups.append({"identity": identity, "content_hashes": hashes, "paths": paths})
+            identity_hash = _text_hash(group[0]["identity"])
+            shadow_groups.append(
+                {"identity_hash": identity_hash, "content_hashes": hashes, "paths": paths}
+            )
             findings.append(
                 _finding(
                     "UPI-O002",
                     "ERR",
                     paths[0],
-                    f"Shadow conflict: identity {identity} has different content at {', '.join(paths)}.",
+                    f"Shadow conflict: identity hash {identity_hash} has different content at "
+                    f"{', '.join(paths)}.",
                 )
             )
 
@@ -290,24 +311,27 @@ def generate_debug_report(
     for index, record in enumerate(records):
         record_node = f"record:{index}"
         scale_node = f"scale:{index}"
-        evidence_node = f"evidence:{index}"
         map_nodes.extend(
             [
                 {**record, "id": record_node, "layer": "record"},
                 {"id": scale_node, "layer": "scale", "value": record["scale"]},
+            ]
+        )
+        map_edges.append(
+            {"source": record_node, "target": scale_node, "relation": "MEASURED_BY"}
+        )
+        if record["evidence_count"] > 0:
+            evidence_node = f"evidence:{index}"
+            map_nodes.append(
                 {
                     "id": evidence_node,
                     "layer": "evidence",
                     "count": record["evidence_count"],
-                },
-            ]
-        )
-        map_edges.extend(
-            [
-                {"source": record_node, "target": scale_node, "relation": "MEASURED_BY"},
-                {"source": record_node, "target": evidence_node, "relation": "DERIVED_FROM"},
-            ]
-        )
+                }
+            )
+            map_edges.append(
+                {"source": record_node, "target": evidence_node, "relation": "DERIVED_FROM"}
+            )
 
     for index, finding in enumerate(findings):
         finding_node = f"finding:{index}"
@@ -354,7 +378,7 @@ def generate_debug_report(
     return {
         "schema_version": "0.1.0",
         "operation": "upi_debug_index",
-        "root": str(root),
+        "root": "." if odins_eye else str(root),
         "verification_type": "software_test",
         "claims_experimental_verification": False,
         "summary": {
@@ -369,6 +393,7 @@ def generate_debug_report(
             "enabled": odins_eye,
             "mode": "local_read_only",
             "secret_values_exposed": False,
+            "source_values_redacted": odins_eye,
             "mirror_groups": mirror_groups,
             "shadow_groups": shadow_groups,
             "semantic_mirror_groups": semantic_groups,
