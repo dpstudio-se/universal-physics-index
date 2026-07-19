@@ -25,7 +25,7 @@ def audit_repo():
             
     # Port conflict check
     try:
-        with open("config/ports.json", "r") as f:
+        with open("config/ports.json", "r", encoding="utf-8-sig") as f:
             ports = json.load(f).get("ports", {})
             port_values = list(ports.values())
             if len(port_values) != len(set(port_values)):
