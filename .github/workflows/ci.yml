@@ -31,10 +31,10 @@ jobs:
           pip install -e ".[dev]"
       
       - name: Lint with ruff
-        run: ruff check src tests
+        run: ruff check src tests angelica_loader.py angelica_simulator.py repo_audit.py
       
       - name: Type check with mypy
-        run: mypy src/upi --ignore-missing-imports
+        run: mypy src/upi angelica_loader.py angelica_simulator.py repo_audit.py --ignore-missing-imports
       
       - name: Run tests with pytest
         run: pytest tests/ -v --tb=short
@@ -77,12 +77,29 @@ jobs:
               validate(instance=data, schema=schemas[record_type])
               print(f'✓ {example.relative_to(\"data\")} is valid as {record_type}')
           "
+
+      - name: Validate VR-ASI platform manifests
+        run: python repo_audit.py --output repo-audit.json
       
       - name: Build package
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip wheel . --no-deps --wheel-dir dist
           python -c "import glob, zipfile; names = zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist(); assert all(any(name.endswith('/schemas/' + schema) for name in names) for schema in ('node.schema.json', 'bridge.schema.json', 'theory.schema.json'))"
+
+  simulator:
+    name: Simulator Smoke Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Validate Docker Compose configuration
+        run: docker compose -f docker-compose.simulator.yml config --quiet
+
+      - name: Run simulator smoke tests
+        run: bash run_sim_tests.sh
 
   security:
     name: Security Checks

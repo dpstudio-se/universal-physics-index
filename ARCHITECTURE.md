@@ -15,9 +15,10 @@ Alla plugins körs i isolerade containrar (Docker/Process-isolation).
 - **Manifest-validering**: Varje plugin måste ha en `plugin.json` som deklarerar permissions.
 - **Resursbegränsningar**: CPU och RAM definieras i manifestet för att förhindra "noisy neighbor"-problem.
 - **Permission-model**:
-  - `file`: Tillgång till begränsade volymer.
-  - `network`: Begränsad utgående trafik (inga host-mounts).
-  - `exec`: Förbjudet i produktion för okända plugins.
+  - `file: false`: Kör containern med ett skrivskyddat filsystem.
+  - `network: false`: Kör containern med `--network none`; `true` ger aldrig host-nätverk.
+  - `exec: true`: Nekas som standard och kräver ett uttryckligt policyundantag.
+- **Manifest-policy**: Okända fält, absoluta/traverserande entrypoints och ogiltiga resursvärden nekas.
 
 ### 2. Dataflöde & Persistens
 Ingen kritisk state lagras i RAM. 

@@ -1,16 +1,39 @@
-#!/bin/bash
-echo "Starting VR-ASI-1 Simulator Tests..."
-docker-compose -f docker-compose.simulator.yml up --build -d
+#!/usr/bin/env bash
+set -euo pipefail
+
+if docker compose version >/dev/null 2>&1; then
+    COMPOSE=(docker compose)
+elif command -v docker-compose >/dev/null 2>&1; then
+    COMPOSE=(docker-compose)
+else
+    echo "Docker Compose is required" >&2
+    exit 1
+fi
+
+cleanup() {
+    "${COMPOSE[@]}" -f docker-compose.simulator.yml down --volumes --remove-orphans || true
+}
+trap cleanup EXIT
+
+echo "Starting VR-ASI-1 simulator tests..."
+"${COMPOSE[@]}" -f docker-compose.simulator.yml up --build -d
 
 echo "Checking service health..."
-sleep 5
-curl http://localhost:8080/health || echo "Angelica not ready"
-curl http://localhost:4000 || echo "Puter Mock not ready"
+MAX_RETRIES=24
+RETRY_INTERVAL=5
+for service_url in +    "http://localhost:8080/health" +    "http://localhost:4000" +    "http://localhost:8081" +    "http://localhost:8082"; do
+    retries=0
+    until curl --fail --silent --show-error "$service_url" >/dev/null; do
+        retries=$((retries + 1))
+        if [ "$retries" -ge "$MAX_RETRIES" ]; then
+            echo "Service at $service_url did not become ready in time" >&2
+            exit 1
+        fi
+        sleep "$RETRY_INTERVAL"
+    done
+done
 
-echo "Running BVR Scenarios..."
-# Scenario 1: Agent Hand-off
-curl -X POST http://localhost:8080/plugins/register -d @oden.json
-echo "Scenario 1 complete."
+echo "Running BVR scenario: agent hand-off..."
+curl --fail --silent --show-error +    -X POST +    -H "Content-Type: application/json" +    --data-binary @oden.json +    http://localhost:8080/plugins/register >/dev/null
 
-docker-compose -f docker-compose.simulator.yml down
-echo "Tests finished."
+echo "Simulator tests finished."

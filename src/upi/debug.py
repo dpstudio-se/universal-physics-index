@@ -13,7 +13,7 @@ from .validation import validate_record_boundaries
 
 CORRECTIONS = {
     "UPI-E011": "Declare the reference_frame used by the normalization.",
-    "UPI-E012": "Add a causal test or downgrade physical equivalence to a model definition.",
+    "UPI-E012": "Downgrade physical equivalence to numerical similarity or a model definition.",
     "UPI-E013": "Declare a causal_test_method or remove the causal claim.",
     "UPI-E014": "Use experimental_observation/replication evidence or remove the experimental claim.",
     "UPI-D001": "Repair the JSON syntax and rerun the scanner.",

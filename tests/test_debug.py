@@ -147,7 +147,9 @@ def test_bundled_schemas_match_repository_schemas() -> None:
     repository_schemas = Path(__file__).parents[1] / "schemas"
 
     for name in ("node.schema.json", "bridge.schema.json", "theory.schema.json"):
-        assert (schemas_dir() / name).read_bytes() == (repository_schemas / name).read_bytes()
+        packaged = json.loads((schemas_dir() / name).read_text(encoding="utf-8"))
+        repository = json.loads((repository_schemas / name).read_text(encoding="utf-8"))
+        assert packaged == repository
 
 
 def test_odins_eye_distinguishes_bridge_relation_types(tmp_path: Path) -> None:

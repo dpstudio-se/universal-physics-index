@@ -5,6 +5,7 @@
   "properties": {
     "pluginId": {
       "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,62}$",
       "description": "Unique identifier for the plugin (e.g., 'oden-core')"
     },
     "version": {
@@ -14,6 +15,7 @@
     },
     "name": {
       "type": "string",
+      "minLength": 1,
       "description": "Human-readable name of the plugin"
     },
     "description": {
@@ -22,6 +24,7 @@
     },
     "entryPoint": {
       "type": "string",
+      "pattern": "^(?!/)(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9._/-]*$",
       "description": "The main file or command to start the plugin"
     },
     "runtime": {
@@ -38,15 +41,26 @@
         "kv": { "type": "boolean", "description": "Access to the key-value store" },
         "models": { "type": "boolean", "description": "Access to LLM models" }
       },
-      "required": ["file", "network", "exec", "kv", "models"]
+      "required": ["file", "network", "exec", "kv", "models"],
+      "additionalProperties": false
     },
     "resources": {
       "type": "object",
       "properties": {
-        "cpu": { "type": "string", "description": "CPU limit (e.g., '0.5')" },
-        "memory": { "type": "string", "description": "Memory limit (e.g., '512Mi')" }
-      }
+        "cpu": {
+          "type": "string",
+          "pattern": "^(?:0\\.[1-9]|[1-9][0-9]*(?:\\.[0-9]+)?)$",
+          "description": "Positive CPU limit (e.g., '0.5')"
+        },
+        "memory": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*[KMG]i?$",
+          "description": "Positive memory limit (e.g., '512Mi')"
+        }
+      },
+      "additionalProperties": false
     }
   },
-  "required": ["pluginId", "version", "name", "entryPoint", "runtime", "permissions"]
+  "required": ["pluginId", "version", "name", "entryPoint", "runtime", "permissions"],
+  "additionalProperties": false
 }

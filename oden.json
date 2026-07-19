@@ -8,7 +8,7 @@
   "permissions": {
     "file": true,
     "network": true,
-    "exec": true,
+    "exec": false,
     "kv": true,
     "models": true
   },

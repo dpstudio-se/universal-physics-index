@@ -161,6 +161,11 @@ class PhysicsNode:
             errors.append("Node identifier cannot be empty")
         if not self.title:
             errors.append("Title cannot be empty")
+        # Local import avoids a module cycle while keeping the model's public
+        # validation path consistent with JSON and graph validation.
+        from .validation import validate_scientific_boundaries
+
+        errors.extend(validate_scientific_boundaries(self))
         return errors
 
 

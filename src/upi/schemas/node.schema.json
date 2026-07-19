@@ -119,7 +119,10 @@
     },
     "reference_frame": {"type": "string"},
     "normalization_method": {"type": "string"},
-    "normalization_claim": {"type": "string"},
+    "normalization_claim": {
+      "type": "string",
+      "enum": ["numerical_similarity_only", "physical_equivalence"]
+    },
     "null_model": {"type": "string"},
     "control_condition": {"type": "string"},
     "statistical_method": {"type": "string"},

@@ -10,7 +10,7 @@ ERROR_MESSAGES = {
     "UPI-E011": "Reference-frame ambiguity",
     "UPI-E012": "Normalization presented as physical equivalence",
     "UPI-E013": "Correlation or association presented as causation without a causal test",
-    "UPI-E014": "Software test presented as experimental verification",
+    "UPI-E014": "Non-experimental verification presented as experimental verification",
 }
 
 
@@ -19,13 +19,20 @@ def validate_scientific_boundaries(node: PhysicsNode) -> list[str]:
     errors: list[str] = []
     if node.normalization_method and not node.reference_frame:
         errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
-    if node.normalization_claim == "physical_equivalence" and not node.causal_test_method:
+    if (
+        node.normalization_claim
+        and node.normalization_claim != "numerical_similarity_only"
+    ):
         errors.append(f"UPI-E012: {ERROR_MESSAGES['UPI-E012']}")
     if node.causal_claim and not node.causal_test_method:
         errors.append(f"UPI-E013: {ERROR_MESSAGES['UPI-E013']}")
     if (
         node.claims_experimental_verification
-        and node.verification_type == VerificationType.SOFTWARE_TEST
+        and node.verification_type
+        not in {
+            VerificationType.EXPERIMENTAL_OBSERVATION,
+            VerificationType.REPLICATION,
+        }
     ):
         errors.append(f"UPI-E014: {ERROR_MESSAGES['UPI-E014']}")
     return errors
@@ -36,15 +43,19 @@ def validate_record_boundaries(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if data.get("normalization_method") and not data.get("reference_frame"):
         errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
-    if data.get("normalization_claim") == "physical_equivalence" and not data.get(
-        "causal_test_method"
-    ):
+    if data.get("normalization_claim") and data.get(
+        "normalization_claim"
+    ) != "numerical_similarity_only":
         errors.append(f"UPI-E012: {ERROR_MESSAGES['UPI-E012']}")
     if data.get("causal_claim") is True and not data.get("causal_test_method"):
         errors.append(f"UPI-E013: {ERROR_MESSAGES['UPI-E013']}")
     if (
         data.get("claims_experimental_verification") is True
-        and data.get("verification_type") == VerificationType.SOFTWARE_TEST.value
+        and data.get("verification_type")
+        not in {
+            VerificationType.EXPERIMENTAL_OBSERVATION.value,
+            VerificationType.REPLICATION.value,
+        }
     ):
         errors.append(f"UPI-E014: {ERROR_MESSAGES['UPI-E014']}")
     return errors

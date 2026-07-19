@@ -5,6 +5,13 @@ info:
   description: API for VR-ASI-1 plugin orchestration and control
 
 paths:
+  /health:
+    get:
+      summary: Check simulator health
+      responses:
+        '200':
+          description: Angelica simulator is ready
+
   /plugins/register:
     post:
       summary: Register a new plugin
@@ -57,9 +64,12 @@ components:
         runtime: { type: string, enum: [node, python, docker] }
         permissions:
           type: object
+          required: [file, network, exec, kv, models]
+          additionalProperties: false
           properties:
             file: { type: boolean }
             network: { type: boolean }
             exec: { type: boolean }
             kv: { type: boolean }
             models: { type: boolean }
+      additionalProperties: false

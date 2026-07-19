@@ -1,0 +1,14 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY pyproject.toml README.md LICENSE ./
+COPY src ./src
+RUN python -m pip install --no-cache-dir .
+
+COPY plugin.schema.json angelica_loader.py angelica_simulator.py ./
+
+USER 65534:65534
+EXPOSE 8080
+
+CMD ["python", "angelica_simulator.py"]
