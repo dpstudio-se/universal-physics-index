@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from collections import Counter
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
 from .validation import validate_record_boundaries
-
 
 CORRECTIONS = {
     "UPI-E011": "Declare the reference_frame used by the normalization.",
