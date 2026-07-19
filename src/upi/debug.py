@@ -52,6 +52,10 @@ def _scale_signature(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _list_count(value: Any) -> int:
+    return len(value) if isinstance(value, list) else 0
+
+
 def _finding(
     code: str,
     status: str,
@@ -104,8 +108,8 @@ def generate_debug_report(root: Path, schemas_dir: Path | None = None) -> dict[s
         relative_path = path.relative_to(root).as_posix()
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeError, json.JSONDecodeError) as error:
-            findings.append(_finding("UPI-D001", "ERR", relative_path, str(error)))
+        except (OSError, UnicodeError, json.JSONDecodeError) as parse_error:
+            findings.append(_finding("UPI-D001", "ERR", relative_path, str(parse_error)))
             continue
 
         if not isinstance(data, dict):
@@ -137,20 +141,22 @@ def generate_debug_report(root: Path, schemas_dir: Path | None = None) -> dict[s
                 "record_type": record_type,
                 "status": status,
                 "scale": _scale_signature(data),
-                "evidence_count": len(data.get("evidence", [])),
-                "equation_count": len(data.get("equations", data.get("fundamental_equations", []))),
+                "evidence_count": _list_count(data.get("evidence")),
+                "equation_count": _list_count(
+                    data.get("equations", data.get("fundamental_equations"))
+                ),
             }
         )
 
-        for error in _schema_errors(data, record_type, schemas_dir):
+        for schema_error in _schema_errors(data, record_type, schemas_dir):
             findings.append(
-                _finding("UPI-D003", "ERR", relative_path, error, record_type=record_type)
+                _finding("UPI-D003", "ERR", relative_path, schema_error, record_type=record_type)
             )
 
-        for error in validate_record_boundaries(data):
-            code = error.split(":", 1)[0]
+        for boundary_error in validate_record_boundaries(data):
+            code = boundary_error.split(":", 1)[0]
             findings.append(
-                _finding(code, "ERR", relative_path, error, record_type=record_type)
+                _finding(code, "ERR", relative_path, boundary_error, record_type=record_type)
             )
 
         if (
