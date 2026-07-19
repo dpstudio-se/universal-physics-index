@@ -24,6 +24,7 @@ def test_ingest_repo_audit_and_gate_blocks_missing_files_only():
     assert result["summary"]["accepted_count"] == 0
     assert result["summary"]["blocked_count"] == 1
     assert result["blocked"][0]["issue_id"].startswith("missing-")
+    assert result["blocked"][0]["patch_blueprint"]
 
 
 def test_ingest_repo_audit_accepts_critical_fix_candidate():
@@ -39,6 +40,8 @@ def test_ingest_repo_audit_accepts_critical_fix_candidate():
     assert result["summary"]["blocked_count"] == 0
     assert result["summary"]["release_ready"] is True
     assert result["accepted"][0]["release_reason"] == "accepted-by-optimal-gate"
+    assert result["summary"]["optimal_selected"] == 1
+    assert len(result["crew_traces"]) == 5
 
 
 def test_run_from_report_file(tmp_path: Path):
@@ -58,6 +61,7 @@ def test_run_from_report_file(tmp_path: Path):
     result = engine.run_from_report_file(report_path)
     assert result["summary"]["accepted_count"] == 1
     assert result["accepted"][0]["issue_id"].startswith("ports-")
+    assert result["accepted"][0]["validation_checks"]
 
 
 def test_release_ready_when_no_findings():
@@ -72,3 +76,5 @@ def test_release_ready_when_no_findings():
     assert result["summary"]["release_ready"] is True
     assert result["summary"]["accepted_count"] == 0
     assert result["summary"]["blocked_count"] == 0
+    assert result["summary"]["optimal_selected"] == 0
+    assert result["crew_traces"] == []

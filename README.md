@@ -84,13 +84,14 @@ Run it from a repo audit report:
 
 ```bash
 python repo_audit.py --output report.json
-upi workflow-engine --report report.json --min-score 0.75 --max-risk 0.35
+upi workflow-engine --report report.json --min-score 0.75 --max-risk 0.35 --top-k 1 --output workflow_decision.json
 ```
 
 Behavior:
 - Converts audit findings into normalized issues.
-- Builds ranked patch candidates (crew role: patcher).
-- Applies an optimal release gate.
+- Runs crew stages: analyzer -> planner -> patcher -> validator -> gatekeeper.
+- Builds ranked autopatch blueprints plus validation checks.
+- Applies an optimal release gate and only forwards top-k candidates.
 - Fails closed when any candidate is below score/risk threshold.
 
 ## Repository Structure

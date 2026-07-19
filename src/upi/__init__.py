@@ -61,6 +61,7 @@ from .validation import (
 )
 from .workflow_engine import (
     CandidatePlan,
+    CrewStageTrace,
     CrewRole,
     IssueSeverity,
     WorkflowEngine,
@@ -121,6 +122,7 @@ __all__ = [
     "WorkflowEngine",
     "WorkflowIssue",
     "CandidatePlan",
+    "CrewStageTrace",
     "IssueSeverity",
     "CrewRole",
 ]
