@@ -80,6 +80,7 @@ jobs:
       
       - name: Build package
         run: |
+          python -m pip install --upgrade pip setuptools wheel
           python -m pip wheel . --no-deps --wheel-dir dist
           python -c "import glob, zipfile; names = zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist(); assert all(any(name.endswith('/schemas/' + schema) for name in names) for schema in ('node.schema.json', 'bridge.schema.json', 'theory.schema.json'))"
 
