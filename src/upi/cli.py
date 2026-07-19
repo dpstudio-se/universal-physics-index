@@ -15,6 +15,7 @@ from . import (
     validate_bridge_json,
     validate_node_json,
 )
+from .debug import generate_debug_report, render_debug_markdown
 from .models import Address
 
 
@@ -177,6 +178,28 @@ def address_cmd(args):
     print_json(result)
 
 
+def debug_index_cmd(args):
+    """Generate an automated UPI error report and exploded map."""
+    root = Path(args.path)
+    if not root.exists():
+        print(f"Error: Path not found: {root}", file=sys.stderr)
+        sys.exit(1)
+
+    report = generate_debug_report(root)
+    rendered = (
+        render_debug_markdown(report)
+        if args.format == "markdown"
+        else json.dumps(report, indent=2)
+    )
+    if args.output:
+        Path(args.output).write_text(rendered + "\n", encoding="utf-8")
+    else:
+        print(rendered)
+
+    if args.strict and report["findings"]:
+        sys.exit(1)
+
+
 def main():
     """Main CLI entry point."""
     import argparse
@@ -230,6 +253,21 @@ def main():
     addr.add_argument("--torus", help="Torus (for creation)")
     addr.add_argument("--node", help="Node identifier (for creation)")
     addr.set_defaults(func=address_cmd)
+
+    # debug-index
+    debug = subparsers.add_parser(
+        "debug-index",
+        help="Generate a UPI error report and exploded physics/code map",
+    )
+    debug.add_argument("path", nargs="?", default="data", help="Directory of UPI JSON records")
+    debug.add_argument("--output", help="Write the report to a file")
+    debug.add_argument("--format", choices=("json", "markdown"), default="json")
+    debug.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit non-zero when the report contains findings",
+    )
+    debug.set_defaults(func=debug_index_cmd)
 
     args = parser.parse_args()
 

@@ -56,6 +56,8 @@ upi mass-to-frequency 1e-30
 upi index8 --frequency 8
 upi normalize --observed 4.5 --reference 4.0
 upi validate data/constants/planck.json
+upi debug-index data --output upi-debug-report.json
+upi debug-index data --format markdown --output upi-debug-report.md
 
 # Python API
 from upi import mass_from_frequency, UPIGraph, PhysicsNode
@@ -97,6 +99,24 @@ ruff check src tests    # Linting
 mypy src/upi            # Type checking
 upi validate data/constants/planck.json  # Schema validation
 ```
+
+## Automated UPI debugging
+
+`upi debug-index` scans every JSON record below a directory and produces both an error report and
+an exploded map across record, scale, evidence, finding, and correction layers. The same pipeline
+works across the full index while preserving domain and scale boundaries.
+
+The scanner:
+
+- validates node, bridge, and theory schemas;
+- applies stable scientific-boundary error codes;
+- requires falsification conditions for testable node hypotheses;
+- suggests corrections without mutating source records;
+- records time/length scale as unspecified unless the source explicitly declares it;
+- labels its own result as `software_test`, never experimental verification.
+
+Shared equations or software functions across different time and length scales are mapped as
+relationships, not treated as proof of a shared physical mechanism.
 
 ## License
 

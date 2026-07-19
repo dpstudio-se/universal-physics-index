@@ -15,6 +15,7 @@ from .constants import (
     E,
     H,
 )
+from .debug import generate_debug_report, render_debug_markdown
 from .graph import UPIGraph
 from .models import (
     Address,
@@ -101,6 +102,8 @@ __all__ = [
     "get_active_profiles",
     # Graph
     "UPIGraph",
+    "generate_debug_report",
+    "render_debug_markdown",
     # Validation
     "validate_json_schema",
     "validate_node_status",
