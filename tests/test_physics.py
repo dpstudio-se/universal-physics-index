@@ -1,4 +1,5 @@
 import pytest
+
 from upi.physics import (
     energy_from_frequency,
     frequency_from_mass,
