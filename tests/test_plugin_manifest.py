@@ -35,3 +35,30 @@ def test_executable_manifest_requires_local_entrypoint(tmp_path: Path) -> None:
 
     with pytest.raises(FileNotFoundError, match="entryPoint not found"):
         AngelicaPluginLoader(path, ROOT / "plugin.schema.json")
+
+
+def test_executable_manifest_cannot_escape_manifest_directory(tmp_path: Path) -> None:
+    outside = tmp_path / "outside.py"
+    outside.write_text("raise RuntimeError('must not run')\n", encoding="utf-8")
+    manifest_dir = tmp_path / "plugin"
+    manifest_dir.mkdir()
+    manifest = json.loads((ROOT / "oden.json").read_text(encoding="utf-8"))
+    manifest.update({"mode": "executable", "enabled": True, "entryPoint": "../outside.py"})
+    path = manifest_dir / "plugin.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(PermissionError, match="remain inside"):
+        AngelicaPluginLoader(path, ROOT / "plugin.schema.json")
+
+
+def test_executable_manifest_fails_closed_even_with_local_entrypoint(tmp_path: Path) -> None:
+    entrypoint = tmp_path / "plugin.py"
+    entrypoint.write_text("raise RuntimeError('must not run')\n", encoding="utf-8")
+    manifest = json.loads((ROOT / "oden.json").read_text(encoding="utf-8"))
+    manifest.update({"mode": "executable", "enabled": True, "entryPoint": "plugin.py"})
+    path = tmp_path / "plugin.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    loader = AngelicaPluginLoader(path, ROOT / "plugin.schema.json")
+
+    with pytest.raises(RuntimeError, match="not implemented"):
+        loader.build_spawn_command()

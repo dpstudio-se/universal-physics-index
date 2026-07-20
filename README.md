@@ -110,6 +110,8 @@ works across the full index while preserving domain and scale boundaries.
 The scanner:
 
 - validates node, bridge, and theory schemas;
+- treats source records and filenames as untrusted input;
+- redacts source values and replaces source paths with stable hashes in every report mode;
 - applies stable scientific-boundary error codes;
 - requires falsification conditions for testable node hypotheses;
 - suggests corrections without mutating source records;
@@ -121,9 +123,9 @@ relationships, not treated as proof of a shared physical mechanism.
 
 Add `--odins-eye` for a local, read-only inspection layer. It reports exact-content mirrors,
 conflicting records that reuse one UPI identity, hidden JSON paths, and possible semantic mirrors.
-Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. In this mode, reports
-redact source values and contain relative paths plus hashes. The scanner does not access networks or
-mutate index records.
+Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. Reports contain stable
+path identifiers and full path hashes, never raw source paths or values. The scanner does not access
+networks or mutate index records.
 
 ## Declarative agent workflows
 
@@ -133,6 +135,9 @@ capabilities. See `docs/AGENT_CIRCULATION.md` and `examples/workflows/`.
 
 This is a validation and audit layer, not a scheduler or autonomous agent runtime. Biological terms
 such as circulation and immunity are `SYM` architecture metaphors only.
+
+Plugin manifests are also validation-only. Executable command construction fails closed until a
+runtime can enforce every declared capability and default-deny restriction.
 
 ## License
 
