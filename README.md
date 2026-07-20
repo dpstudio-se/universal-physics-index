@@ -81,7 +81,7 @@ This repository is preconfigured for GitHub Codespaces via
 ## Repository Structure
 
 - `src/upi/` — Core modules (physics, models, validation, CLI)
-- `tests/` — Test suite (38 tests, all passing)
+- `tests/` — Test suite (72 tests, all passing)
 - `schemas/` — JSON schemas (node, bridge, theory)
 - `data/` — Example nodes, theories, STOP problems
 - `docs/` — Specification and documentation
@@ -95,7 +95,7 @@ This repository is preconfigured for GitHub Codespaces via
 ## Testing
 
 ```bash
-pytest tests/ -v        # 38 tests, all passing
+pytest tests/ -v        # 72 tests, all passing
 ruff check src tests    # Linting
 mypy src/upi            # Type checking
 upi validate data/constants/planck.json  # Schema validation
