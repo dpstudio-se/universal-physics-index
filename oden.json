@@ -2,15 +2,13 @@
   "pluginId": "oden-core",
   "version": "0.1.0",
   "name": "Oden Orchestrator",
-  "description": "Core agent orchestrator for VR-ASI-1",
-  "entryPoint": "main.py",
+  "description": "Disabled simulation manifest; no executable orchestrator is included.",
   "runtime": "python",
+  "mode": "simulation",
+  "enabled": false,
   "permissions": {
-    "file": true,
-    "network": true,
-    "exec": true,
-    "kv": true,
-    "models": true
+    "defaultDeny": true,
+    "capabilities": []
   },
   "resources": {
     "cpu": "1.0",

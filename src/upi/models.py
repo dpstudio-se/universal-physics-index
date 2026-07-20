@@ -188,6 +188,8 @@ class Bridge:
             errors.append("Bridge must have relation type")
         if self.status == ScientificStatus.STOP and not self.stop_reason:
             errors.append("STOP bridges must have stop_reason")
+        if self.source == self.target:
+            errors.append("Bridge source and target cannot be the same")
         return errors
 
 
