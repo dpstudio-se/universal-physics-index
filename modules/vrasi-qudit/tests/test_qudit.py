@@ -3,8 +3,13 @@ from vrasi_qudit import (
     basis_state,
     dual_round_trip_error,
     fourier_transform,
+    index_to_coordinates,
+    local_fourier_transform,
+    local_phase_gate,
+    local_shift_gate,
     search_torus_register,
     shift_gate,
+    tensor_product,
 )
 
 
@@ -17,6 +22,27 @@ def test_standalone_five_state_qudit_round_trip() -> None:
         inverse=True,
     )
     assert reconstructed.amplitudes == pytest.approx(state.amplitudes, abs=1e-12)
+
+
+def test_standalone_local_torus_functions() -> None:
+    dimensions = (4, 5)
+    state = tensor_product((basis_state(4, 1), basis_state(5, 2)))
+
+    shifted = local_shift_gate(state, dimensions, axis=0, shift=2)
+    shifted_index = max(range(shifted.dimension), key=shifted.probabilities.__getitem__)
+    assert index_to_coordinates(shifted_index, dimensions) == (3, 2)
+
+    phased = local_phase_gate(shifted, dimensions, axis=1, power=2)
+    assert phased.probabilities == pytest.approx(shifted.probabilities)
+
+    reconstructed = local_fourier_transform(phased, dimensions, axis=0)
+    reconstructed = local_fourier_transform(
+        reconstructed,
+        dimensions,
+        axis=0,
+        inverse=True,
+    )
+    assert reconstructed.amplitudes == pytest.approx(phased.amplitudes, abs=1e-12)
 
 
 def test_standalone_multi_torus_search() -> None:
