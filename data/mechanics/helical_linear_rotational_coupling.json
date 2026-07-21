@@ -58,19 +58,19 @@
   "mechanism": "Translation and rotation form a helix when an object advances along an axis while its transverse coordinates rotate. A mechanical screw or equivalent kinematic constraint converts angular displacement into axial displacement. Work conservation links torque to axial force, while declared efficiency accounts for dissipative loss. Two coaxial rotors exchange angular momentum internally; equal and opposite angular momenta reduce reaction torque on the supporting body but do not remove kinetic energy.",
   "evidence": [
     {
-      "type": "textbook_derivation",
+      "type": "calculation",
       "source": "H. Goldstein, C. Poole, and J. Safko, Classical Mechanics, 3rd edition, Addison-Wesley, ISBN 9780201657029",
       "confidence": 0.99,
       "notes": "Standard rigid-body rotation, torque, angular momentum, kinetic energy, and power relations."
     },
     {
-      "type": "textbook_derivation",
+      "type": "calculation",
       "source": "M. P. do Carmo, Differential Geometry of Curves and Surfaces, Dover, ISBN 9780486806990",
       "confidence": 0.99,
       "notes": "Standard curvature and torsion formulas for regular curves, including circular helices."
     },
     {
-      "type": "engineering_reference",
+      "type": "other",
       "source": "R. G. Budynas and J. K. Nisbett, Shigley's Mechanical Engineering Design, McGraw-Hill, power-screw chapters",
       "confidence": 0.98,
       "notes": "Mechanical work, lead, torque, force, efficiency, and real screw-design limits."
