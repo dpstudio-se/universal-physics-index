@@ -144,6 +144,13 @@ def test_validate_cli_routes_theory_before_node(
     assert payload["valid"] is True
 
 
-def test_operational_source_manifest_is_not_a_typed_data_record() -> None:
-    assert Path("config/external_index_sources.json").is_file()
-    assert not Path("data/sources/external_index_sources.json").exists()
+def test_operational_source_manifest_uses_canonical_config_filename() -> None:
+    canonical = Path("config/external_source_manifest.json")
+    legacy_paths = (
+        Path("config/external_index_sources.json"),
+        Path("data/sources/external_index_sources.json"),
+        Path("data/sources/external_source_manifest.json"),
+    )
+
+    assert canonical.is_file()
+    assert all(not path.exists() for path in legacy_paths)
