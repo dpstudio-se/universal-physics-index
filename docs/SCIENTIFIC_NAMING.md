@@ -76,7 +76,7 @@ and state that `m_eq` is an energy-equivalent mass, not necessarily the invarian
 ### Reserved symbols
 
 - `T`: thermodynamic temperature.
-- `T_tr`: project-defined traceability score. It is dimensionless unless a future specification explicitly defines otherwise, and it requires a documented measurement procedure.
+- `T_tr`: project-defined dimensionless traceability score. A specification using it MUST define its inputs, normalization interval, aggregation rule, uncertainty treatment, and reproducible measurement procedure. It MUST NOT be called a transparency score unless a separate variable is introduced for that concept.
 - `f_h1`: neutral harmonic-frequency identifier when no accepted physical name exists.
 - `R0_TIR`: dimensionless trace-integrity conflict ratio.
 - `r0_S = dR0_TIR/dt`: trace-integrity change rate in `s^-1`.
