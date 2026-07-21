@@ -1,7 +1,7 @@
 import argparse
-import glob
 import json
 import os
+from pathlib import Path
 
 
 def audit_repo():
@@ -25,18 +25,20 @@ def audit_repo():
             report["missing_files"].append(f)
 
     # Port conflict check
+    ports_path = "config/ports.json"
     try:
-        with open("config/ports.json", encoding="utf-8") as f:
+        with open(ports_path, encoding="utf-8") as f:
             ports = json.load(f).get("ports", {})
             port_values = list(ports.values())
             if len(port_values) != len(set(port_values)):
                 report["port_conflicts"].append("Duplicate ports found in config/ports.json")
     except Exception as e:
-        report["critical_conflicts"].append(f"Error reading ports.json: {str(e)}")
+        report["critical_conflicts"].append(f"Error reading {ports_path}: {str(e)}")
 
     # File scan
-    for _path in glob.glob("**/*", recursive=True):
-        report["files_scanned"] += 1
+    for path in Path(".").rglob("*"):
+        if path.is_file():
+            report["files_scanned"] += 1
 
     return report
 

@@ -1,51 +1,48 @@
 services:
   angelica:
-    build: .
-    ports:
-      - "8080:8080"
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
     environment:
-      - NODE_ENV=simulation
+      PORT: "8080"
+      SERVICE_NAME: angelica
     volumes:
-      - .:/app
+      - ./simulator:/app:ro
+    ports:
+      - "${PORT_ANGELICA:-8080}:8080"
 
   puter-mock:
-    image: python:3.9-slim
-    command: >
-      python3 -c "
-      from http.server import BaseHTTPRequestHandler, HTTPServer;
-      class MockHandler(BaseHTTPRequestHandler):
-          def do_GET(self):
-              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Puter Response OK')
-          def do_POST(self):
-              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Puter POST OK')
-      HTTPServer(('0.0.0.0', 4000), MockHandler).serve_forever()"
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "4000"
+      SERVICE_NAME: puter
+    volumes:
+      - ./simulator:/app:ro
     ports:
-      - "4000:4000"
+      - "${PORT_PUTER:-4000}:4000"
 
   oden-mock:
-    image: python:3.9-slim
-    command: >
-      python3 -c "
-      from http.server import BaseHTTPRequestHandler, HTTPServer;
-      class MockHandler(BaseHTTPRequestHandler):
-          def do_GET(self):
-              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Oden Response OK')
-          def do_POST(self):
-              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Oden POST OK')
-      HTTPServer(('0.0.0.0', 8081), MockHandler).serve_forever()"
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "8081"
+      SERVICE_NAME: oden
+    volumes:
+      - ./simulator:/app:ro
     ports:
-      - "8081:8081"
+      - "${PORT_ODEN:-8081}:8081"
 
   odens-eye-mock:
-    image: python:3.9-slim
-    command: >
-      python3 -c "
-      from http.server import BaseHTTPRequestHandler, HTTPServer;
-      class MockHandler(BaseHTTPRequestHandler):
-          def do_GET(self):
-              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Eye Response OK')
-          def do_POST(self):
-              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Eye POST OK')
-      HTTPServer(('0.0.0.0', 8082), MockHandler).serve_forever()"
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "8082"
+      SERVICE_NAME: odens-eye
+    volumes:
+      - ./simulator:/app:ro
     ports:
-      - "8082:8082"
+      - "${PORT_ODENS_EYE:-8082}:8082"

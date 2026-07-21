@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vrasi-swarm"
+version = "0.1.0"
+description = "Standalone 3-6-9 coordination kernel for VR-ASI networks"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+vrasi-swarm = "vrasi_swarm.__main__:main"
+
+[tool.setuptools]
+packages = ["vrasi_swarm"]
+package-dir = {"" = "src"}
