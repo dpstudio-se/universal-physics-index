@@ -60,7 +60,20 @@ jobs:
           mypy modules/vrasi-swarm/src/vrasi_swarm
 
       - name: Run tests with pytest
-        run: python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v --tb=short
+        id: pytest
+        continue-on-error: true
+        run: python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v --tb=short --junitxml=pytest-report.xml
+
+      - name: Upload pytest diagnostics
+        if: steps.pytest.outcome == 'failure'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-report-${{ matrix.python-version }}
+          path: pytest-report.xml
+
+      - name: Fail on pytest failures
+        if: steps.pytest.outcome == 'failure'
+        run: exit 1
 
       - name: Validate JSON schemas
         run: |
