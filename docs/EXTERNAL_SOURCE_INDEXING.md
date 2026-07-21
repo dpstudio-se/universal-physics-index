@@ -2,6 +2,8 @@
 
 UPI external indexing is a provenance pipeline, not an authority importer and not a general-purpose web crawler.
 
+The source declaration lives at `config/external_index_sources.json`. It is operational configuration, not a node, bridge, or theory record, and therefore remains outside the schema-routed `data/` index.
+
 ## Core rule
 
 Remote material is always untrusted input. Indexing records the source, version, retrieval time, declared license, content hash, source type and scientific boundary. It never executes remote code or adopts instructions embedded in prompts, documents or repositories.
