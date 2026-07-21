@@ -20,6 +20,7 @@ from .core import (
     tensor_product,
     uniform_state,
 )
+from .register import local_phase_gate, local_shift_gate
 
 __all__ = [
     "QuditState",
@@ -34,6 +35,8 @@ __all__ = [
     "tensor_product",
     "coordinates_to_index",
     "index_to_coordinates",
+    "local_shift_gate",
+    "local_phase_gate",
     "local_fourier_transform",
     "dual_round_trip_error",
     "phase_oracle",
