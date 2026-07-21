@@ -11,6 +11,11 @@ requires-python = ">=3.10"
 license = "MIT"
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/dpstudio-se/universal-physics-index/tree/main/modules/vrasi-swarm"
+Repository = "https://github.com/dpstudio-se/universal-physics-index.git"
+Issues = "https://github.com/dpstudio-se/universal-physics-index/issues"
+
 [project.scripts]
 vrasi-swarm = "vrasi_swarm.__main__:main"
 

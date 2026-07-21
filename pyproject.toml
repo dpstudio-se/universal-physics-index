@@ -27,6 +27,12 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 
+[project.urls]
+Homepage = "https://github.com/dpstudio-se/universal-physics-index"
+Repository = "https://github.com/dpstudio-se/universal-physics-index.git"
+Issues = "https://github.com/dpstudio-se/universal-physics-index/issues"
+Documentation = "https://github.com/dpstudio-se/universal-physics-index/tree/main/docs"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",

@@ -4,7 +4,6 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-
 ROOT = Path(__file__).resolve().parents[1]
 NODE_PATH = ROOT / "data" / "examples" / "double_slit_information.json"
 SCHEMA_PATH = ROOT / "schemas" / "node.schema.json"

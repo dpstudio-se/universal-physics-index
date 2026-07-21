@@ -34,15 +34,17 @@ Hierarchical, machine-readable addresses: `UPI<Domain,Generation,Torus,Node>`
 ### 3. Mass-Frequency Bridge
 
 Fundamental relation:
-```
+```text
 E = h·f          m = h·f / c²          f = m·c² / h
 ```
 
-**Critical**: `f` = invariant rest-mass frequency (not any frequency)
+**Critical**: `f` = invariant rest-mass frequency when the quantity is interpreted as rest mass. For an arbitrary frequency, `h·f/c²` is an energy-equivalent mass calculation, not automatically the invariant mass of an oscillating object.
 
 ### 4. Normalized Signal Loader
 
-Runtime matching: `Z(t,x) = z(t,x) / z_ref(t,x)` with tolerance `abs(Z - 1) ≤ epsilon_Z`
+Runtime matching: `Z(t,x) = z(t,x) / z_ref(t,x)` with tolerance `abs(Z - 1) ≤ epsilon_Z`.
+
+Numerical agreement inside a declared tolerance is not evidence of physical identity or a shared mechanism.
 
 ## Quick Start
 
@@ -59,61 +61,62 @@ upi validate data/constants/planck.json
 upi debug-index data --output upi-debug-report.json
 upi debug-index data --format markdown --output upi-debug-report.md
 upi debug-index data --odins-eye --output upi-odins-eye.json
+python repo_audit.py --output repo-audit.json
 
 # Python API
-from upi import mass_from_frequency, UPIGraph, PhysicsNode
-mass = mass_from_frequency(1e20)
+python - <<'PY'
+from upi import mass_from_frequency
+print(mass_from_frequency(1e20))
+PY
 ```
 
 ## Codespaces
 
-This repository is preconfigured for GitHub Codespaces via
-`.devcontainer/devcontainer.json`.
+This repository is preconfigured for GitHub Codespaces via `.devcontainer/devcontainer.json`.
 
 1. Open the repository in GitHub.
 2. Click **Code** -> **Codespaces** -> **Create codespace on main**.
-3. Wait for container initialization (dependencies are installed automatically).
+3. Wait for container initialization.
 4. Run:
    - `pytest tests/ -v`
-   - `ruff check src tests`
-   - `mypy src/upi --ignore-missing-imports`
+   - `ruff check src tests repo_audit.py`
+   - `mypy src/upi repo_audit.py --ignore-missing-imports`
+   - `python repo_audit.py --output repo-audit.json`
 
 ## Repository Structure
 
-- `src/upi/` — Core modules (physics, models, validation, CLI)
+- `src/upi/` — Core modules for physics, models, validation, graph, CLI and audit reporting
 - `modules/vrasi-physics/` — Standalone, dependency-free VR-ASI physics kernel
 - `modules/vrasi-swarm/` — Standalone 3-6-9/Gen4 coordination kernel
-- `tests/` — UPI test suite
-- `schemas/` — JSON schemas (node, bridge, theory)
-- `data/` — Example nodes, theories, STOP problems
-- `docs/` — Specification and documentation
+- `tests/` — UPI regression and boundary test suite
+- `schemas/` — Schemas for nodes, bridges, theories and bounded workflow records
+- `data/` — Schema-routed UPI nodes, bridges, theories and intentional negative fixtures
+- `config/` — Operational configuration such as ports and external-source declarations
+- `docs/` — Specifications, derivations and scientific-boundary documentation
+
+Operational manifests do not belong under `data/` unless they implement one of the declared UPI record schemas.
 
 ### Standalone VR-ASI physics
 
-The simulator does not need the complete UPI graph or workflow system. Its three required
-calculations are packaged separately and can be installed without `upi`:
+The simulator does not need the complete UPI graph or workflow system. Its three required calculations are packaged separately and can be installed without `upi`:
 
 ```bash
 python -m pip install ./modules/vrasi-physics
 vrasi-physics 8
 ```
 
-See [`modules/vrasi-physics/README.md`](modules/vrasi-physics/README.md) for the deliberately
-small API and its interpretation limits.
+See [`modules/vrasi-physics/README.md`](modules/vrasi-physics/README.md) for the deliberately small API and its interpretation limits.
 
 ### 3-6-9 generation 4 coordination
 
-The transport-neutral swarm module turns nine allowlisted node observations into a
-deterministic top-three quorum. It shares hashes and pseudonymous IDs, not private payloads
-or network endpoints:
+The transport-neutral swarm module turns nine allowlisted node observations into a deterministic top-three quorum. It shares hashes and pseudonymous IDs, not private payloads or network endpoints:
 
 ```bash
 python -m pip install ./modules/vrasi-swarm
 vrasi-swarm demo
 ```
 
-This is an auditable coordination protocol (`SYM`), not a claim of collective biological
-consciousness or new physics.
+This is an auditable coordination protocol (`SYM`), not a claim of collective biological consciousness or new physics.
 
 ## Important Disclaimers
 
@@ -124,17 +127,18 @@ consciousness or new physics.
 ## Testing
 
 ```bash
-pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v
-ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
-mypy src/upi            # Type checking
-upi validate data/constants/planck.json  # Schema validation
+python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v
+ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
+mypy src/upi repo_audit.py --ignore-missing-imports
+python repo_audit.py --output repo-audit.json
+upi validate data/constants/planck.json
 ```
+
+`repo_audit.py` exits non-zero when schemas, typed data, plugin manifests, source declarations, critical files or port assignments are invalid.
 
 ## Automated UPI debugging
 
-`upi debug-index` scans every JSON record below a directory and produces both an error report and
-an exploded map across record, scale, evidence, finding, and correction layers. The same pipeline
-works across the full index while preserving domain and scale boundaries.
+`upi debug-index` scans every typed JSON record below a directory and produces both an error report and an exploded map across record, scale, evidence, finding, and correction layers. The same pipeline works across the full typed index while preserving domain and scale boundaries.
 
 The scanner:
 
@@ -147,26 +151,17 @@ The scanner:
 - records time/length scale as unspecified unless the source explicitly declares it;
 - labels its own result as `software_test`, never experimental verification.
 
-Shared equations or software functions across different time and length scales are mapped as
-relationships, not treated as proof of a shared physical mechanism.
+Shared equations or software functions across different time and length scales are mapped as relationships, not treated as proof of a shared physical mechanism.
 
-Add `--odins-eye` for a local, read-only inspection layer. It reports exact-content mirrors,
-conflicting records that reuse one UPI identity, hidden JSON paths, and possible semantic mirrors.
-Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. Reports contain stable
-path identifiers and full path hashes, never raw source paths or values. The scanner does not access
-networks or mutate index records.
+Add `--odins-eye` for a local, read-only inspection layer. It reports exact-content mirrors, conflicting records that reuse one UPI identity, hidden JSON paths, and possible semantic mirrors. Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. Reports contain stable path identifiers and full path hashes, never raw source paths or values. The scanner does not access networks or mutate index records.
 
 ## Declarative agent workflows
 
-UPI includes schemas for bounded agent tasks, terminal results and workflow specifications. The
-contracts model transport, independent review and reversible quarantine under default-deny
-capabilities. See `docs/AGENT_CIRCULATION.md` and `examples/workflows/`.
+UPI includes schemas for bounded agent tasks, terminal results and workflow specifications. The contracts model transport, independent review and reversible quarantine under default-deny capabilities. See `docs/AGENT_CIRCULATION.md` and `examples/workflows/`.
 
-This is a validation and audit layer, not a scheduler or autonomous agent runtime. Biological terms
-such as circulation and immunity are `SYM` architecture metaphors only.
+This is a validation and audit layer, not a scheduler or autonomous agent runtime. Biological terms such as circulation and immunity are `SYM` architecture metaphors only.
 
-Plugin manifests are also validation-only. Executable command construction fails closed until a
-runtime can enforce every declared capability and default-deny restriction.
+Plugin manifests are also validation-only. Executable command construction fails closed until a runtime can enforce every declared capability and default-deny restriction.
 
 ## License
 
@@ -185,9 +180,6 @@ MIT - See LICENSE file
 
 **Status**: Alpha v0.1.0 — API subject to change
 
-For full documentation, see `docs/`
+For full documentation, see `docs/`.
 
-Functional DNA and Vortex-DNA collaboration concepts are documented in
-[`docs/FUNCTIONAL_DNA.md`](docs/FUNCTIONAL_DNA.md) and
-[`docs/VORTEX_DNA.md`](docs/VORTEX_DNA.md). Both are `SYM` architectures;
-they do not provide independent scientific evidence or hidden authority.
+Functional DNA and Vortex-DNA collaboration concepts are documented in [`docs/FUNCTIONAL_DNA.md`](docs/FUNCTIONAL_DNA.md) and [`docs/VORTEX_DNA.md`](docs/VORTEX_DNA.md). Both are `SYM` architectures; they do not provide independent scientific evidence or hidden authority.
