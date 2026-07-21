@@ -14,103 +14,70 @@ from .constants import (
 from .models import RuntimeMatchResult
 
 
-def _finite_nonnegative(value: float, name: str) -> float:
-    """Return a finite non-negative value or raise a stable input error."""
-    if not math.isfinite(value):
+def _finite_real(value: float, name: str) -> float:
+    """Return a finite real number while rejecting booleans and non-numeric input."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(f"{name} must be a real number")
+    normalized = float(value)
+    if not math.isfinite(normalized):
         raise ValueError(f"{name} must be finite")
-    if value < 0:
+    return normalized
+
+
+def _finite_nonnegative(value: float, name: str) -> float:
+    """Return a finite non-negative real number."""
+    normalized = _finite_real(value, name)
+    if normalized < 0:
         raise ValueError(f"{name} must be non-negative")
+    return normalized
+
+
+def _finite_positive(value: float, name: str) -> float:
+    """Return a finite positive real number."""
+    normalized = _finite_real(value, name)
+    if normalized <= 0:
+        raise ValueError(f"{name} must be positive")
+    return normalized
+
+
+def _finite_numeric(value: float | complex, name: str) -> float | complex:
+    """Return a finite real or complex number."""
+    if isinstance(value, bool) or not isinstance(value, (int, float, complex)):
+        raise TypeError(f"{name} must be numeric")
+    normalized = complex(value)
+    if not math.isfinite(normalized.real) or not math.isfinite(normalized.imag):
+        raise ValueError(f"{name} must be finite")
     return value
 
 
 def energy_from_frequency(frequency_hz: float) -> float:
-    """Calculate energy from frequency using E = h*f.
-
-    Args:
-        frequency_hz: Frequency in Hertz
-
-    Returns:
-        Energy in Joules
-
-    Raises:
-        ValueError: If frequency is invalid (NaN, zero, negative, infinity)
-    """
-    if frequency_hz != frequency_hz:  # NaN
-        raise ValueError("Frequency is NaN")
-    if frequency_hz <= 0:
-        raise ValueError(f"Frequency must be positive, got {frequency_hz}")
-    if not (-1e308 < frequency_hz < 1e308):
-        raise ValueError(f"Frequency is infinite or out of bounds: {frequency_hz}")
-    return H * frequency_hz
+    """Calculate energy from frequency using E = h*f."""
+    frequency = _finite_positive(frequency_hz, "Frequency")
+    return H * frequency
 
 
 def mass_from_frequency(frequency_hz: float) -> float:
-    """Calculate rest mass from frequency using m = h*f / c^2.
-
-    Args:
-        frequency_hz: Frequency in Hertz
-
-    Returns:
-        Rest mass in kilograms
-
-    Raises:
-        ValueError: If frequency is invalid
-    """
-    if frequency_hz != frequency_hz:  # NaN
-        raise ValueError("Frequency is NaN")
-    if frequency_hz <= 0:
-        raise ValueError(f"Frequency must be positive, got {frequency_hz}")
-    if not (-1e308 < frequency_hz < 1e308):
-        raise ValueError(f"Frequency is infinite or out of bounds: {frequency_hz}")
-    return (H * frequency_hz) / (C ** 2)
+    """Calculate the mass-energy equivalent m = h*f/c^2 for a declared frequency."""
+    frequency = _finite_positive(frequency_hz, "Frequency")
+    return (H * frequency) / (C**2)
 
 
 def frequency_from_mass(mass_kg: float) -> float:
-    """Calculate rest-mass frequency from mass using f = m*c^2 / h.
-
-    Args:
-        mass_kg: Rest mass in kilograms
-
-    Returns:
-        Rest-mass frequency in Hertz
-
-    Raises:
-        ValueError: If mass is invalid
-    """
-    if mass_kg != mass_kg:  # NaN
-        raise ValueError("Mass is NaN")
-    if mass_kg <= 0:
-        raise ValueError(f"Mass must be positive, got {mass_kg}")
-    if not (-1e308 < mass_kg < 1e308):
-        raise ValueError(f"Mass is infinite or out of bounds: {mass_kg}")
-    return (mass_kg * C ** 2) / H
+    """Calculate invariant rest-mass frequency using f = m*c^2/h."""
+    mass = _finite_positive(mass_kg, "Mass")
+    return (mass * C**2) / H
 
 
 def index8_from_frequency(frequency_hz: float) -> float:
-    """Calculate 8 Hz dimensionless index N8 = f / (8 Hz).
-
-    Args:
-        frequency_hz: Frequency in Hertz
-
-    Returns:
-        Dimensionless index N8
-
-    Raises:
-        ValueError: If frequency is invalid
-    """
-    if frequency_hz != frequency_hz:  # NaN
-        raise ValueError("Frequency is NaN")
-    if frequency_hz < 0:
-        raise ValueError(f"Frequency cannot be negative, got {frequency_hz}")
-    if not (-1e308 < frequency_hz < 1e308):
-        raise ValueError(f"Frequency is infinite or out of bounds: {frequency_hz}")
-    return frequency_hz / N8_DENOMINATOR
+    """Calculate the dimensionless reference index N8 = f/(8 Hz)."""
+    frequency = _finite_nonnegative(frequency_hz, "Frequency")
+    return frequency / N8_DENOMINATOR
 
 
 def normalize_value(value: float, reference: float) -> float:
-    """Return Z = value/reference for finite values and a non-zero reference."""
-    finite_value = _finite_nonnegative(value, "value")
-    finite_reference = _finite_nonnegative(reference, "reference")
+    """Return Z = value/reference for finite signed values and a non-zero reference."""
+    finite_value = _finite_real(value, "value")
+    finite_reference = _finite_real(reference, "reference")
     if finite_reference == 0:
         raise ZeroDivisionError("reference must not be zero")
     return finite_value / finite_reference
@@ -118,68 +85,37 @@ def normalize_value(value: float, reference: float) -> float:
 
 def normalized_match(value: float, reference: float, tolerance: float = 1e-9) -> bool:
     """Compare a normalized value with one; this is not evidence of physical identity."""
-    if tolerance < 0 or not math.isfinite(tolerance):
-        raise ValueError("tolerance must be finite and non-negative")
-    return abs(normalize_value(value, reference) - 1.0) <= tolerance
+    finite_tolerance = _finite_nonnegative(tolerance, "tolerance")
+    return abs(normalize_value(value, reference) - 1.0) <= finite_tolerance
 
 
 def propagated_mass_uncertainty(frequency_uncertainty_hz: float) -> float:
-    """Propagate frequency standard uncertainty through m = h f / c².
+    """Propagate frequency standard uncertainty through m = h*f/c^2.
 
     In SI, h and c are exact; this function assumes frequency is the only uncertain input.
+    A zero uncertainty is valid and maps to zero mass uncertainty.
     """
-    return mass_from_frequency(frequency_uncertainty_hz)
+    uncertainty = _finite_nonnegative(
+        frequency_uncertainty_hz,
+        "frequency_uncertainty_hz",
+    )
+    return (H * uncertainty) / (C**2)
 
 
 def index8_from_mass(mass_kg: float) -> float:
-    """Calculate 8 Hz dimensionless index N8 = m*c^2 / (8*h).
-
-    Args:
-        mass_kg: Rest mass in kilograms
-
-    Returns:
-        Dimensionless index N8
-
-    Raises:
-        ValueError: If mass is invalid
-    """
-    if mass_kg != mass_kg:  # NaN
-        raise ValueError("Mass is NaN")
-    if mass_kg < 0:
-        raise ValueError(f"Mass cannot be negative, got {mass_kg}")
-    if not (-1e308 < mass_kg < 1e308):
-        raise ValueError(f"Mass is infinite or out of bounds: {mass_kg}")
-    return (mass_kg * C ** 2) / (N8_DENOMINATOR * H)
+    """Calculate the dimensionless reference index N8 = m*c^2/(8*h)."""
+    mass = _finite_nonnegative(mass_kg, "Mass")
+    return (mass * C**2) / (N8_DENOMINATOR * H)
 
 
 def relativistic_total_frequency(
     momentum_wavelength_m: float,
-    rest_mass_frequency_hz: float
+    rest_mass_frequency_hz: float,
 ) -> float:
-    """Calculate total temporal frequency using nu^2 = (c/lambda)^2 + f^2.
-
-    Args:
-        momentum_wavelength_m: Momentum wavelength (de Broglie wavelength) in meters
-        rest_mass_frequency_hz: Invariant rest-mass frequency in Hertz
-
-    Returns:
-        Total temporal frequency in Hertz
-
-    Raises:
-        ValueError: If inputs are invalid
-    """
-    if momentum_wavelength_m != momentum_wavelength_m:  # NaN
-        raise ValueError("Wavelength is NaN")
-    if rest_mass_frequency_hz != rest_mass_frequency_hz:  # NaN
-        raise ValueError("Frequency is NaN")
-    if momentum_wavelength_m <= 0:
-        raise ValueError(f"Wavelength must be positive, got {momentum_wavelength_m}")
-    if rest_mass_frequency_hz < 0:
-        raise ValueError(f"Frequency cannot be negative, got {rest_mass_frequency_hz}")
-
-    c_over_lambda = C / momentum_wavelength_m
-    sum_of_squares = (c_over_lambda ** 2) + (rest_mass_frequency_hz ** 2)
-    return math.sqrt(sum_of_squares)
+    """Calculate total temporal frequency using nu^2 = (c/lambda)^2 + f^2."""
+    wavelength = _finite_positive(momentum_wavelength_m, "Wavelength")
+    rest_frequency = _finite_nonnegative(rest_mass_frequency_hz, "Frequency")
+    return math.hypot(C / wavelength, rest_frequency)
 
 
 class ZeroReferenceError(ZeroDivisionError, ValueError):
@@ -187,60 +123,39 @@ class ZeroReferenceError(ZeroDivisionError, ValueError):
 
 
 def normalize_signal(
-    observed: float | complex, reference: float | complex
+    observed: float | complex,
+    reference: float | complex,
 ) -> float | complex:
-    """Normalize signal Z(t,x) = z(t,x) / z_ref(t,x).
-
-    Args:
-        observed: Observed signal value
-        reference: Reference signal value
-
-    Returns:
-        Normalized signal Z
-
-    Raises:
-        ValueError: If reference is zero, NaN, or infinity
-    """
-    if reference != reference:  # NaN
+    """Normalize signal Z(t,x) = z(t,x)/z_ref(t,x)."""
+    if reference != reference:
         raise ValueError("Reference is NaN")
+    if observed != observed:
+        raise ValueError("Observed signal is NaN")
+    _finite_numeric(reference, "Reference")
+    _finite_numeric(observed, "Observed")
     if reference == 0:
         raise ZeroReferenceError("Reference signal cannot be zero")
-    if abs(reference) >= 1e308:
-        raise ValueError(f"Reference is infinite or out of bounds: {reference}")
-    if observed != observed:  # NaN
-        raise ValueError("Observed signal is NaN")
-
     return observed / reference
 
 
 def signal_match(
     observed: float,
     reference: float,
-    epsilon: float = EPSILON_Z_DEFAULT
+    epsilon: float = EPSILON_Z_DEFAULT,
 ) -> RuntimeMatchResult:
-    """Check if normalized signal matches reference within tolerance.
-
-    Implements: abs(Z - 1) <= epsilon where Z = z / z_ref
-
-    Args:
-        observed: Observed signal value
-        reference: Reference signal value
-        epsilon: Tolerance for match (unitless)
-
-    Returns:
-        RuntimeMatchResult with match outcome
-    """
+    """Check whether abs(observed/reference - 1) is within epsilon."""
+    finite_epsilon = _finite_nonnegative(epsilon, "epsilon")
     normalized = cast(float, normalize_signal(observed, reference))
     error = abs(normalized - 1.0)
-    matches = error <= epsilon
+    matches = error <= finite_epsilon
 
     return RuntimeMatchResult(
         normalized_value=normalized,
         observed=observed,
         reference=reference,
-        epsilon=epsilon,
+        epsilon=finite_epsilon,
         matches=matches,
-        error=error
+        error=error,
     )
 
 
@@ -250,47 +165,30 @@ def complex_signal_match(
     reference_amplitude: float,
     reference_phase: float,
     amplitude_tolerance: float = AMPLITUDE_TOLERANCE_DEFAULT,
-    phase_tolerance: float = PHASE_TOLERANCE_DEFAULT
+    phase_tolerance: float = PHASE_TOLERANCE_DEFAULT,
 ) -> RuntimeMatchResult:
-    """Check if complex signal (amplitude, phase) matches reference.
+    """Check a complex signal represented by amplitude and phase."""
+    observed_amp = _finite_nonnegative(observed_amplitude, "observed_amplitude")
+    reference_amp = _finite_positive(reference_amplitude, "reference_amplitude")
+    observed_phi = _finite_real(observed_phase, "observed_phase")
+    reference_phi = _finite_real(reference_phase, "reference_phase")
+    amplitude_eps = _finite_nonnegative(amplitude_tolerance, "amplitude_tolerance")
+    phase_eps = _finite_nonnegative(phase_tolerance, "phase_tolerance")
 
-    Args:
-        observed_amplitude: Magnitude of observed signal
-        observed_phase: Phase of observed signal (radians)
-        reference_amplitude: Magnitude of reference signal
-        reference_phase: Phase of reference signal (radians)
-        amplitude_tolerance: Amplitude tolerance (unitless)
-        phase_tolerance: Phase tolerance (radians)
-
-    Returns:
-        RuntimeMatchResult with match outcome
-
-    Raises:
-        ValueError: If amplitudes are invalid
-    """
-    if reference_amplitude == 0:
-        raise ValueError("Reference amplitude cannot be zero")
-    if observed_amplitude != observed_amplitude or reference_amplitude != reference_amplitude:
-        raise ValueError("Amplitude is NaN")
-
-    # Normalize amplitude
-    normalized_amplitude = observed_amplitude / reference_amplitude
+    normalized_amplitude = observed_amp / reference_amp
     amplitude_error = abs(normalized_amplitude - 1.0)
-    amplitude_matches = amplitude_error <= amplitude_tolerance
+    amplitude_matches = amplitude_error <= amplitude_eps
 
-    # Phase difference (wrap to [-pi, pi])
-    phase_diff = observed_phase - reference_phase
+    phase_diff = observed_phi - reference_phi
     phase_diff = (phase_diff + math.pi) % (2 * math.pi) - math.pi
-    phase_matches = abs(phase_diff) <= phase_tolerance
-
-    matches = amplitude_matches and phase_matches
+    phase_matches = abs(phase_diff) <= phase_eps
 
     return RuntimeMatchResult(
         normalized_value=normalized_amplitude,
-        observed=observed_amplitude,
-        reference=reference_amplitude,
-        epsilon=amplitude_tolerance,
-        matches=matches,
+        observed=observed_amp,
+        reference=reference_amp,
+        epsilon=amplitude_eps,
+        matches=amplitude_matches and phase_matches,
         error=amplitude_error,
-        notes=f"Phase diff: {phase_diff:.6e} rad (tolerance: {phase_tolerance:.6e})"
+        notes=f"Phase diff: {phase_diff:.6e} rad (tolerance: {phase_eps:.6e})",
     )
