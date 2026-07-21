@@ -33,7 +33,11 @@ def frequency_to_mass(args):
         "operation": "frequency_to_mass",
         "input_frequency_hz": frequency_hz,
         "output_mass_kg": mass_kg,
-        "equation": "m = h*f / c^2"
+        "equation": "m = h*f / c^2",
+        "interpretation": (
+            "Energy-equivalence calculation for the declared frequency; "
+            "this is not the mass of an arbitrary oscillating object."
+        ),
     }
     print_json(result)
 

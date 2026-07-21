@@ -7,6 +7,9 @@ from typing import Any
 from .models import Bridge, PhysicsNode, ScientificStatus, VerificationType
 
 ERROR_MESSAGES = {
+    "UPI-E004": "Hypothesis lacks test or falsification metadata",
+    "UPI-E005": "Symbolic statement cannot be marked established",
+    "UPI-E007": "Scientific claim lacks evidence provenance",
     "UPI-E011": "Reference-frame ambiguity",
     "UPI-E012": "Normalization presented as physical equivalence",
     "UPI-E013": "Correlation or association presented as causation without a causal test",
@@ -34,6 +37,27 @@ def validate_scientific_boundaries(node: PhysicsNode) -> list[str]:
 def validate_record_boundaries(data: dict[str, Any]) -> list[str]:
     """Apply evidence-boundary guards to decoded, untrusted JSON data."""
     errors: list[str] = []
+    status = data.get("status")
+    if status == ScientificStatus.HYP.value and not any(
+        data.get(field)
+        for field in (
+            "test_method",
+            "predictions",
+            "predicted_observation",
+            "falsification_conditions",
+            "falsification_condition",
+            "measurable_variable",
+        )
+    ):
+        errors.append(f"UPI-E004: {ERROR_MESSAGES['UPI-E004']}")
+    if status == ScientificStatus.EST.value and data.get("symbolic_interpretation"):
+        errors.append(f"UPI-E005: {ERROR_MESSAGES['UPI-E005']}")
+    if status in {
+        ScientificStatus.EST.value,
+        ScientificStatus.DER.value,
+        ScientificStatus.HYP.value,
+    } and not any(data.get(field) for field in ("evidence", "primary_sources", "provenance")):
+        errors.append(f"UPI-E007: {ERROR_MESSAGES['UPI-E007']}")
     if data.get("normalization_method") and not data.get("reference_frame"):
         errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
     if data.get("normalization_claim") == "physical_equivalence" and not data.get(

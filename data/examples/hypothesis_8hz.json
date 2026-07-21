@@ -1,0 +1,12 @@
+{
+  "address": "UPI<HYPOTHESIS,1,T_REFERENCE,N_8HZ>",
+  "title": "Eight-hertz organizing-frequency hypothesis",
+  "description": "Early test proposal; 8 Hz is not asserted to be a universal constant.",
+  "status": "HYP",
+  "quantities": [{"name": "reference_frequency", "value": 8.0, "unit": "Hz", "reference": "numerical normalization frequency"}],
+  "primary_sources": ["Research proposal; no experimental evidence claimed"],
+  "predictions": ["A preregistered outcome differs from all controls by the stated threshold."],
+  "falsification_conditions": ["No replicated, corrected effect relative to the null and control frequencies."],
+  "control_condition": "Compare 7.834, 8.000 and 8.200 Hz with a sham control.",
+  "confusion_guard": "Numerical matching does not prove physical equivalence and is not a medical claim."
+}

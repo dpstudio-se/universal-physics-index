@@ -1,0 +1,10 @@
+{
+  "address": "UPI<SYMBOLIC,1,T_QUADRALITH,N_CONTROL_GRAPH>",
+  "title": "Quadralith symbolic control graph",
+  "description": "Optional conceptual graph; it is not an accepted physical model.",
+  "status": "SYM",
+  "equations": ["AUM <-> alpha <-> Omega <-> Phi <-> AUM", "Omega <-> alpha"],
+  "definitions": ["AUM: initialization or latent state", "alpha: activation", "Omega: projection or observer state", "Phi: integration or completion"],
+  "confusion_guard": "Omega7834, Omega8200, Omega1766 and OmegaTF1766 are identifiers, never SI constants.",
+  "tags": ["symbolic", "conceptual-control-graph"]
+}

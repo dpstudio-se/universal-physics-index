@@ -14,6 +14,15 @@ from .constants import (
 from .models import RuntimeMatchResult
 
 
+def _finite_nonnegative(value: float, name: str) -> float:
+    """Return a finite non-negative value or raise a stable input error."""
+    if not math.isfinite(value):
+        raise ValueError(f"{name} must be finite")
+    if value < 0:
+        raise ValueError(f"{name} must be non-negative")
+    return value
+
+
 def energy_from_frequency(frequency_hz: float) -> float:
     """Calculate energy from frequency using E = h*f.
 
@@ -96,6 +105,30 @@ def index8_from_frequency(frequency_hz: float) -> float:
     if not (-1e308 < frequency_hz < 1e308):
         raise ValueError(f"Frequency is infinite or out of bounds: {frequency_hz}")
     return frequency_hz / N8_DENOMINATOR
+
+
+def normalize_value(value: float, reference: float) -> float:
+    """Return Z = value/reference for finite values and a non-zero reference."""
+    finite_value = _finite_nonnegative(value, "value")
+    finite_reference = _finite_nonnegative(reference, "reference")
+    if finite_reference == 0:
+        raise ZeroDivisionError("reference must not be zero")
+    return finite_value / finite_reference
+
+
+def normalized_match(value: float, reference: float, tolerance: float = 1e-9) -> bool:
+    """Compare a normalized value with one; this is not evidence of physical identity."""
+    if tolerance < 0 or not math.isfinite(tolerance):
+        raise ValueError("tolerance must be finite and non-negative")
+    return abs(normalize_value(value, reference) - 1.0) <= tolerance
+
+
+def propagated_mass_uncertainty(frequency_uncertainty_hz: float) -> float:
+    """Propagate frequency standard uncertainty through m = h f / c².
+
+    In SI, h and c are exact; this function assumes frequency is the only uncertain input.
+    """
+    return mass_from_frequency(frequency_uncertainty_hz)
 
 
 def index8_from_mass(mass_kg: float) -> float:
