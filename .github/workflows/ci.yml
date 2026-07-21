@@ -36,7 +36,22 @@ jobs:
           python -m pip install --quiet -e ./modules/vrasi-swarm
 
       - name: Lint with ruff
-        run: ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
+        id: ruff
+        continue-on-error: true
+        run: ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests --output-format json > ruff-report.json
+
+      - name: Upload Ruff diagnostics
+        if: steps.ruff.outcome == 'failure'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ruff-report-${{ matrix.python-version }}
+          path: ruff-report.json
+
+      - name: Fail on Ruff findings
+        if: steps.ruff.outcome == 'failure'
+        run: |
+          cat ruff-report.json
+          exit 1
 
       - name: Type check with mypy
         run: |
