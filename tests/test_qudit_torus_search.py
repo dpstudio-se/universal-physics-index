@@ -9,6 +9,8 @@ from upi import (
     fourier_transform,
     index_to_coordinates,
     local_fourier_transform,
+    local_phase_gate,
+    local_shift_gate,
     phase_gate,
     search_torus_register,
     shift_gate,
@@ -35,6 +37,27 @@ def test_mixed_radix_torus_coordinates_are_bijective() -> None:
     for index in range(math.prod(dimensions)):
         coordinates = index_to_coordinates(index, dimensions)
         assert coordinates_to_index(coordinates, dimensions) == index
+
+
+def test_each_torus_has_local_shift_phase_and_fourier_functions() -> None:
+    dimensions = (4, 5)
+    state = tensor_product((basis_state(4, 1), basis_state(5, 2)))
+
+    shifted = local_shift_gate(state, dimensions, axis=0, shift=2)
+    shifted_index = max(range(shifted.dimension), key=shifted.probabilities.__getitem__)
+    assert index_to_coordinates(shifted_index, dimensions) == (3, 2)
+
+    phased = local_phase_gate(shifted, dimensions, axis=1, power=2)
+    assert phased.probabilities == pytest.approx(shifted.probabilities)
+
+    dual = local_fourier_transform(phased, dimensions, axis=0)
+    reconstructed = local_fourier_transform(
+        dual,
+        dimensions,
+        axis=0,
+        inverse=True,
+    )
+    assert reconstructed.amplitudes == pytest.approx(phased.amplitudes, abs=1e-12)
 
 
 def test_local_fourier_round_trip_handles_sparse_slices() -> None:
