@@ -168,6 +168,8 @@ def complex_signal_match(
     phase_tolerance: float = PHASE_TOLERANCE_DEFAULT,
 ) -> RuntimeMatchResult:
     """Check a complex signal represented by amplitude and phase."""
+    if reference_amplitude == 0:
+        raise ValueError("Reference amplitude cannot be zero")
     observed_amp = _finite_nonnegative(observed_amplitude, "observed_amplitude")
     reference_amp = _finite_positive(reference_amplitude, "reference_amplitude")
     observed_phi = _finite_real(observed_phase, "observed_phase")
