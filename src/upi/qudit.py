@@ -97,6 +97,28 @@ def _state_from_amplitudes(amplitudes: Sequence[complex]) -> QuditState:
     return QuditState(dimension, tuple(value / scale for value in values))
 
 
+def _fourier_amplitudes(
+    amplitudes: Sequence[complex],
+    *,
+    inverse: bool = False,
+) -> tuple[complex, ...]:
+    values = tuple(complex(value) for value in amplitudes)
+    dimension = _validate_dimension(len(values))
+    for value in values:
+        if not isfinite(value.real) or not isfinite(value.imag):
+            raise ValueError("amplitudes must be finite")
+    sign = -1.0 if inverse else 1.0
+    scale = 1.0 / sqrt(dimension)
+    output: list[complex] = []
+    for output_index in range(dimension):
+        total = 0j
+        for input_index, amplitude in enumerate(values):
+            angle = sign * 2.0 * pi * input_index * output_index / dimension
+            total += amplitude * complex(cos(angle), sin(angle))
+        output.append(scale * total)
+    return tuple(output)
+
+
 def basis_state(dimension: int, index: int) -> QuditState:
     """Return one computational-basis state |index>."""
     dimension = _validate_dimension(dimension)
@@ -143,16 +165,9 @@ def phase_gate(state: QuditState, power: int = 1) -> QuditState:
 def fourier_transform(state: QuditState, *, inverse: bool = False) -> QuditState:
     """Apply the normalized discrete quantum Fourier transform."""
     state = _validate_state(state)
-    sign = -1.0 if inverse else 1.0
-    scale = 1.0 / sqrt(state.dimension)
-    output: list[complex] = []
-    for output_index in range(state.dimension):
-        total = 0j
-        for input_index, amplitude in enumerate(state.amplitudes):
-            angle = sign * 2.0 * pi * input_index * output_index / state.dimension
-            total += amplitude * complex(cos(angle), sin(angle))
-        output.append(scale * total)
-    return _state_from_amplitudes(output)
+    return _state_from_amplitudes(
+        _fourier_amplitudes(state.amplitudes, inverse=inverse)
+    )
 
 
 def coordinates_to_index(coordinates: Sequence[int], dimensions: Sequence[int]) -> int:
@@ -231,17 +246,16 @@ def local_fourier_transform(
             local_index = coordinates_to_index(base_coordinates, dims)
             local_indices.append(local_index)
             local_amplitudes.append(state.amplitudes[local_index])
-        transformed = fourier_transform(
-            _state_from_amplitudes(local_amplitudes),
+        transformed = _fourier_amplitudes(
+            local_amplitudes,
             inverse=inverse,
         )
-        local_norm = sqrt(sum(abs(value) ** 2 for value in local_amplitudes))
         for local_index, amplitude in zip(
             local_indices,
-            transformed.amplitudes,
+            transformed,
             strict=True,
         ):
-            output[local_index] = amplitude * local_norm
+            output[local_index] = amplitude
     return _state_from_amplitudes(output)
 
 
