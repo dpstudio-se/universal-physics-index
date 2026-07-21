@@ -213,7 +213,8 @@ def evaluate_screw_coupling(
         torque = _finite(torque_nm, "torque_nm")
         axial_force = 2.0 * pi * eta * torque / pitch
     else:
-        axial_force = _finite(float(axial_force_n), "axial_force_n")
+        assert axial_force_n is not None
+        axial_force = _finite(axial_force_n, "axial_force_n")
         torque = axial_force * pitch / (2.0 * pi * eta)
     input_power = torque * angular_speed
     output_power = axial_force * axial_speed
