@@ -34,11 +34,12 @@ jobs:
           python -m pip install --quiet -e ".[dev]"
           python -m pip install --quiet -e ./modules/vrasi-physics
           python -m pip install --quiet -e ./modules/vrasi-swarm
+          python -m pip install --quiet -e ./modules/vrasi-qudit
 
       - name: Lint with ruff
         id: ruff
         continue-on-error: true
-        run: ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests --output-format json > ruff-report.json
+        run: ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests modules/vrasi-qudit/src modules/vrasi-qudit/tests --output-format json > ruff-report.json
 
       - name: Upload Ruff diagnostics
         if: steps.ruff.outcome == 'failure'
@@ -58,11 +59,12 @@ jobs:
           mypy src/upi repo_audit.py --ignore-missing-imports
           mypy modules/vrasi-physics/src/vrasi_physics
           mypy modules/vrasi-swarm/src/vrasi_swarm
+          mypy modules/vrasi-qudit/src/vrasi_qudit
 
       - name: Run tests with pytest
         id: pytest
         continue-on-error: true
-        run: python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v --tb=short --junitxml=pytest-report.xml
+        run: python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ modules/vrasi-qudit/tests/ -v --tb=short --junitxml=pytest-report.xml
 
       - name: Upload pytest diagnostics
         if: steps.pytest.outcome == 'failure'
@@ -127,6 +129,7 @@ jobs:
           python -m pip wheel --quiet . --no-deps --wheel-dir dist
           python -m pip wheel --quiet ./modules/vrasi-physics --no-deps --wheel-dir dist/vrasi-physics
           python -m pip wheel --quiet ./modules/vrasi-swarm --no-deps --wheel-dir dist/vrasi-swarm
+          python -m pip wheel --quiet ./modules/vrasi-qudit --no-deps --wheel-dir dist/vrasi-qudit
           python -c "import glob, zipfile; names = zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist(); assert all(any(name.endswith('/schemas/' + schema) for name in names) for schema in ('node.schema.json', 'bridge.schema.json', 'theory.schema.json', 'agent-task.schema.json', 'agent-result.schema.json', 'workflow.schema.json'))"
 
   github-source-install:
@@ -148,6 +151,7 @@ jobs:
           python -m pip install --quiet --no-cache-dir "${SOURCE_URL}"
           python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/vrasi-physics"
           python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/vrasi-swarm"
+          python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/vrasi-qudit"
 
       - name: Verify GitHub source provenance
         run: |
@@ -162,6 +166,7 @@ jobs:
               "universal-physics-index",
               "vrasi-physics",
               "vrasi-swarm",
+              "vrasi-qudit",
           ):
               distribution = metadata.distribution(distribution_name)
               direct_url_text = distribution.read_text("direct_url.json")
@@ -178,21 +183,30 @@ jobs:
           python - <<'PY'
           import upi
           import vrasi_physics
+          import vrasi_qudit
           import vrasi_swarm
 
           assert upi.index8_from_frequency(8.0) == 1.0
           assert upi.mass_from_frequency(8.0) > 0.0
+          upi_search = upi.search_torus_register((4, 5), (7,))
+          assert upi_search.ranked_states[0].index == 7
+          assert upi_search.success_probability > 0.99
 
           physics_result = vrasi_physics.evaluate_frequency(8.0)
           assert physics_result.reference_index == 1.0
           assert physics_result.energy_j > 0.0
           assert physics_result.mass_equivalent_kg > 0.0
 
+          qudit_result = vrasi_qudit.search_torus_register((4, 5), (7,))
+          assert qudit_result.ranked_states[0].coordinates == (1, 2)
+          assert qudit_result.dual_round_trip_error < 1e-12
+          assert len(qudit_result.stages) > 3
+
           assert vrasi_swarm.POOL_SIZE == 9
           assert vrasi_swarm.SELECTED_SIZE == 3
           assert vrasi_swarm.QUORUM_SIZE == 3
           assert len(vrasi_swarm.digest_payload({"source": "github"})) == 64
-          print("✓ UPI, vrasi-physics and vrasi-swarm public APIs passed")
+          print("✓ UPI, vrasi-physics, vrasi-qudit and vrasi-swarm APIs passed")
           PY
 
       - name: Smoke test every installed CLI
@@ -200,6 +214,7 @@ jobs:
           upi --version
           upi index8 --frequency 8
           vrasi-physics 8
+          vrasi-qudit --dimensions 4,5 --targets 7 --top-k 3
           vrasi-swarm demo
 
   security:
