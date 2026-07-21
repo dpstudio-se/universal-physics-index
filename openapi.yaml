@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Angelica Gateway API
+  version: 1.0.0
+  description: API for VR-ASI-1 plugin orchestration and control
+
+paths:
+  /plugins/register:
+    post:
+      summary: Register a new plugin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginManifest'
+      responses:
+        '201':
+          description: Plugin registered successfully
+  
+  /plugins/{id}/start:
+    post:
+      summary: Start a plugin container
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Plugin started
+          
+  /state/kv:
+    get:
+      summary: Get KV store value
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Value returned
+
+components:
+  schemas:
+    PluginManifest:
+      type: object
+      required: [pluginId, version, name, entryPoint, runtime, permissions]
+      properties:
+        pluginId: { type: string }
+        version: { type: string }
+        name: { type: string }
+        entryPoint: { type: string }
+        runtime: { type: string, enum: [node, python, docker] }
+        permissions:
+          type: object
+          properties:
+            file: { type: boolean }
+            network: { type: boolean }
+            exec: { type: boolean }
+            kv: { type: boolean }
+            models: { type: boolean }

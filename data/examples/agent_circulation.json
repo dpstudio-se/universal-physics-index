@@ -1,0 +1,24 @@
+{
+  "address": "UPI<SYMBOLIC,1,AGENT_WORKFLOW,CIRCULATION_IMMUNITY>",
+  "title": "Agent circulation and immune-review architecture",
+  "description": "Symbolic mapping for bounded transport, review, quarantine and coordination roles.",
+  "status": "SYM",
+  "information_layer": "PUBLIC",
+  "definitions": [
+    "TRANSPORT_AGENT: carries one immutable task envelope and one result",
+    "IMMUNE_REVIEW_AGENT: detects, classifies, quarantines and reports without silent mutation",
+    "COORDINATOR: leases, reconciles and cancels work without bypassing policy",
+    "QUARANTINE: reversible isolation with no execution or network access",
+    "AUDIT_MEMORY: provenance record keyed by task, attempt and evidence hashes"
+  ],
+  "assumptions": [
+    "All capabilities are explicit and default-deny",
+    "Retries are bounded and idempotent",
+    "Agent agreement is not independent evidence"
+  ],
+  "verification_type": "software_test",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Biological terms are architecture metaphors only; no biological equivalence, hidden authority or autonomous replication is claimed.",
+  "tags": ["symbolic", "workflow", "agent-role", "transport", "review", "quarantine"],
+  "version": "0.1.0"
+}

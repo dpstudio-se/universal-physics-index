@@ -1,20 +1,13 @@
-# Validation Error Codes
+# Extended Boundary Error Codes
 
 | Code | Meaning |
 |---|---|
-| UPI-E001 | Missing or unsupported status |
-| UPI-E002 | Missing unit |
-| UPI-E003 | Frequency type unspecified |
-| UPI-E004 | Hypothesis lacks test/falsification metadata |
-| UPI-E005 | Symbolic statement marked established |
-| UPI-E006 | Dimensional inconsistency |
-| UPI-E007 | Missing provenance |
-| UPI-E008 | Unsupported evidence promotion |
-| UPI-E009 | Duplicate identifier |
-| UPI-E010 | Cyclic dependency |
-| UPI-E011 | Reference-frame ambiguity |
-| UPI-E012 | Normalization presented as physical equivalence |
-| UPI-E013 | Correlation or association presented as causation without a causal test |
-| UPI-E014 | Software test presented as experimental verification |
+| `UPI-E004` | A hypothesis has no test, prediction, measurable variable or falsification condition |
+| `UPI-E005` | A symbolic interpretation is presented as established science |
+| `UPI-E007` | An `EST`, `DER` or `HYP` claim has no evidence or source provenance |
+| `UPI-E011` | Reference frame is ambiguous or absent for normalization |
+| `UPI-E012` | Numerical normalization is presented as physical equivalence |
+| `UPI-E013` | Correlation or association is presented as causation without a causal test |
+| `UPI-E014` | A software test is presented as experimental verification |
 
-Errors are stable machine-readable identifiers; messages and paths provide human context. v0.1.0-alpha implements structural and boundary guards and reserves E006/E008 for expanded validation.
+These stable codes protect falsifiability, provenance and the distinction between implementation checks, mathematical checks, simulations and empirical evidence.

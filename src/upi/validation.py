@@ -1,162 +1,215 @@
-"""Machine-readable validation for untrusted UPI records."""
-
-from __future__ import annotations
+"""Validation module for UPI nodes and bridges."""
 
 import json
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
-from .models import FrequencyType, PhysicsNode, Status
+from .models import Bridge, PhysicsNode, ScientificStatus, VerificationType
 
-
-@dataclass(frozen=True, slots=True)
-class ValidationIssue:
-    code: str
-    message: str
-    path: str = "$"
-    severity: str = "error"
-
-
-class UPIValidationError(ValueError):
-    def __init__(self, issues: Iterable[ValidationIssue]) -> None:
-        self.issues = tuple(issues)
-        super().__init__("; ".join(f"{issue.code}: {issue.message}" for issue in self.issues))
+ERROR_MESSAGES = {
+    "UPI-E004": "Hypothesis lacks test or falsification metadata",
+    "UPI-E005": "Symbolic statement cannot be marked established",
+    "UPI-E007": "Scientific claim lacks evidence provenance",
+    "UPI-E011": "Reference-frame ambiguity",
+    "UPI-E012": "Normalization presented as physical equivalence",
+    "UPI-E013": "Correlation or association presented as causation without a causal test",
+    "UPI-E014": "Software test presented as experimental verification",
+}
 
 
-def validate_node(node: PhysicsNode) -> list[ValidationIssue]:
-    issues: list[ValidationIssue] = []
-    if not node.status:
-        issues.append(ValidationIssue("UPI-E001", "missing status", "$.status"))
-    for name, quantity in node.quantities.items():
-        if not quantity.unit:
-            issues.append(ValidationIssue("UPI-E002", "missing unit", f"$.quantities.{name}.unit"))
-        if "frequency" in name.lower() and quantity.frequency_type is None:
-            issues.append(
-                ValidationIssue("UPI-E003", "frequency type unspecified", f"$.quantities.{name}")
-            )
-    if node.status is Status.HYP:
-        test_fields = (
-            node.test_method,
-            node.predicted_observation,
-            node.falsification_condition,
-            node.required_dataset,
-            node.measurable_variable,
-        )
-        if not any(test_fields) and node.testability != "future":
-            issues.append(
-                ValidationIssue("UPI-E004", "hypothesis lacks test or falsification metadata")
-            )
-    if node.status is Status.EST and node.symbolic_interpretation:
-        issues.append(
-            ValidationIssue("UPI-E005", "symbolic statement cannot be marked established")
-        )
-    if node.status in {Status.EST, Status.DER, Status.HYP} and not node.provenance:
-        issues.append(ValidationIssue("UPI-E007", "missing provenance", "$.provenance"))
+def validate_scientific_boundaries(node: PhysicsNode) -> list[str]:
+    """Return stable error-code messages for evidence-boundary violations."""
+    errors: list[str] = []
     if node.normalization_method and not node.reference_frame:
-        issues.append(ValidationIssue("UPI-E011", "normalization reference frame unspecified"))
-    if node.normalization_claim == "physical_equivalence" and not node.test_method:
-        issues.append(
-            ValidationIssue("UPI-E012", "normalization presented as physical equivalence")
-        )
+        errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
+    if node.normalization_claim == "physical_equivalence" and not node.causal_test_method:
+        errors.append(f"UPI-E012: {ERROR_MESSAGES['UPI-E012']}")
     if node.causal_claim and not node.causal_test_method:
-        issues.append(ValidationIssue("UPI-E013", "causal claim lacks a causal test method"))
+        errors.append(f"UPI-E013: {ERROR_MESSAGES['UPI-E013']}")
     if (
         node.claims_experimental_verification
-        and node.verification_type.value == "software_test"
+        and node.verification_type == VerificationType.SOFTWARE_TEST
     ):
-        issues.append(
-            ValidationIssue("UPI-E014", "software test presented as experimental verification")
-        )
-    return issues
+        errors.append(f"UPI-E014: {ERROR_MESSAGES['UPI-E014']}")
+    return errors
 
 
-def validate_dependency_graph(nodes: Iterable[PhysicsNode]) -> list[ValidationIssue]:
-    node_list = list(nodes)
-    ids = [node.identifier for node in node_list]
-    issues: list[ValidationIssue] = []
-    if len(ids) != len(set(ids)):
-        issues.append(ValidationIssue("UPI-E009", "duplicate identifier"))
-    graph = {node.identifier: node.dependencies for node in node_list}
-    visiting: set[str] = set()
-    visited: set[str] = set()
-
-    def visit(identifier: str) -> bool:
-        if identifier in visiting:
-            return True
-        if identifier in visited:
-            return False
-        visiting.add(identifier)
-        if any(visit(dep) for dep in graph.get(identifier, []) if dep in graph):
-            return True
-        visiting.remove(identifier)
-        visited.add(identifier)
-        return False
-
-    if any(visit(identifier) for identifier in graph if identifier not in visited):
-        issues.append(ValidationIssue("UPI-E010", "cyclic dependency"))
-    return issues
-
-
-def validate_record(record: dict[str, Any]) -> list[ValidationIssue]:
-    """Apply essential boundary checks to a decoded, untrusted JSON record."""
-    issues: list[ValidationIssue] = []
-    status = record.get("status")
-    if status is None:
-        issues.append(ValidationIssue("UPI-E001", "missing status", "$.status"))
-    elif status not in {item.value for item in Status}:
-        issues.append(ValidationIssue("UPI-E001", "unsupported status", "$.status"))
-    quantities = record.get("quantities", {})
-    if isinstance(quantities, dict):
-        for name, quantity in quantities.items():
-            if not isinstance(quantity, dict) or not quantity.get("unit"):
-                issues.append(ValidationIssue("UPI-E002", "missing unit", f"$.quantities.{name}"))
-            if "frequency" in name.lower() and (
-                not isinstance(quantity, dict)
-                or quantity.get("frequency_type") not in {item.value for item in FrequencyType}
-            ):
-                issues.append(
-                    ValidationIssue("UPI-E003", "frequency type unspecified", f"$.quantities.{name}")
-                )
-    if status == "HYP" and not any(
-        record.get(key)
-        for key in (
+def validate_record_boundaries(data: dict[str, Any]) -> list[str]:
+    """Apply evidence-boundary guards to decoded, untrusted JSON data."""
+    errors: list[str] = []
+    status = data.get("status")
+    if status == ScientificStatus.HYP.value and not any(
+        data.get(field)
+        for field in (
             "test_method",
+            "predictions",
             "predicted_observation",
+            "falsification_conditions",
             "falsification_condition",
-            "required_dataset",
             "measurable_variable",
         )
-    ) and record.get("testability") != "future":
-        issues.append(ValidationIssue("UPI-E004", "hypothesis lacks test or falsification metadata"))
-    if status == "EST" and record.get("symbolic_interpretation"):
-        issues.append(ValidationIssue("UPI-E005", "symbolic statement marked as established"))
-    if status in {"EST", "DER", "HYP"} and not record.get("provenance"):
-        issues.append(ValidationIssue("UPI-E007", "missing provenance"))
-    if record.get("normalization_method") and not record.get("reference_frame"):
-        issues.append(ValidationIssue("UPI-E011", "normalization reference frame unspecified"))
-    if record.get("normalization_claim") == "physical_equivalence" and not record.get(
-        "test_method"
     ):
-        issues.append(
-            ValidationIssue("UPI-E012", "normalization presented as physical equivalence")
-        )
-    if record.get("causal_claim") is True and not record.get("causal_test_method"):
-        issues.append(ValidationIssue("UPI-E013", "causal claim lacks a causal test method"))
+        errors.append(f"UPI-E004: {ERROR_MESSAGES['UPI-E004']}")
+    if status == ScientificStatus.EST.value and data.get("symbolic_interpretation"):
+        errors.append(f"UPI-E005: {ERROR_MESSAGES['UPI-E005']}")
+    if status in {
+        ScientificStatus.EST.value,
+        ScientificStatus.DER.value,
+        ScientificStatus.HYP.value,
+    } and not any(data.get(field) for field in ("evidence", "primary_sources", "provenance")):
+        errors.append(f"UPI-E007: {ERROR_MESSAGES['UPI-E007']}")
+    if data.get("normalization_method") and not data.get("reference_frame"):
+        errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
+    if data.get("normalization_claim") == "physical_equivalence" and not data.get(
+        "causal_test_method"
+    ):
+        errors.append(f"UPI-E012: {ERROR_MESSAGES['UPI-E012']}")
+    if data.get("causal_claim") is True and not data.get("causal_test_method"):
+        errors.append(f"UPI-E013: {ERROR_MESSAGES['UPI-E013']}")
     if (
-        record.get("claims_experimental_verification") is True
-        and record.get("verification_type") == "software_test"
+        data.get("claims_experimental_verification") is True
+        and data.get("verification_type") == VerificationType.SOFTWARE_TEST.value
     ):
-        issues.append(
-            ValidationIssue("UPI-E014", "software test presented as experimental verification")
-        )
-    return issues
+        errors.append(f"UPI-E014: {ERROR_MESSAGES['UPI-E014']}")
+    return errors
 
 
-def load_json(path: str | Path) -> dict[str, Any]:
-    """Safely parse JSON without executing input content."""
-    with Path(path).open(encoding="utf-8") as stream:
-        value = json.load(stream)
-    if not isinstance(value, dict):
-        raise UPIValidationError([ValidationIssue("UPI-E001", "root must be an object")])
-    return value
+def validate_json_schema(
+    data: dict[str, Any],
+    schema_path: Path
+) -> tuple[bool, list[str]]:
+    """Validate JSON data against a JSON schema.
+
+    Args:
+        data: JSON data to validate
+        schema_path: Path to JSON schema file
+
+    Returns:
+        (is_valid, list of error messages)
+    """
+    try:
+        import jsonschema
+    except ImportError:
+        return False, ["jsonschema module not installed"]
+
+    try:
+        with open(schema_path) as f:
+            schema = json.load(f)
+    except Exception as e:
+        return False, [f"Failed to load schema: {e}"]
+
+    try:
+        jsonschema.validate(instance=data, schema=schema)
+        return True, []
+    except jsonschema.ValidationError as e:
+        return False, [str(e)]
+    except jsonschema.SchemaError as e:
+        return False, [f"Schema error: {e}"]
+
+
+def validate_node_status(node: PhysicsNode) -> list[str]:
+    """Validate that node status is consistent.
+
+    Returns list of error strings (empty if valid).
+    """
+    errors = []
+
+    if node.status == ScientificStatus.STOP and not node.stop_reason:
+        errors.append("STOP nodes must have a stop_reason field")
+
+    if not node.address.node:
+        errors.append("Node identifier cannot be empty")
+
+    if not node.title:
+        errors.append("Title cannot be empty")
+
+    errors.extend(validate_scientific_boundaries(node))
+    return errors
+
+
+def validate_bridge_consistency(bridge: Bridge) -> list[str]:
+    """Validate that bridge is consistent.
+
+    Returns list of error strings (empty if valid).
+    """
+    errors = []
+
+    if not bridge.relation:
+        errors.append("Bridge must have a relation type")
+
+    if bridge.status == ScientificStatus.STOP and not bridge.stop_reason:
+        errors.append("STOP bridges must have a stop_reason field")
+
+    if bridge.source == bridge.target:
+        errors.append("Bridge source and target cannot be the same")
+
+    return errors
+
+
+def validate_status_enum(status_str: str) -> bool:
+    """Check if string is a valid scientific status."""
+    try:
+        ScientificStatus(status_str)
+        return True
+    except ValueError:
+        return False
+
+
+def validate_node_json(data: dict[str, Any], schema_path: Path) -> tuple[bool, list[str]]:
+    """Validate a node JSON object.
+
+    Args:
+        data: JSON data
+        schema_path: Path to node.schema.json
+
+    Returns:
+        (is_valid, list of errors)
+    """
+    errors = []
+
+    # Schema validation
+    is_valid, schema_errors = validate_json_schema(data, schema_path)
+    if not is_valid:
+        errors.extend(schema_errors)
+
+    # Additional semantic validation
+    if "status" in data:
+        if not validate_status_enum(data["status"]):
+            errors.append(f"Unknown status: {data['status']}")
+
+    if data.get("status") == "STOP" and not data.get("stop_reason"):
+        errors.append("STOP nodes must have stop_reason")
+
+    if not data.get("address"):
+        errors.append("Empty node identifier")
+
+    errors.extend(validate_record_boundaries(data))
+
+    return len(errors) == 0, errors
+
+
+def validate_bridge_json(data: dict[str, Any], schema_path: Path) -> tuple[bool, list[str]]:
+    """Validate a bridge JSON object.
+
+    Args:
+        data: JSON data
+        schema_path: Path to bridge.schema.json
+
+    Returns:
+        (is_valid, list of errors)
+    """
+    errors = []
+
+    # Schema validation
+    is_valid, schema_errors = validate_json_schema(data, schema_path)
+    if not is_valid:
+        errors.extend(schema_errors)
+
+    # Additional semantic validation
+    if not data.get("relation"):
+        errors.append("Bridge must have a relation type")
+
+    if data.get("status") == "STOP" and not data.get("stop_reason"):
+        errors.append("STOP bridges must have stop_reason")
+
+    return len(errors) == 0, errors

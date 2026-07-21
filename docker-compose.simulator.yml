@@ -1,0 +1,51 @@
+services:
+  angelica:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=simulation
+    volumes:
+      - .:/app
+
+  puter-mock:
+    image: python:3.9-slim
+    command: >
+      python3 -c "
+      from http.server import BaseHTTPRequestHandler, HTTPServer;
+      class MockHandler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Puter Response OK')
+          def do_POST(self):
+              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Puter POST OK')
+      HTTPServer(('0.0.0.0', 4000), MockHandler).serve_forever()"
+    ports:
+      - "4000:4000"
+
+  oden-mock:
+    image: python:3.9-slim
+    command: >
+      python3 -c "
+      from http.server import BaseHTTPRequestHandler, HTTPServer;
+      class MockHandler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Oden Response OK')
+          def do_POST(self):
+              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Oden POST OK')
+      HTTPServer(('0.0.0.0', 8081), MockHandler).serve_forever()"
+    ports:
+      - "8081:8081"
+
+  odens-eye-mock:
+    image: python:3.9-slim
+    command: >
+      python3 -c "
+      from http.server import BaseHTTPRequestHandler, HTTPServer;
+      class MockHandler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              self.send_response(200); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Eye Response OK')
+          def do_POST(self):
+              self.send_response(201); self.send_header('Content-type', 'text/plain'); self.end_headers(); self.wfile.write(b'Mock Eye POST OK')
+      HTTPServer(('0.0.0.0', 8082), MockHandler).serve_forever()"
+    ports:
+      - "8082:8082"

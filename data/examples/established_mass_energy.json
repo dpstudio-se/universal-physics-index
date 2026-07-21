@@ -1,16 +1,11 @@
 {
-  "address": {"domain": "RELATIVITY", "generation": "G1", "torus": "T_ENERGY", "node": "N_MASS_ENERGY"},
+  "address": "UPI<RELATIVITY,1,T_ENERGY,N_MASS_ENERGY>",
   "title": "Mass-energy equivalence",
   "description": "Rest energy relation in special relativity.",
-  "scientific_domain": "special relativity",
   "status": "EST",
-  "schema_version": "0.1.0",
-  "equation": "E = m c^2",
-  "variables": {"E": "rest energy", "m": "invariant mass", "c": "speed of light in vacuum"},
+  "equations": ["E = m c^2"],
+  "definitions": ["E is rest energy", "m is invariant mass", "c is the speed of light in vacuum"],
   "assumptions": ["isolated body", "invariant mass", "SI units"],
-  "evidence_level": "consensus",
-  "provenance": [{"source_type": "standard reference", "source_status": "textbook", "citation": "Special relativity textbook treatment"}],
-  "confusion_guard": ["This node does not claim every form of energy is a rest mass."],
-  "created_date": "2026-07-17",
-  "revised_date": "2026-07-17"
+  "evidence": [{"type": "other", "source": "Special relativity textbook treatment"}],
+  "confusion_guard": "This node does not claim every form of energy is a rest mass."
 }

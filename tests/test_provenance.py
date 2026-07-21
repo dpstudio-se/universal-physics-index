@@ -1,7 +1,6 @@
-from upi.models import Address, PhysicsNode, Status
-from upi.validation import validate_node
+from upi.validation import validate_record_boundaries
 
 
 def test_scientific_record_requires_provenance() -> None:
-    record = PhysicsNode(Address("PHYSICS", "G1", "T1", "N1"), "Claim", "Claim", "physics", Status.EST)
-    assert "UPI-E007" in {issue.code for issue in validate_node(record)}
+    errors = validate_record_boundaries({"status": "EST"})
+    assert any(error.startswith("UPI-E007:") for error in errors)

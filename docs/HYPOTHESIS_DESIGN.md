@@ -1,7 +1,7 @@
 # Hypothesis Design
 
-Record the system boundary, measurable variable, control group, independent and dependent variables, predicted result, falsification condition, confounders, uncertainty, dataset and analysis method.
+A scientific hypothesis should define its claim, domain, system boundary, variables, units, assumptions, expected observation, null model, control condition, test method, dataset, statistical method, falsification condition, uncertainty, confounders and replication rule.
 
-Also state a null model, statistical method and replication rule. A causal claim requires a causal identification strategy or intervention design; correlation alone is insufficient. Label evidence as software test, simulation, mathematical check, experimental observation or replication. Only the latter two can support an experimental-verification claim.
+A causal claim requires a causal identification strategy or intervention design; correlation alone is insufficient. Evidence must be labeled as software test, simulation, mathematical check, experimental observation or replication. Only the latter two can support an experimental-verification claim.
 
-For transparency and instability, operationalize hidden state, coordination cost, divergence and instability before testing. “Transparency reduces entropy” is not a thermodynamic law unless system boundaries and measurable thermodynamic variables are defined.
+An untestable proposal remains `HYP` with future testability, `STOP`, or `SYM` depending on its content.

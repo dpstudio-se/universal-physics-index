@@ -1,4 +1,5 @@
 import pytest
+
 from upi.physics import (
     energy_from_frequency,
     frequency_from_mass,
@@ -33,8 +34,9 @@ def test_negative_frequency_is_rejected() -> None:
         mass_from_frequency(-1.0)
 
 
-def test_zero_frequency_is_valid_zero_equivalent() -> None:
-    assert mass_from_frequency(0.0) == 0.0
+def test_zero_frequency_follows_current_positive_input_contract() -> None:
+    with pytest.raises(ValueError, match="must be positive"):
+        mass_from_frequency(0.0)
 
 
 def test_dimensional_relation_numerically() -> None:

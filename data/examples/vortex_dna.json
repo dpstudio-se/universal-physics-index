@@ -1,26 +1,20 @@
 {
-  "address": {"domain": "SYMBOLIC", "generation": "G1", "torus": "T_VORTEX_DNA", "node": "N_FUNCTIONAL_ARCHITECTURE"},
+  "address": "UPI<SYMBOLIC,1,VORTEX_DNA,FUNCTIONAL_ARCHITECTURE>",
   "title": "Vortex-DNA functional architecture",
-  "description": "A transparent collaboration and boundary-control model; DNA is metaphorical here.",
-  "scientific_domain": "symbolic systems architecture",
+  "description": "Transparent collaboration and boundary-control model; DNA is metaphorical.",
   "status": "SYM",
-  "schema_version": "0.1.0",
-  "variables": {
-    "IDENTITY_CORE": "role and collaboration contract",
-    "SCIENTIFIC_CORE": "established definitions and dimensional rules",
-    "HYPOTHESIS_CORE": "testable unestablished claims",
-    "SYMBOLIC_CORE": "conceptual mappings",
-    "AUDIT_CORE": "revision and conflict record",
-    "BOUNDARY_CORE": "classification guard"
-  },
-  "symbolic_interpretation": "Layered memory, routing, audit and scientific-boundary architecture.",
-  "confusion_guard": [
-    "Not biological DNA.",
-    "Agent agreement is not independent evidence.",
-    "No layer grants hidden authority or bypasses permissions."
+  "information_layer": "PUBLIC",
+  "definitions": [
+    "IDENTITY_CORE: role and collaboration contract",
+    "SCIENTIFIC_CORE: established definitions and dimensional rules",
+    "HYPOTHESIS_CORE: testable unestablished claims",
+    "SYMBOLIC_CORE: conceptual mappings",
+    "AUDIT_CORE: revision and conflict record",
+    "BOUNDARY_CORE: classification guard"
   ],
   "verification_type": "none",
   "claims_experimental_verification": false,
-  "created_date": "2026-07-18",
-  "revised_date": "2026-07-18"
+  "confusion_guard": "Not biological DNA; agent agreement is not independent evidence; no layer grants hidden authority.",
+  "tags": ["symbolic", "audit", "boundary"],
+  "version": "0.1.0"
 }
