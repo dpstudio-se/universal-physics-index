@@ -12,6 +12,15 @@ def write_required_scaffold(root: Path) -> None:
         json.dumps({"ports": {"angelica": 8080, "oden": 8081}}),
         encoding="utf-8",
     )
+    (root / "config" / "external_index_sources.json").write_text(
+        json.dumps(
+            {
+                "operation": "upi_external_source_manifest",
+                "sources": [{"source_id": "fixture"}],
+            }
+        ),
+        encoding="utf-8",
+    )
     for name in ("plugin.schema.json", ".env.example", "ARCHITECTURE.md"):
         (root / name).write_text("fixture", encoding="utf-8")
 
@@ -27,7 +36,7 @@ def test_audit_counts_files_not_directories(
 
     report = audit_repo()
 
-    assert report["files_scanned"] == 5
+    assert report["files_scanned"] == 6
     assert report["missing_files"] == []
     assert report["port_conflicts"] == []
 
