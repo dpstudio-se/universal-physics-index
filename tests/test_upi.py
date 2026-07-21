@@ -285,6 +285,13 @@ class TestModels:
         errors = bridge.validate()
         assert len(errors) > 0
 
+    def test_bridge_rejects_self_reference(self):
+        """Model and JSON validation reject the same self-bridge."""
+        address = Address("physics", 1, "classical", "force")
+        bridge = Bridge(source=address, target=address, relation=EdgeType.CAUSES)
+
+        assert any("cannot be the same" in error for error in bridge.validate())
+
 
 class TestGraph:
     """Test UPI graph structure."""

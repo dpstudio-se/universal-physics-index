@@ -56,6 +56,9 @@ upi mass-to-frequency 1e-30
 upi index8 --frequency 8
 upi normalize --observed 4.5 --reference 4.0
 upi validate data/constants/planck.json
+upi debug-index data --output upi-debug-report.json
+upi debug-index data --format markdown --output upi-debug-report.md
+upi debug-index data --odins-eye --output upi-odins-eye.json
 
 # Python API
 from upi import mass_from_frequency, UPIGraph, PhysicsNode
@@ -78,7 +81,7 @@ This repository is preconfigured for GitHub Codespaces via
 ## Repository Structure
 
 - `src/upi/` — Core modules (physics, models, validation, CLI)
-- `tests/` — Test suite (38 tests, all passing)
+- `tests/` — Test suite (72 tests, all passing)
 - `schemas/` — JSON schemas (node, bridge, theory)
 - `data/` — Example nodes, theories, STOP problems
 - `docs/` — Specification and documentation
@@ -92,11 +95,49 @@ This repository is preconfigured for GitHub Codespaces via
 ## Testing
 
 ```bash
-pytest tests/ -v        # 38 tests, all passing
+pytest tests/ -v        # 72 tests, all passing
 ruff check src tests    # Linting
 mypy src/upi            # Type checking
 upi validate data/constants/planck.json  # Schema validation
 ```
+
+## Automated UPI debugging
+
+`upi debug-index` scans every JSON record below a directory and produces both an error report and
+an exploded map across record, scale, evidence, finding, and correction layers. The same pipeline
+works across the full index while preserving domain and scale boundaries.
+
+The scanner:
+
+- validates node, bridge, and theory schemas;
+- treats source records and filenames as untrusted input;
+- redacts source values and replaces source paths with stable hashes in every report mode;
+- applies stable scientific-boundary error codes;
+- requires falsification conditions for testable node hypotheses;
+- suggests corrections without mutating source records;
+- records time/length scale as unspecified unless the source explicitly declares it;
+- labels its own result as `software_test`, never experimental verification.
+
+Shared equations or software functions across different time and length scales are mapped as
+relationships, not treated as proof of a shared physical mechanism.
+
+Add `--odins-eye` for a local, read-only inspection layer. It reports exact-content mirrors,
+conflicting records that reuse one UPI identity, hidden JSON paths, and possible semantic mirrors.
+Exact matches and conflicts are hash-backed; semantic overlap remains `HYP`. Reports contain stable
+path identifiers and full path hashes, never raw source paths or values. The scanner does not access
+networks or mutate index records.
+
+## Declarative agent workflows
+
+UPI includes schemas for bounded agent tasks, terminal results and workflow specifications. The
+contracts model transport, independent review and reversible quarantine under default-deny
+capabilities. See `docs/AGENT_CIRCULATION.md` and `examples/workflows/`.
+
+This is a validation and audit layer, not a scheduler or autonomous agent runtime. Biological terms
+such as circulation and immunity are `SYM` architecture metaphors only.
+
+Plugin manifests are also validation-only. Executable command construction fails closed until a
+runtime can enforce every declared capability and default-deny restriction.
 
 ## License
 

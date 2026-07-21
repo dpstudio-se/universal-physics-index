@@ -15,6 +15,7 @@ from .constants import (
     E,
     H,
 )
+from .debug import generate_debug_report, render_debug_markdown
 from .graph import UPIGraph
 from .models import (
     Address,
@@ -40,6 +41,7 @@ from .physics import (
     relativistic_total_frequency,
     signal_match,
 )
+from .plugin_loader import AngelicaPluginLoader
 from .runtime import (
     RuntimeProfile,
     RuntimeProfileLoader,
@@ -58,6 +60,14 @@ from .validation import (
     validate_record_boundaries,
     validate_scientific_boundaries,
     validate_status_enum,
+)
+from .workflow import (
+    WorkflowState,
+    validate_result,
+    validate_task,
+    validate_task_result_pair,
+    validate_transition,
+    validate_workflow,
 )
 
 __all__ = [
@@ -81,6 +91,7 @@ __all__ = [
     "RuntimeMatchResult",
     "InformationLayer",
     "VerificationType",
+    "AngelicaPluginLoader",
     # Physics
     "energy_from_frequency",
     "mass_from_frequency",
@@ -101,6 +112,15 @@ __all__ = [
     "get_active_profiles",
     # Graph
     "UPIGraph",
+    "generate_debug_report",
+    "render_debug_markdown",
+    # Declarative workflows
+    "WorkflowState",
+    "validate_task",
+    "validate_result",
+    "validate_workflow",
+    "validate_transition",
+    "validate_task_result_pair",
     # Validation
     "validate_json_schema",
     "validate_node_status",

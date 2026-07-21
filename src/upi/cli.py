@@ -15,7 +15,9 @@ from . import (
     validate_bridge_json,
     validate_node_json,
 )
+from .debug import generate_debug_report, render_debug_markdown
 from .models import Address
+from .schema_resources import schema_path
 
 
 def print_json(data):
@@ -108,18 +110,16 @@ def validate_cmd(args):
         sys.exit(1)
 
     # Try to determine if it's a node or bridge based on content
-    schema_dir = Path(__file__).parent.parent.parent / "schemas"
-
     is_node = "address" in data and "status" in data and "title" in data
     is_bridge = "source" in data and "target" in data and "relation" in data
 
     if is_node:
-        schema_path = schema_dir / "node.schema.json"
-        is_valid, errors = validate_node_json(data, schema_path)
+        node_schema_path = schema_path("node")
+        is_valid, errors = validate_node_json(data, node_schema_path)
         obj_type = "node"
     elif is_bridge:
-        schema_path = schema_dir / "bridge.schema.json"
-        is_valid, errors = validate_bridge_json(data, schema_path)
+        bridge_schema_path = schema_path("bridge")
+        is_valid, errors = validate_bridge_json(data, bridge_schema_path)
         obj_type = "bridge"
     else:
         print("Error: Cannot determine if object is node or bridge", file=sys.stderr)
@@ -177,6 +177,28 @@ def address_cmd(args):
     print_json(result)
 
 
+def debug_index_cmd(args):
+    """Generate an automated UPI error report and exploded map."""
+    root = Path(args.path)
+    if not root.exists():
+        print(f"Error: Path not found: {root}", file=sys.stderr)
+        sys.exit(1)
+
+    report = generate_debug_report(root, odins_eye=args.odins_eye)
+    rendered = (
+        render_debug_markdown(report)
+        if args.format == "markdown"
+        else json.dumps(report, indent=2)
+    )
+    if args.output:
+        Path(args.output).write_text(rendered + "\n", encoding="utf-8")
+    else:
+        print(rendered)
+
+    if args.strict and report["findings"]:
+        sys.exit(1)
+
+
 def main():
     """Main CLI entry point."""
     import argparse
@@ -230,6 +252,26 @@ def main():
     addr.add_argument("--torus", help="Torus (for creation)")
     addr.add_argument("--node", help="Node identifier (for creation)")
     addr.set_defaults(func=address_cmd)
+
+    # debug-index
+    debug = subparsers.add_parser(
+        "debug-index",
+        help="Generate a UPI error report and exploded physics/code map",
+    )
+    debug.add_argument("path", nargs="?", default="data", help="Directory of UPI JSON records")
+    debug.add_argument("--output", help="Write the report to a file")
+    debug.add_argument("--format", choices=("json", "markdown"), default="json")
+    debug.add_argument(
+        "--odins-eye",
+        action="store_true",
+        help="Find hidden paths, conflicting identities, and mirrored records",
+    )
+    debug.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit non-zero when the report contains findings",
+    )
+    debug.set_defaults(func=debug_index_cmd)
 
     args = parser.parse_args()
 
