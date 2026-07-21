@@ -1,0 +1,64 @@
+{
+  "address": "UPI<quantum_information,1,qudit,generalized_weyl_gates>",
+  "title": "Generalized qudit shift and phase gates",
+  "description": "Established d-level generalization of the Pauli shift and phase operators. The cyclic shift X_d permutes computational-basis labels modulo d, while Z_d changes their relative phases using d-th roots of unity.",
+  "status": "EST",
+  "definitions": [
+    "omega_d = exp(2 pi i / d) is a primitive d-th root of unity.",
+    "X_d is the cyclic shift operator on the computational basis.",
+    "Z_d is the diagonal phase operator on the computational basis.",
+    "The operators obey the Weyl commutation relation Z_d X_d = omega_d X_d Z_d."
+  ],
+  "equations": [
+    "omega_d = exp(2 pi i / d)",
+    "X_d |j> = |(j + 1) mod d>",
+    "Z_d |j> = omega_d^j |j>",
+    "X_d^d = Z_d^d = I_d",
+    "Z_d X_d = omega_d X_d Z_d"
+  ],
+  "assumptions": [
+    "The basis labels form the cyclic group Z_d.",
+    "The local dimension d is a declared integer with d >= 2.",
+    "The gates act ideally without hardware noise or leakage."
+  ],
+  "mechanism": "X_d reassigns basis labels through a norm-preserving permutation. Z_d multiplies each amplitude by a unit-modulus phase. Both operators are unitary.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "A. Muthukrishnan and C. R. Stroud Jr., Multivalued logic gates for quantum computation, Physical Review A 62, 052309 (2000)",
+      "notes": "Primary research treatment of multivalued quantum logic gates."
+    },
+    {
+      "type": "calculation",
+      "source": "Daniel Gottesman, Fault-Tolerant Quantum Computation with Higher-Dimensional Systems, arXiv:quant-ph/9802007",
+      "notes": "Higher-dimensional generalized Pauli operator framework."
+    }
+  ],
+  "primary_sources": [
+    "https://doi.org/10.1103/PhysRevA.62.052309",
+    "https://arxiv.org/abs/quant-ph/9802007"
+  ],
+  "predictions": [
+    "X_d and Z_d preserve total probability for every normalized input.",
+    "Applying X_d exactly d times returns the original state.",
+    "Applying Z_d exactly d times returns the original state.",
+    "The computed commutator differs from the Weyl phase only by numerical tolerance."
+  ],
+  "falsification_conditions": [
+    "Reject an implementation if X_d or Z_d changes state norm beyond tolerance.",
+    "Reject the cyclic gate if X_d^d is not the identity.",
+    "Reject the phase gate if any diagonal factor has modulus different from one beyond tolerance."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Computational basis of a finite d-dimensional Hilbert space.",
+  "normalization_method": "Unitary action preserves the existing state normalization.",
+  "normalization_claim": "Probability preservation verifies the software operator, not physical gate fidelity.",
+  "null_model": "An arbitrary non-unitary permutation or scaling of amplitudes.",
+  "control_condition": "Apply each gate followed by its inverse and compare with the input state.",
+  "causal_claim": false,
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Generalized gates are established mathematics. Executing their matrices on a classical computer does not establish a physical qudit device.",
+  "tags": ["qudit", "weyl-operators", "generalized-pauli", "shift-gate", "phase-gate"],
+  "version": "0.1.0"
+}
