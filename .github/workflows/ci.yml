@@ -66,7 +66,11 @@ jobs:
               for name in ('node', 'bridge', 'theory')
           }
 
-          for example in Path('data').rglob('*.json'):
+          data_root = Path('data')
+          for example in data_root.rglob('*.json'):
+              if example.name.startswith('invalid_'):
+                  print(f'✓ {example.relative_to(data_root)} is an intentional negative fixture')
+                  continue
               data = json.loads(example.read_text())
               if {'source', 'target', 'relation'} <= data.keys():
                   record_type = 'bridge'
@@ -75,7 +79,7 @@ jobs:
               else:
                   record_type = 'node'
               validate(instance=data, schema=schemas[record_type])
-              print(f'✓ {example.relative_to(\"data\")} is valid as {record_type}')
+              print(f'✓ {example.relative_to(data_root)} is valid as {record_type}')
           "
       
       - name: Build package

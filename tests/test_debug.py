@@ -18,6 +18,7 @@ def test_debug_index_builds_exploded_map(tmp_path: Path) -> None:
             "description": "A valid test node.",
             "status": "EST",
             "quantities": [{"name": "time", "value": 1.0, "unit": "s"}],
+            "evidence": [{"type": "calculation", "source": "test fixture"}],
         },
     )
 
