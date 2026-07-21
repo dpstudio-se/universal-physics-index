@@ -1,0 +1,68 @@
+{
+  "address": "UPI<quantum_algorithms,1,amplitude_amplification,phase_oracle_diffusion>",
+  "title": "Phase-oracle amplitude amplification",
+  "description": "Established ideal quantum-search mechanism in which a phase oracle marks target states and a reflection about the initial state rotates amplitude toward the marked subspace. Grover search is the uniform-state special case.",
+  "status": "EST",
+  "definitions": [
+    "f(x) is a Boolean marking function for computational-basis state x.",
+    "O_f is the phase oracle that changes the sign of marked basis states.",
+    "|s> is the uniform superposition over N basis states in the Grover special case.",
+    "D is the reflection 2|s><s| - I.",
+    "M is the number of marked states and theta = asin(sqrt(M/N))."
+  ],
+  "equations": [
+    "O_f |x> = (-1)^(f(x)) |x>",
+    "|s> = (1/sqrt(N)) sum_(x=0)^(N-1) |x>",
+    "D = 2 |s><s| - I",
+    "G = D O_f",
+    "theta = asin(sqrt(M/N))",
+    "P_success(r) = sin^2((2 r + 1) theta)",
+    "r_opt approximately round(pi/(4 theta) - 1/2)"
+  ],
+  "assumptions": [
+    "The initial state is the declared uniform state for the stated probability formula.",
+    "The phase oracle marks exactly M states and is implemented coherently in the ideal quantum model.",
+    "The automatic iteration estimate assumes M is known.",
+    "Noise, imperfect gates and readout error are excluded from the ideal equations."
+  ],
+  "mechanism": "Oracle and diffusion act as two reflections whose product is a rotation in the two-dimensional subspace spanned by marked and unmarked components. Repetition increases marked-state amplitude until the optimum is passed.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Lov K. Grover, A fast quantum mechanical algorithm for database search, Proceedings of STOC 1996; arXiv:quant-ph/9605043",
+      "notes": "Primary source for phase-oracle quantum database search."
+    }
+  ],
+  "primary_sources": [
+    "https://arxiv.org/abs/quant-ph/9605043"
+  ],
+  "predictions": [
+    "For ideal N, M and r, the marked probability equals sin^2((2r+1)theta).",
+    "For N = 20, M = 1 and r = 3, ideal success probability exceeds 0.99.",
+    "Continuing iterations beyond the optimum eventually decreases marked probability."
+  ],
+  "falsification_conditions": [
+    "Reject the implementation if its marked probability disagrees with the analytic two-subspace rotation beyond tolerance.",
+    "Reject the oracle if unmarked basis amplitudes change during an oracle-only basis-state test.",
+    "Reject the diffusion operator if it fails to preserve state norm.",
+    "Do not claim query speedup for a classical state-vector implementation."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Ideal finite-dimensional quantum query model.",
+  "normalization_method": "Use normalized input states and unitary oracle/reflection operators.",
+  "normalization_claim": "Analytic probability amplification is established for the ideal algorithm; software agreement does not verify quantum hardware speedup.",
+  "null_model": "Uniform random selection with target probability M/N per independent trial.",
+  "control_condition": "Run the same number of iterations with an oracle that marks no target and verify that no target amplification appears.",
+  "confounders": [
+    "Incorrect marked-state count changes the selected iteration number.",
+    "Finite precision introduces small probability and norm errors.",
+    "Classical simulation cost can erase the algorithmic hardware advantage."
+  ],
+  "replication_rule": "For declared N, M and r, compare simulated probabilities with the analytic formula and record numerical tolerance and implementation commit.",
+  "causal_claim": false,
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "The ideal Grover rotation is established quantum-algorithm mathematics. Running it by explicitly updating all amplitudes on a classical computer is not a quantum speedup.",
+  "tags": ["grover", "phase-oracle", "diffusion", "amplitude-amplification", "quantum-search"],
+  "version": "0.1.0"
+}
