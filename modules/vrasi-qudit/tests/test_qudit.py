@@ -1,5 +1,4 @@
 import pytest
-
 from vrasi_qudit import (
     basis_state,
     dual_round_trip_error,
