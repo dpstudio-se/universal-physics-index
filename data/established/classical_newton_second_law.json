@@ -1,0 +1,17 @@
+{
+  "address": "UPI<CLASSICAL_MECHANICS,1,FORCE_MOTION,NEWTON_SECOND_LAW>",
+  "title": "Newton's second law",
+  "description": "The net external force equals the time rate of change of momentum; for constant mass this reduces to F_net = m a.",
+  "status": "EST",
+  "definitions": ["p is linear momentum", "F_net is net external force", "m is invariant nonrelativistic mass", "a is acceleration"],
+  "equations": ["F_net = d p / d t", "p = m v", "F_net = m a (constant m)"],
+  "assumptions": ["Classical nonrelativistic regime", "Inertial reference frame", "Constant-mass reduction only where applicable"],
+  "evidence": [{"type": "experiment", "source": "Repeated laboratory and engineering tests of classical dynamics", "confidence": 1.0}],
+  "primary_sources": ["Newton, Philosophiae Naturalis Principia Mathematica (1687)", "BIPM SI Brochure, force and derived units"],
+  "falsification_conditions": ["A reproducible isolated classical system violates momentum-rate balance beyond quantified uncertainty"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "F = ma is the constant-mass special case, not the most general statement.",
+  "tags": ["classical mechanics", "force", "momentum"]
+}
