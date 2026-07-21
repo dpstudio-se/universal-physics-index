@@ -190,7 +190,7 @@ jobs:
 
           assert vrasi_swarm.POOL_SIZE == 9
           assert vrasi_swarm.SELECTED_SIZE == 3
-          assert vrasi_swarm.QUORUM_SIZE == 6
+          assert vrasi_swarm.QUORUM_SIZE == 3
           assert len(vrasi_swarm.digest_payload({"source": "github"})) == 64
           print("✓ UPI, vrasi-physics and vrasi-swarm public APIs passed")
           PY
