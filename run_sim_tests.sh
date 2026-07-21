@@ -10,21 +10,14 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "Checking the UPI calculation layer..."
-PYTHONPATH=src python - <<'PY'
+echo "Checking the standalone VR-ASI physics layer..."
+PYTHONPATH=modules/vrasi-physics/src python - <<'PY'
 import json
+from dataclasses import asdict
 
-from upi.physics import energy_from_frequency, index8_from_frequency, mass_from_frequency
+from vrasi_physics import evaluate_frequency
 
-frequency_hz = 8.0
-print(json.dumps({
-    "frequency_hz": frequency_hz,
-    "energy_j": energy_from_frequency(frequency_hz),
-    "mass_equivalent_kg": mass_from_frequency(frequency_hz),
-    "n8_reference_index": index8_from_frequency(frequency_hz),
-    "verification_type": "software_test",
-    "claims_experimental_verification": False,
-}))
+print(json.dumps(asdict(evaluate_frequency(8.0)), sort_keys=True))
 PY
 
 echo "Starting VR-ASI-1 Simulator Tests..."

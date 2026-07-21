@@ -81,10 +81,24 @@ This repository is preconfigured for GitHub Codespaces via
 ## Repository Structure
 
 - `src/upi/` — Core modules (physics, models, validation, CLI)
-- `tests/` — Test suite (72 tests, all passing)
+- `modules/vrasi-physics/` — Standalone, dependency-free VR-ASI physics kernel
+- `tests/` — UPI test suite
 - `schemas/` — JSON schemas (node, bridge, theory)
 - `data/` — Example nodes, theories, STOP problems
 - `docs/` — Specification and documentation
+
+### Standalone VR-ASI physics
+
+The simulator does not need the complete UPI graph or workflow system. Its three required
+calculations are packaged separately and can be installed without `upi`:
+
+```bash
+python -m pip install ./modules/vrasi-physics
+vrasi-physics 8
+```
+
+See [`modules/vrasi-physics/README.md`](modules/vrasi-physics/README.md) for the deliberately
+small API and its interpretation limits.
 
 ## Important Disclaimers
 
@@ -95,8 +109,8 @@ This repository is preconfigured for GitHub Codespaces via
 ## Testing
 
 ```bash
-pytest tests/ -v        # 72 tests, all passing
-ruff check src tests    # Linting
+pytest tests/ modules/vrasi-physics/tests/ -v
+ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests
 mypy src/upi            # Type checking
 upi validate data/constants/planck.json  # Schema validation
 ```

@@ -29,15 +29,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install -e ".[dev]"
+          pip install -e ./modules/vrasi-physics
       
       - name: Lint with ruff
-        run: ruff check src tests
+        run: ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests
       
       - name: Type check with mypy
-        run: mypy src/upi --ignore-missing-imports
+        run: |
+          mypy src/upi --ignore-missing-imports
+          mypy modules/vrasi-physics/src/vrasi_physics
       
       - name: Run tests with pytest
-        run: pytest tests/ -v --tb=short
+        run: pytest tests/ modules/vrasi-physics/tests/ -v --tb=short
       
       - name: Validate JSON schemas
         run: |
@@ -82,6 +85,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip wheel . --no-deps --wheel-dir dist
+          python -m pip wheel ./modules/vrasi-physics --no-deps --wheel-dir dist/vrasi-physics
           python -c "import glob, zipfile; names = zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist(); assert all(any(name.endswith('/schemas/' + schema) for name in names) for schema in ('node.schema.json', 'bridge.schema.json', 'theory.schema.json', 'agent-task.schema.json', 'agent-result.schema.json', 'workflow.schema.json'))"
 
   security:
