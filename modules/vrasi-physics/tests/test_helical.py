@@ -1,7 +1,6 @@
 import math
 
 import pytest
-
 from vrasi_physics import (
     evaluate_coupled_rotors,
     evaluate_helical_motion,
