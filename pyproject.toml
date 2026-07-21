@@ -55,7 +55,7 @@ upi = ["schemas/*.json"]
 minversion = "7.0"
 testpaths = ["tests"]
 python_files = "test_*.py"
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 addopts = "-v --tb=short"
 
 [tool.ruff]
