@@ -55,19 +55,19 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
         "claims_experimental_verification": False,
     }
 
-    for relative in CRITICAL_FILES:
-        if not (root / relative).is_file():
-            report["missing_files"].append(relative)
+    for critical_file in CRITICAL_FILES:
+        if not (root / critical_file).is_file():
+            report["missing_files"].append(critical_file)
 
     schemas: dict[str, dict[str, Any]] = {}
-    for record_type in RECORD_SCHEMAS:
-        schema_path = root / "schemas" / f"{record_type}.schema.json"
+    for schema_name in RECORD_SCHEMAS:
+        schema_path = root / "schemas" / f"{schema_name}.schema.json"
         try:
             schema = _load_json(schema_path)
             if not isinstance(schema, dict):
                 raise TypeError("schema top level must be an object")
             Draft7Validator.check_schema(schema)
-            schemas[record_type] = schema
+            schemas[schema_name] = schema
         except (OSError, UnicodeError, json.JSONDecodeError, TypeError, SchemaError) as error:
             report["schema_errors"].append(
                 _format_validation_error(schema_path.relative_to(root), error)
@@ -76,33 +76,35 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
     data_root = root / "data"
     if data_root.is_dir():
         for path in sorted(data_root.rglob("*.json")):
-            relative = path.relative_to(root)
+            relative_path = path.relative_to(root)
             if path.name.startswith("invalid_"):
                 continue
             try:
                 data = _load_json(path)
             except (OSError, UnicodeError, json.JSONDecodeError) as error:
-                report["data_errors"].append(_format_validation_error(relative, error))
+                report["data_errors"].append(_format_validation_error(relative_path, error))
                 continue
             if not isinstance(data, dict):
-                report["data_errors"].append(f"{relative.as_posix()}: top level must be an object")
-                continue
-            record_type = _record_type(data)
-            if record_type is None:
                 report["data_errors"].append(
-                    f"{relative.as_posix()}: unclassified data record; expected node, bridge, or theory"
+                    f"{relative_path.as_posix()}: top level must be an object"
                 )
                 continue
-            schema = schemas.get(record_type)
+            record_kind = _record_type(data)
+            if record_kind is None:
+                report["data_errors"].append(
+                    f"{relative_path.as_posix()}: unclassified data record; expected node, bridge, or theory"
+                )
+                continue
+            schema = schemas.get(record_kind)
             if schema is None:
                 report["data_errors"].append(
-                    f"{relative.as_posix()}: {record_type} schema is unavailable"
+                    f"{relative_path.as_posix()}: {record_kind} schema is unavailable"
                 )
                 continue
             errors = sorted(Draft7Validator(schema).iter_errors(data), key=str)
             if errors:
                 report["data_errors"].extend(
-                    f"{relative.as_posix()}: {error.json_path or '$'} failed "
+                    f"{relative_path.as_posix()}: {error.json_path or '$'} failed "
                     f"{error.validator} validation"
                     for error in errors
                 )
@@ -161,12 +163,12 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
             raise TypeError("plugin schema top level must be an object")
         Draft7Validator.check_schema(plugin_schema)
         validator = Draft7Validator(plugin_schema)
-        for relative in PLUGIN_MANIFESTS:
-            path = root / relative
-            manifest = _load_json(path)
+        for manifest_name in PLUGIN_MANIFESTS:
+            manifest_path = root / manifest_name
+            manifest = _load_json(manifest_path)
             errors = sorted(validator.iter_errors(manifest), key=str)
             report["manifest_errors"].extend(
-                f"{relative}: {error.json_path or '$'} failed {error.validator} validation"
+                f"{manifest_name}: {error.json_path or '$'} failed {error.validator} validation"
                 for error in errors
             )
     except (OSError, UnicodeError, json.JSONDecodeError, TypeError, SchemaError) as error:
