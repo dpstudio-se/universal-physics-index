@@ -39,7 +39,7 @@ Use names in this priority order:
 | Immunity / immune system | `validation_and_quarantine_layer` | `SYM` architecture alias |
 | Heartbeat | `periodic_liveness_signal` | Engineering shorthand allowed |
 | Transparency operator | `traceability_operator` or a domain-specific observable | Symbolic name requires an explicit definition |
-| Mass-frequency bridge | `rest-energy Compton-frequency relation` | Use only for `E_0 = m c^2 = h f_C` |
+| Mass-frequency bridge | `rest-energy Compton-frequency relation` | Use only for `E_0 = m c^2 = h nu_C = hbar omega_C` |
 | Frequency-derived mass | `equivalent_mass`, symbol `m_eq` | Must not be described as measured rest mass |
 | 8 Hz lock | `reference_frequency` | No universal-constant claim |
 
@@ -47,21 +47,28 @@ Use names in this priority order:
 
 ### Rest-energy frequency
 
-Use
+Use ordinary frequency notation
 
 ```text
 E_0 = m c^2
-f_C = E_0 / h = m c^2 / h
-m = h f_C / c^2
+nu_C = E_0 / h = m c^2 / h
+m = h nu_C / c^2
 ```
 
-Here `f_C` is the Compton frequency associated with rest energy. A generic oscillation frequency `f` must not automatically be converted into physical rest mass.
+or angular-frequency notation
+
+```text
+omega_C = E_0 / hbar = m c^2 / hbar
+m = hbar omega_C / c^2
+```
+
+Here `nu_C` is the Compton frequency in hertz and `omega_C` is the corresponding angular frequency in radians per second. A generic oscillation frequency must not automatically be converted into physical rest mass.
 
 For a purely energy-equivalent conversion, use
 
 ```text
-E = h f
-m_eq = E / c^2 = h f / c^2
+E = h nu
+m_eq = E / c^2 = h nu / c^2
 ```
 
 and state that `m_eq` is an energy-equivalent mass, not necessarily the invariant mass of an object.
@@ -69,11 +76,12 @@ and state that `m_eq` is an energy-equivalent mass, not necessarily the invarian
 ### Reserved symbols
 
 - `T`: thermodynamic temperature.
-- `T_tr`: project-defined traceability or transparency score, only with a declared dimension and measurement procedure.
+- `T_tr`: project-defined traceability score. It is dimensionless unless a future specification explicitly defines otherwise, and it requires a documented measurement procedure.
 - `f_h1`: neutral harmonic-frequency identifier when no accepted physical name exists.
 - `R0_TIR`: dimensionless trace-integrity conflict ratio.
 - `r0_S = dR0_TIR/dt`: trace-integrity change rate in `s^-1`.
-- `Omega` or `omega`: angular frequency only when defined by `omega = 2 pi f`; otherwise use a descriptive identifier.
+- `omega`: angular frequency only when defined by `omega = 2 pi nu`.
+- `Omega`: do not reserve project-wide. Depending on context, `Omega` may denote the ohm symbol, solid angle, a cosmological density parameter, a sample space, or another discipline-specific quantity. Use it only with an explicit local definition.
 - `phi`: phase angle or an explicitly defined scalar, not an unexplained project-wide constant.
 
 ## File and API naming
