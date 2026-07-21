@@ -20,6 +20,9 @@ from vrasi_physics import evaluate_frequency
 print(json.dumps(asdict(evaluate_frequency(8.0)), sort_keys=True))
 PY
 
+echo "Checking the standalone 3-6-9/Gen4 swarm layer..."
+PYTHONPATH=modules/vrasi-swarm/src python -m vrasi_swarm demo
+
 echo "Starting VR-ASI-1 Simulator Tests..."
 "${COMPOSE[@]}" up -d
 

@@ -82,6 +82,7 @@ This repository is preconfigured for GitHub Codespaces via
 
 - `src/upi/` — Core modules (physics, models, validation, CLI)
 - `modules/vrasi-physics/` — Standalone, dependency-free VR-ASI physics kernel
+- `modules/vrasi-swarm/` — Standalone 3-6-9/Gen4 coordination kernel
 - `tests/` — UPI test suite
 - `schemas/` — JSON schemas (node, bridge, theory)
 - `data/` — Example nodes, theories, STOP problems
@@ -100,6 +101,20 @@ vrasi-physics 8
 See [`modules/vrasi-physics/README.md`](modules/vrasi-physics/README.md) for the deliberately
 small API and its interpretation limits.
 
+### 3-6-9 generation 4 coordination
+
+The transport-neutral swarm module turns nine allowlisted node observations into a
+deterministic top-three quorum. It shares hashes and pseudonymous IDs, not private payloads
+or network endpoints:
+
+```bash
+python -m pip install ./modules/vrasi-swarm
+vrasi-swarm demo
+```
+
+This is an auditable coordination protocol (`SYM`), not a claim of collective biological
+consciousness or new physics.
+
 ## Important Disclaimers
 
 **UPI is NOT**: A Theory of Everything | Peer review replacement | Claim of universal 8 Hz constant
@@ -109,8 +124,8 @@ small API and its interpretation limits.
 ## Testing
 
 ```bash
-pytest tests/ modules/vrasi-physics/tests/ -v
-ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests
+pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v
+ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
 mypy src/upi            # Type checking
 upi validate data/constants/planck.json  # Schema validation
 ```
