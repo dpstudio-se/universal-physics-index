@@ -11,10 +11,11 @@ from jsonschema import Draft7Validator
 from jsonschema.exceptions import SchemaError
 
 RECORD_SCHEMAS = ("node", "bridge", "theory")
+SOURCE_MANIFEST_PATH = Path("config/external_source_manifest.json")
 CRITICAL_FILES = (
     "plugin.schema.json",
     "config/ports.json",
-    "config/external_index_sources.json",
+    SOURCE_MANIFEST_PATH.as_posix(),
     ".env.example",
     "ARCHITECTURE.md",
 )
@@ -133,7 +134,7 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
         report["critical_conflicts"].append(f"Error reading config/ports.json: {error}")
 
-    source_manifest_path = root / "config" / "external_index_sources.json"
+    source_manifest_path = root / SOURCE_MANIFEST_PATH
     try:
         source_manifest = _load_json(source_manifest_path)
         if not isinstance(source_manifest, dict):
@@ -154,7 +155,7 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
         if len(source_ids) != len(set(source_ids)):
             raise ValueError("source_id values must be unique")
     except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as error:
-        report["manifest_errors"].append(f"config/external_index_sources.json: {error}")
+        report["manifest_errors"].append(f"{SOURCE_MANIFEST_PATH.as_posix()}: {error}")
 
     plugin_schema_path = root / "plugin.schema.json"
     try:
