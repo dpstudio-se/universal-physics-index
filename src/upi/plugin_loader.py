@@ -39,16 +39,10 @@ class AngelicaPluginLoader:
             raise FileNotFoundError(f"Plugin entryPoint not found: {entrypoint.name}")
 
     def build_spawn_command(self) -> list[str]:
-        """Build, but never execute, a command for an enabled executable plugin."""
+        """Fail closed because this validation layer cannot enforce runtime capabilities."""
         if self.manifest["mode"] != "executable" or not self.manifest["enabled"]:
             raise RuntimeError("Simulation or disabled plugin cannot be spawned")
-        return [
-            "docker",
-            "run",
-            "--rm",
-            "--name",
-            self.manifest["pluginId"],
-            "--memory",
-            self.manifest["resources"]["memory"],
-            "vrasi1-plugin-base",
-        ]
+        raise RuntimeError(
+            "Executable plugin spawning is not implemented; manifest validation "
+            "does not provide a runtime security boundary"
+        )

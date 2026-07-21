@@ -100,6 +100,11 @@ def _text_hash(value: str) -> str:
     return sha256(value.encode("utf-8")).hexdigest()
 
 
+def _path_reference(value: str) -> tuple[str, str]:
+    path_hash = _text_hash(value)
+    return f"path:{path_hash[:16]}", path_hash
+
+
 def _group_by(items: list[dict[str, Any]], key: str) -> list[list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
     for item in items:
@@ -155,8 +160,8 @@ def generate_debug_report(
 ) -> dict[str, Any]:
     """Scan every JSON record below *root* and return a UPI debug report.
 
-    The report is deterministic and AI-ready. It never mutates source records and
-    never upgrades software validation to experimental evidence.
+    The report is deterministic, redacted, and AI-ready. It never mutates source
+    records and never upgrades software validation to experimental evidence.
     """
     root = root.resolve()
     schemas_dir = (schemas_dir or packaged_schemas_dir()).resolve()
@@ -169,24 +174,31 @@ def generate_debug_report(
 
     for path in json_paths:
         relative_path = path.relative_to(root).as_posix()
+        path_id, path_hash = _path_reference(relative_path)
         if odins_eye and any(part.startswith(".") for part in Path(relative_path).parts):
             findings.append(
                 _finding(
                     "UPI-O003",
                     "EST",
-                    relative_path,
+                    path_id,
                     "JSON record is stored below a hidden path.",
                 )
             )
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeError, json.JSONDecodeError) as parse_error:
-            findings.append(_finding("UPI-D001", "ERR", relative_path, str(parse_error)))
+        except json.JSONDecodeError:
+            findings.append(_finding("UPI-D001", "ERR", path_id, "Invalid JSON syntax."))
+            continue
+        except UnicodeError:
+            findings.append(_finding("UPI-D001", "ERR", path_id, "File is not valid UTF-8."))
+            continue
+        except OSError:
+            findings.append(_finding("UPI-D001", "ERR", path_id, "File could not be read."))
             continue
 
         if not isinstance(data, dict):
             findings.append(
-                _finding("UPI-D002", "STOP", relative_path, "Top-level JSON must be an object.")
+                _finding("UPI-D002", "STOP", path_id, "Top-level JSON must be an object.")
             )
             continue
 
@@ -196,14 +208,14 @@ def generate_debug_report(
                 _finding(
                     "UPI-D002",
                     "STOP",
-                    relative_path,
+                    path_id,
                     "Could not classify record as node, bridge, or theory.",
                 )
             )
             continue
 
         status = str(data.get("status", "STOP"))
-        reported_status = status if not odins_eye or status in VALID_STATUSES else "INVALID"
+        reported_status = status if status in VALID_STATUSES else "INVALID"
         status_counts[reported_status] += 1
         type_counts[record_type] += 1
         identity = _record_identity(data, record_type)
@@ -211,12 +223,11 @@ def generate_debug_report(
         records.append(
             {
                 "identity_hash": _text_hash(identity),
-                "path": relative_path,
+                "path": path_id,
+                "path_hash": path_hash,
                 "record_type": record_type,
                 "status": reported_status,
-                "scale": (
-                    _redacted_scale_signature(data) if odins_eye else _scale_signature(data)
-                ),
+                "scale": _redacted_scale_signature(data),
                 "evidence_count": _list_count(data.get("evidence")),
                 "equation_count": _list_count(
                     data.get("equations", data.get("fundamental_equations"))
@@ -225,7 +236,8 @@ def generate_debug_report(
         )
         inspection_records.append(
             {
-                "path": relative_path,
+                "path": path_id,
+                "path_hash": path_hash,
                 "identity": identity,
                 "content_hash": content_hash,
                 "semantic_signature": _semantic_signature(data),
@@ -234,13 +246,13 @@ def generate_debug_report(
 
         for schema_error in _schema_errors(data, record_type, schemas_dir):
             findings.append(
-                _finding("UPI-D003", "ERR", relative_path, schema_error, record_type=record_type)
+                _finding("UPI-D003", "ERR", path_id, schema_error, record_type=record_type)
             )
 
         for boundary_error in validate_record_boundaries(data):
             code = boundary_error.split(":", 1)[0]
             findings.append(
-                _finding(code, "ERR", relative_path, boundary_error, record_type=record_type)
+                _finding(code, "ERR", path_id, boundary_error, record_type=record_type)
             )
 
         if record_type == "node" and status == "HYP" and not data.get("falsification_conditions"):
@@ -248,7 +260,7 @@ def generate_debug_report(
                 _finding(
                     "UPI-D004",
                     "STOP",
-                    relative_path,
+                    path_id,
                     "Hypothesis has no falsification_conditions.",
                     record_type=record_type,
                 )
@@ -261,7 +273,13 @@ def generate_debug_report(
         for group in _group_by(inspection_records, "content_hash"):
             paths = sorted(item["path"] for item in group)
             content_hash = group[0]["content_hash"]
-            mirror_groups.append({"content_hash": content_hash, "paths": paths})
+            mirror_groups.append(
+                {
+                    "content_hash": content_hash,
+                    "paths": paths,
+                    "path_hashes": sorted(item["path_hash"] for item in group),
+                }
+            )
             findings.append(
                 _finding(
                     "UPI-O001",
@@ -278,7 +296,12 @@ def generate_debug_report(
             paths = sorted(item["path"] for item in group)
             identity_hash = _text_hash(group[0]["identity"])
             shadow_groups.append(
-                {"identity_hash": identity_hash, "content_hashes": hashes, "paths": paths}
+                {
+                    "identity_hash": identity_hash,
+                    "content_hashes": hashes,
+                    "paths": paths,
+                    "path_hashes": sorted(item["path_hash"] for item in group),
+                }
             )
             findings.append(
                 _finding(
@@ -296,7 +319,12 @@ def generate_debug_report(
             semantic_hashes = {item["content_hash"] for item in group}
             if len(semantic_hashes) < 2 or set(paths) <= exact_mirror_paths:
                 continue
-            semantic_groups.append({"paths": paths})
+            semantic_groups.append(
+                {
+                    "paths": paths,
+                    "path_hashes": sorted(item["path_hash"] for item in group),
+                }
+            )
             findings.append(
                 _finding(
                     "UPI-O004",
@@ -378,9 +406,11 @@ def generate_debug_report(
     return {
         "schema_version": "0.1.0",
         "operation": "upi_debug_index",
-        "root": "." if odins_eye else str(root),
+        "root": ".",
         "verification_type": "software_test",
         "claims_experimental_verification": False,
+        "input_trust": "untrusted",
+        "source_paths_redacted": True,
         "summary": {
             "files_scanned": len(json_paths),
             "records_classified": len(records),
@@ -393,7 +423,7 @@ def generate_debug_report(
             "enabled": odins_eye,
             "mode": "local_read_only",
             "secret_values_exposed": False,
-            "source_values_redacted": odins_eye,
+            "source_values_redacted": True,
             "mirror_groups": mirror_groups,
             "shadow_groups": shadow_groups,
             "semantic_mirror_groups": semantic_groups,
