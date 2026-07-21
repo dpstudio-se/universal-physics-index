@@ -1,0 +1,101 @@
+{
+  "address": "UPI<quantum_information,6,duality,double_slit_measurement>",
+  "title": "Double-slit interference, which-way information, and no-signalling",
+  "description": "Density-matrix model of a two-path interferometer coupled to a path detector. Interference visibility is controlled by detector-state overlap, while local outcome statistics cannot be changed by a remote choice of measurement basis. The node separates experimentally established predictions from interpretation-dependent claims about collapse, determinism, or retrocausality.",
+  "status": "EST",
+  "definitions": [
+    "|L> and |R> are orthogonal path states associated with the two slits.",
+    "|D_L> and |D_R> are detector or environment states correlated with the paths.",
+    "gamma = <D_R|D_L> is the complex coherence factor retained after tracing out the detector.",
+    "V is fringe visibility and D is optimal path distinguishability.",
+    "rho_path is the reduced density operator of the path subsystem."
+  ],
+  "equations": [
+    "|Psi> = (|L>|D_L> + exp(i phi)|R>|D_R>)/sqrt(2)",
+    "rho_path = Tr_D(|Psi><Psi|)",
+    "rho_path = (|L><L| + |R><R| + gamma exp(-i phi)|L><R| + gamma* exp(i phi)|R><L|)/2",
+    "P(x) = (|psi_L(x)|^2 + |psi_R(x)|^2 + 2 Re[gamma exp(i phi) psi_L*(x) psi_R(x)])/2",
+    "V = |gamma| for equal path intensities",
+    "D = sqrt(1 - |gamma|^2) for two pure detector states with equal priors",
+    "V^2 + D^2 = 1 for the ideal pure-state case",
+    "V^2 + D^2 <= 1 in the general two-path case",
+    "rho_A' = Tr_B[(I_A tensor E_B)(rho_AB)] = rho_A for every trace-preserving local map E_B"
+  ],
+  "assumptions": [
+    "The two paths form an effective two-dimensional Hilbert space.",
+    "The ideal equality uses equal path amplitudes and pure detector marker states.",
+    "The no-signalling equation assumes ordinary quantum mechanics and a trace-preserving local operation on the remote subsystem."
+  ],
+  "mechanism": "A which-way interaction correlates path states with distinguishable detector or environment states. Tracing over those states suppresses the off-diagonal coherence terms by gamma. No conscious observer is required. Erasing or sorting detector information can recover interference only in conditioned coincidence subensembles; the unconditioned local distribution remains unchanged.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "B.-G. Englert, Fringe Visibility and Which-Way Information: An Inequality, Phys. Rev. Lett. 77, 2154 (1996), DOI: 10.1103/PhysRevLett.77.2154",
+      "date": "1996-09-09",
+      "confidence": 0.99,
+      "notes": "Derives the quantitative visibility-distinguishability bound."
+    },
+    {
+      "type": "experiment",
+      "source": "S. Duerr, T. Nonn, and G. Rempe, Fringe Visibility and Which-Way Information in an Atom Interferometer, Phys. Rev. Lett. 81, 5705 (1998), DOI: 10.1103/PhysRevLett.81.5705",
+      "date": "1998-12-28",
+      "confidence": 0.99,
+      "notes": "Experimental test of the complementarity relation in an atom interferometer."
+    },
+    {
+      "type": "calculation",
+      "source": "M. O. Scully and K. Druehl, Quantum eraser: A proposed photon correlation experiment concerning observation and delayed choice in quantum mechanics, Phys. Rev. A 25, 2208 (1982), DOI: 10.1103/PhysRevA.25.2208",
+      "date": "1982-04-01",
+      "confidence": 0.98,
+      "notes": "Shows how which-way information and conditional correlations control recovered fringes."
+    }
+  ],
+  "primary_sources": [
+    "https://doi.org/10.1103/PhysRevLett.77.2154",
+    "https://doi.org/10.1103/PhysRevLett.81.5705",
+    "https://doi.org/10.1103/PhysRevA.25.2208"
+  ],
+  "predictions": [
+    "When |gamma| approaches 1, high-visibility interference is possible and optimal path distinguishability approaches 0.",
+    "When |gamma| approaches 0, unconditioned interference vanishes and optimal path distinguishability approaches 1.",
+    "Changing only the remote detector measurement basis cannot alter the unconditioned local screen distribution.",
+    "Interference can appear in separately conditioned coincidence subsets whose sum contains no signalling fringe."
+  ],
+  "falsification_conditions": [
+    "For a correctly isolated ideal two-path system, a reproducible violation of V^2 + D^2 <= 1 after accounting for uncertainty and model assumptions would falsify this node.",
+    "A controllable change of the unconditioned local screen distribution caused solely by a spacelike-separated remote measurement choice would violate the no-signalling prediction.",
+    "Failure of the density-matrix model to predict measured visibility from independently characterized detector-state overlap would require revision."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Two-path interferometer plus detector/environment Hilbert-space factorization",
+  "normalization_method": "Normalized pure joint state; Born probabilities integrate to one",
+  "normalization_claim": "All displayed probabilities and density operators are normalized under the stated assumptions.",
+  "null_model": "Incoherent classical mixture rho_0 = (|L><L| + |R><R|)/2 with no off-diagonal terms.",
+  "control_condition": "No path marking or identical detector states, |D_L> = exp(i theta)|D_R>, giving |gamma| = 1.",
+  "statistical_method": "Estimate visibility from I_max and I_min using V = (I_max - I_min)/(I_max + I_min), propagate counting uncertainty, and compare with independently estimated distinguishability.",
+  "confounders": [
+    "Unequal slit illumination",
+    "Finite detector resolution",
+    "Environmental decoherence unrelated to the intended marker",
+    "Post-selection bias",
+    "Phase drift",
+    "Accidental coincidence counts"
+  ],
+  "replication_rule": "Pre-register the measurement settings and analysis, report conditioned and unconditioned distributions, estimate V and D with uncertainty, and repeat across independently calibrated marker overlaps.",
+  "causal_claim": true,
+  "causal_test_method": "Actively vary the marker-state overlap while holding slit geometry and source statistics fixed, then test the predicted change in off-diagonal coherence and visibility.",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "The formalism does not imply that a particle consciously knows it is observed, that usable information travels faster than light, or that the future is already determined. Collapse, many-worlds, Bohmian, retrocausal, and superdeterministic accounts are interpretation-level additions unless they produce distinct testable predictions.",
+  "tags": [
+    "quantum mechanics",
+    "double slit",
+    "interference",
+    "which-way information",
+    "decoherence",
+    "density matrix",
+    "no-signalling",
+    "quantum eraser"
+  ],
+  "version": "0.1.0"
+}
