@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft7Validator
+from jsonschema.exceptions import SchemaError
 
 RECORD_SCHEMAS = ("node", "bridge", "theory")
 CRITICAL_FILES = (
@@ -67,7 +68,7 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
                 raise TypeError("schema top level must be an object")
             Draft7Validator.check_schema(schema)
             schemas[record_type] = schema
-        except (OSError, UnicodeError, json.JSONDecodeError, TypeError) as error:
+        except (OSError, UnicodeError, json.JSONDecodeError, TypeError, SchemaError) as error:
             report["schema_errors"].append(
                 _format_validation_error(schema_path.relative_to(root), error)
             )
@@ -115,8 +116,16 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
         if not isinstance(ports, dict) or not ports:
             raise ValueError("ports must be a non-empty object")
         values = list(ports.values())
-        if any(isinstance(port, bool) or not isinstance(port, int) or not 1 <= port <= 65535 for port in values):
-            report["port_conflicts"].append("Every configured port must be an integer in 1..65535")
+        invalid_port = any(
+            isinstance(port, bool)
+            or not isinstance(port, int)
+            or not 1 <= port <= 65535
+            for port in values
+        )
+        if invalid_port:
+            report["port_conflicts"].append(
+                "Every configured port must be an integer in 1..65535"
+            )
         if len(values) != len(set(values)):
             report["port_conflicts"].append("Duplicate ports found in config/ports.json")
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
@@ -132,9 +141,14 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
         sources = source_manifest.get("sources")
         if not isinstance(sources, list) or not sources:
             raise ValueError("source manifest requires a non-empty sources array")
-        source_ids = [item.get("source_id") for item in sources if isinstance(item, dict)]
-        if len(source_ids) != len(sources) or any(not item for item in source_ids):
-            raise ValueError("every source requires source_id")
+        source_ids: list[str] = []
+        for source in sources:
+            if not isinstance(source, dict):
+                raise ValueError("every source must be an object")
+            source_id = source.get("source_id")
+            if not isinstance(source_id, str) or not source_id:
+                raise ValueError("every source requires a non-empty string source_id")
+            source_ids.append(source_id)
         if len(source_ids) != len(set(source_ids)):
             raise ValueError("source_id values must be unique")
     except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as error:
@@ -155,7 +169,7 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
                 f"{relative}: {error.json_path or '$'} failed {error.validator} validation"
                 for error in errors
             )
-    except (OSError, UnicodeError, json.JSONDecodeError, TypeError) as error:
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, SchemaError) as error:
         report["manifest_errors"].append(f"Plugin manifest validation failed: {error}")
 
     report["files_scanned"] = sum(1 for path in root.rglob("*") if path.is_file())
