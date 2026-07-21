@@ -1,0 +1,137 @@
+{
+  "address": "UPI<physics,2,classical_mechanics,helical_linear_rotational_coupling>",
+  "title": "Helical motion, screw conversion, and coupled-rotor balance",
+  "description": "Established classical mechanics and differential geometry for motion combining translation along an axis with rotation around it. The node indexes helix position, velocity, acceleration, pitch, curvature, torsion, force, kinetic energy, angular momentum, power, ideal screw conversion, and two-rotor angular-momentum balance.",
+  "status": "EST",
+  "definitions": [
+    "R is the helix radius in metres and must be positive.",
+    "v_a is signed axial speed in metres per second.",
+    "omega is signed angular speed in radians per second and follows the right-hand rule around the declared axis.",
+    "phi_0 is the initial angular phase in radians; phase selects position on the orbit but does not itself create force.",
+    "p is signed axial advance per temporal revolution in metres per turn.",
+    "b = v_a/omega is reduced signed pitch in metres per radian and determines geometric handedness under the declared coordinate convention.",
+    "kappa is curvature in inverse metres and tau_g is geometric torsion in inverse metres.",
+    "I is moment of inertia in kilogram square metres, tau_m is mechanical torque in newton metres, and L is angular momentum in kilogram square metres per second.",
+    "eta is mechanical efficiency with 0 < eta <= 1.",
+    "The central coupling symbol in a diagram may represent a bearing, gear, screw, shaft, controller, or phase-locking element; its physical model must be declared separately."
+  ],
+  "equations": [
+    "theta(t) = omega t + phi_0",
+    "r(t) = (v_a t, R cos(theta), R sin(theta))",
+    "v(t) = (v_a, -R omega sin(theta), R omega cos(theta))",
+    "a(t) = (0, -R omega^2 cos(theta), -R omega^2 sin(theta))",
+    "v_t = R |omega|",
+    "|v| = sqrt(v_a^2 + (R omega)^2)",
+    "f_rot = |omega|/(2 pi)",
+    "T_rot = 2 pi/|omega|",
+    "p = v_a T_rot = 2 pi v_a/|omega|",
+    "b = v_a/omega",
+    "kappa = R/(R^2 + b^2)",
+    "tau_g = b/(R^2 + b^2)",
+    "beta_axis = atan2(R |omega|, |v_a|)",
+    "a_r = R omega^2",
+    "F_r = m R omega^2",
+    "K_point = (1/2) m (v_a^2 + (R omega)^2)",
+    "K_rigid = (1/2) m v_a^2 + (1/2) I omega^2",
+    "L_axis = I omega",
+    "tau_m = I alpha for constant I",
+    "P = F_a v_a + tau_m omega",
+    "dx = (p_s/(2 pi)) dphi for a screw with lead p_s",
+    "v_a = (p_s/(2 pi)) omega",
+    "F_a = 2 pi eta tau_m/p_s for forward torque-to-force conversion",
+    "tau_m = F_a p_s/(2 pi eta) for required input torque",
+    "P_out = eta P_in in the declared forward screw model",
+    "L_total = I_1 omega_1 + I_2 omega_2",
+    "K_rot,total = (1/2) I_1 omega_1^2 + (1/2) I_2 omega_2^2",
+    "R_balance = |L_total|/(|I_1 omega_1| + |I_2 omega_2|)",
+    "tau_c = -k_phi(phi_1 - phi_2) - c_phi(omega_1 - omega_2) for a linear torsional spring-damper coupling"
+  ],
+  "assumptions": [
+    "The helix has constant radius, constant axial speed, and constant angular speed unless an acceleration term is explicitly introduced.",
+    "The coordinate axis is x and positive angular speed follows the right-hand rule around +x.",
+    "The centripetal-force equation applies to a point mass or mass element constrained to the circular component of the path.",
+    "The rigid-body energy and angular-momentum equations require a declared moment of inertia about the rotation axis.",
+    "The screw equations use a single effective lead and a forward efficiency eta; real friction, backlash, elastic deformation, critical speed, buckling, thread geometry, wear, and self-locking require additional models.",
+    "Counter-rotation can cancel net angular momentum when I_1 omega_1 + I_2 omega_2 = 0, but the stored rotational energy remains positive.",
+    "No closed internal rotor system produces net linear momentum without exchanging momentum with matter, radiation, an external field, or a boundary."
+  ],
+  "mechanism": "Translation and rotation form a helix when an object advances along an axis while its transverse coordinates rotate. A mechanical screw or equivalent kinematic constraint converts angular displacement into axial displacement. Work conservation links torque to axial force, while declared efficiency accounts for dissipative loss. Two coaxial rotors exchange angular momentum internally; equal and opposite angular momenta reduce reaction torque on the supporting body but do not remove kinetic energy.",
+  "evidence": [
+    {
+      "type": "textbook_derivation",
+      "source": "H. Goldstein, C. Poole, and J. Safko, Classical Mechanics, 3rd edition, Addison-Wesley, ISBN 9780201657029",
+      "confidence": 0.99,
+      "notes": "Standard rigid-body rotation, torque, angular momentum, kinetic energy, and power relations."
+    },
+    {
+      "type": "textbook_derivation",
+      "source": "M. P. do Carmo, Differential Geometry of Curves and Surfaces, Dover, ISBN 9780486806990",
+      "confidence": 0.99,
+      "notes": "Standard curvature and torsion formulas for regular curves, including circular helices."
+    },
+    {
+      "type": "engineering_reference",
+      "source": "R. G. Budynas and J. K. Nisbett, Shigley's Mechanical Engineering Design, McGraw-Hill, power-screw chapters",
+      "confidence": 0.98,
+      "notes": "Mechanical work, lead, torque, force, efficiency, and real screw-design limits."
+    }
+  ],
+  "primary_sources": [
+    "urn:isbn:9780201657029",
+    "urn:isbn:9780486806990",
+    "urn:isbn:9781260729964"
+  ],
+  "predictions": [
+    "For fixed R and omega, radial acceleration is independent of axial speed and equals R omega^2.",
+    "Changing the sign of omega at fixed positive axial speed reverses geometric torsion and helicity sign while preserving curvature, total speed, period, and radial-acceleration magnitude.",
+    "For an ideal screw at fixed pitch and efficiency, axial speed is proportional to angular speed and axial force is proportional to torque.",
+    "When two rotors satisfy I_1 omega_1 = -I_2 omega_2, net axial angular momentum is zero while total rotational energy remains greater than zero unless both speeds are zero.",
+    "At fixed input torque and efficiency, reducing screw lead increases ideal axial force but decreases axial advance per revolution."
+  ],
+  "falsification_conditions": [
+    "A measured uniform helix that reproducibly violates the differentiated position, velocity, or acceleration equations after coordinate and uncertainty checks would falsify the kinematic model.",
+    "A frictionless screw that violates work conservation F_a dx = tau_m dphi under the stated assumptions would falsify the coupling derivation.",
+    "A closed isolated two-rotor apparatus that gains net linear momentum without momentum exchange would contradict momentum conservation and require physics outside this node.",
+    "Observed curvature or torsion inconsistent with kappa = R/(R^2+b^2) and tau_g = b/(R^2+b^2) for a measured circular helix would falsify the geometric classification."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Cartesian inertial frame with helix axis along x and right-hand-rule angular convention",
+  "normalization_method": "All quantities are represented in coherent SI units; radians are dimensionless but retained in labels for interpretability.",
+  "normalization_claim": "Unit normalization only; it does not assert identity between linear and angular quantities.",
+  "null_model": "Pure linear motion with omega = 0 or pure circular motion with v_a = 0; each is a limiting case rather than a general helix.",
+  "control_condition": "Compare analytic values against numerical differentiation of r(t) and against equal-and-opposite rotor configurations with known inertias.",
+  "statistical_method": "Propagate uncertainty from R, v_a, omega, mass, inertia, pitch, torque, force, and efficiency using analytic derivatives or Monte Carlo sampling; compare residuals in SI units.",
+  "confounders": [
+    "Axis misalignment",
+    "Variable radius",
+    "Angular acceleration",
+    "Axial acceleration",
+    "Bearing friction",
+    "Backlash",
+    "Elastic shaft twist",
+    "Unmodelled external torque",
+    "Incorrect moment of inertia",
+    "Sensor phase delay",
+    "Coordinate handedness mismatch"
+  ],
+  "replication_rule": "Declare axis, handedness convention, SI units, geometry, mass distribution, sampling rate, uncertainty, and all external forces or torques. Reproduce the trajectory and independently verify differentiated velocity, acceleration, work, power, and angular-momentum balance.",
+  "causal_claim": false,
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "The angular coordinate phi and phase synchronization do not generate energy or force by themselves. Force requires momentum change, torque requires angular-momentum change, and sustained output power requires an energy source. Resonance can amplify response by storing supplied energy but cannot create energy. The diagram is a topology cue until radius, pitch, mass, inertia, constraints, forces, torques, losses, and boundary interactions are declared.",
+  "tags": [
+    "classical mechanics",
+    "helix",
+    "spiral",
+    "rotation",
+    "translation",
+    "screw theory",
+    "torque",
+    "angular momentum",
+    "curvature",
+    "torsion",
+    "power",
+    "counter rotation"
+  ],
+  "version": "0.1.0"
+}
