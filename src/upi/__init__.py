@@ -38,6 +38,9 @@ from .physics import (
     index8_from_mass,
     mass_from_frequency,
     normalize_signal,
+    normalize_value,
+    normalized_match,
+    propagated_mass_uncertainty,
     relativistic_total_frequency,
     signal_match,
 )
@@ -71,15 +74,16 @@ from .workflow import (
 )
 
 __all__ = [
-    # Version
     "__version__",
-    # Constants
-    "H", "C", "K_B", "E", "N_A",
+    "H",
+    "C",
+    "K_B",
+    "E",
+    "N_A",
     "N8_REFERENCE_HZ",
     "EPSILON_Z_DEFAULT",
     "AMPLITUDE_TOLERANCE_DEFAULT",
     "PHASE_TOLERANCE_DEFAULT",
-    # Models
     "Address",
     "Quantity",
     "EvidenceRecord",
@@ -92,17 +96,18 @@ __all__ = [
     "InformationLayer",
     "VerificationType",
     "AngelicaPluginLoader",
-    # Physics
     "energy_from_frequency",
     "mass_from_frequency",
     "frequency_from_mass",
     "index8_from_frequency",
     "index8_from_mass",
     "relativistic_total_frequency",
+    "normalize_value",
+    "normalized_match",
+    "propagated_mass_uncertainty",
     "normalize_signal",
     "signal_match",
     "complex_signal_match",
-    # Runtime
     "RuntimeProfile",
     "RuntimeProfileLoader",
     "get_runtime_loader",
@@ -110,18 +115,15 @@ __all__ = [
     "activate_profile",
     "deactivate_profile",
     "get_active_profiles",
-    # Graph
     "UPIGraph",
     "generate_debug_report",
     "render_debug_markdown",
-    # Declarative workflows
     "WorkflowState",
     "validate_task",
     "validate_result",
     "validate_workflow",
     "validate_transition",
     "validate_task_result_pair",
-    # Validation
     "validate_json_schema",
     "validate_node_status",
     "validate_bridge_consistency",
