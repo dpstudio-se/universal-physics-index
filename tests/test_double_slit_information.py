@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-import jsonschema
+from jsonschema import validate
 import pytest
 
 
@@ -14,7 +14,7 @@ def test_double_slit_node_matches_schema() -> None:
     node = json.loads(NODE_PATH.read_text(encoding="utf-8"))
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
-    jsonschema.validate(instance=node, schema=schema)
+    validate(instance=node, schema=schema)
     assert node["status"] == "EST"
     assert node["claims_experimental_verification"] is True
 
