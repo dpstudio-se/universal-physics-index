@@ -1,0 +1,17 @@
+{
+  "address": "UPI<CLASSICAL_MECHANICS,1,ENERGY,WORK_ENERGY_THEOREM>",
+  "title": "Work-energy theorem",
+  "description": "The net work done on a particle equals its change in translational kinetic energy.",
+  "status": "EST",
+  "definitions": ["W_net is net work", "K is translational kinetic energy"],
+  "equations": ["W_net = integral F_net . d r", "K = (1/2) m v^2", "W_net = Delta K"],
+  "assumptions": ["Classical nonrelativistic point-particle description", "Mass is constant in the stated kinetic-energy expression"],
+  "evidence": [{"type": "experiment", "source": "Mechanical work and calorimetric equivalence measurements", "confidence": 1.0}],
+  "primary_sources": ["Standard analytical mechanics derivations", "BIPM SI Brochure, joule definition"],
+  "falsification_conditions": ["A reproducible classical trajectory violates the integral force-work and kinetic-energy relation"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": true,
+  "confusion_guard": "This theorem concerns net work and translational kinetic energy; total energy accounting may include internal, field, and rest energy.",
+  "tags": ["work", "kinetic energy", "mechanics"]
+}

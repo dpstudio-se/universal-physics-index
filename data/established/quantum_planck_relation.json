@@ -1,0 +1,17 @@
+{
+  "address": "UPI<QUANTUM_MECHANICS,1,QUANTA,PLANCK_EINSTEIN_RELATION>",
+  "title": "Planck-Einstein energy-frequency relation",
+  "description": "A photon of frequency f has energy E = h f; more generally quantum stationary-state phases evolve with angular frequency E/hbar.",
+  "status": "EST",
+  "definitions": ["E is photon energy", "h is the Planck constant", "f is ordinary frequency", "hbar = h/(2 pi)"],
+  "equations": ["E = h f", "E = hbar omega", "omega = 2 pi f"],
+  "assumptions": ["For E = h f, the excitation is a photon or a mode quantum", "Frequency is defined in the relevant inertial frame"],
+  "evidence": [{"type": "experiment", "source": "Photoelectric effect, spectroscopy, Compton scattering, Josephson and quantum electrical standards", "confidence": 1.0}],
+  "primary_sources": ["Planck (1900)", "Einstein, Ueber einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt (1905)", "BIPM SI Brochure: exact h"],
+  "falsification_conditions": ["Precision photon-energy measurements show a reproducible nonlinearity not explained by known physics"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "E = h f does not by itself assign invariant rest mass m = h f / c^2 to a photon; a photon has zero invariant mass.",
+  "tags": ["quantum", "photon", "Planck constant", "frequency"]
+}

@@ -1,0 +1,17 @@
+{
+  "address": "UPI<RELATIVITY,1,SPACETIME,LORENTZ_INTERVAL>",
+  "title": "Lorentz-invariant spacetime interval",
+  "description": "The Minkowski interval is invariant under Lorentz transformations between inertial frames.",
+  "status": "EST",
+  "definitions": ["Delta s is spacetime interval", "c is vacuum light speed", "Delta t and Delta x,y,z are coordinate separations"],
+  "equations": ["Delta s^2 = c^2 Delta t^2 - Delta x^2 - Delta y^2 - Delta z^2", "gamma = 1 / sqrt(1 - v^2/c^2)"],
+  "assumptions": ["Special relativity", "Inertial frames", "Metric signature +---"],
+  "evidence": [{"type": "experiment", "source": "Particle lifetime dilation, accelerator dynamics, precision clock and navigation tests", "confidence": 1.0}],
+  "primary_sources": ["Einstein, Zur Elektrodynamik bewegter Koerper (1905)", "Modern precision tests of Lorentz invariance"],
+  "falsification_conditions": ["A reproducible inertial-frame experiment shows Lorentz transformation failure after systematic effects are excluded"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "Coordinate time and distance are frame dependent; the interval is invariant.",
+  "tags": ["special relativity", "Lorentz invariance", "spacetime"]
+}

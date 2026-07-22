@@ -1,0 +1,17 @@
+{
+  "address": "UPI<QUANTUM_MECHANICS,1,DYNAMICS,SCHRODINGER_EQUATION>",
+  "title": "Time-dependent Schroedinger equation",
+  "description": "The nonrelativistic quantum state evolves unitarily under its Hamiltonian according to the Schroedinger equation.",
+  "status": "EST",
+  "definitions": ["psi is the quantum state or wavefunction", "H is the Hamiltonian operator", "hbar is the reduced Planck constant"],
+  "equations": ["i hbar partial psi / partial t = H psi", "H = -(hbar^2 / 2m) nabla^2 + V for one spinless particle in a scalar potential"],
+  "assumptions": ["Nonrelativistic quantum mechanics", "Closed-system unitary evolution between measurements", "Hamiltonian domain and boundary conditions are specified"],
+  "evidence": [{"type": "experiment", "source": "Atomic spectra, diffraction, tunnelling, interferometry, and quantum-device measurements", "confidence": 1.0}],
+  "primary_sources": ["Schroedinger, Quantisierung als Eigenwertproblem (1926)", "Standard nonrelativistic quantum mechanics"],
+  "falsification_conditions": ["A controlled nonrelativistic quantum system reproducibly departs from Hamiltonian evolution outside quantified open-system effects"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "The equation predicts measurement statistics but does not by itself select a unique interpretation of quantum mechanics.",
+  "tags": ["quantum mechanics", "wavefunction", "Hamiltonian"]
+}
