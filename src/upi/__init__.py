@@ -16,6 +16,17 @@ from .constants import (
     H,
 )
 from .debug import generate_debug_report, render_debug_markdown
+from .dual_observer import (
+    DualObserverTraceResult,
+    Event1D,
+    dual_observer_trace,
+    inverse_lorentz_transform_event,
+    lorentz_factor,
+    lorentz_transform_event,
+    minkowski_interval_m2,
+    trace_integrity_rate,
+    trace_integrity_ratio,
+)
 from .graph import UPIGraph
 from .models import (
     Address,
@@ -102,6 +113,16 @@ __all__ = [
     "normalize_signal",
     "signal_match",
     "complex_signal_match",
+    # Dual-observer trace physics
+    "Event1D",
+    "DualObserverTraceResult",
+    "lorentz_factor",
+    "lorentz_transform_event",
+    "inverse_lorentz_transform_event",
+    "minkowski_interval_m2",
+    "trace_integrity_ratio",
+    "trace_integrity_rate",
+    "dual_observer_trace",
     # Runtime
     "RuntimeProfile",
     "RuntimeProfileLoader",

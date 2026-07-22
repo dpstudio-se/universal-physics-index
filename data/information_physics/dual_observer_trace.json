@@ -1,0 +1,120 @@
+{
+  "address": "UPI<information_physics,6,duality,dual_observer_trace>",
+  "title": "Dual-observer trace and invariant mapping",
+  "description": "A traceable model connecting two observer-dependent representations through a translation operator, a preserved invariant, forward generation, backward reconstruction, conflict scoring, and evidence-sensitive status control. The implemented physical reference profile uses 1+1 dimensional Lorentz transformations.",
+  "status": "DER",
+  "quantities": [
+    {
+      "name": "example_beta",
+      "value": 0.6,
+      "unit": "1",
+      "reference": "Relative speed v/c in the worked example"
+    },
+    {
+      "name": "example_gamma",
+      "value": 1.25,
+      "unit": "1",
+      "reference": "Lorentz factor for beta = 0.6"
+    },
+    {
+      "name": "example_omega_A",
+      "value": 269502.0714947271,
+      "unit": "m^2",
+      "reference": "Minkowski interval for t_A = 2 microseconds and x_A = 300 m"
+    },
+    {
+      "name": "example_R0_TIR_clean",
+      "value": 2.1175823681357506e-13,
+      "unit": "1",
+      "reference": "Numerical round-trip result with 1 ns and 0.1 m tolerances"
+    },
+    {
+      "name": "example_R0_TIR_biased",
+      "value": 1.0,
+      "unit": "1",
+      "reference": "Result after adding 2 ns and 0.25 m to observer B"
+    }
+  ],
+  "definitions": [
+    "X_A and X_B are local observer or model representations.",
+    "D_A_to_B translates representation A into representation B.",
+    "Omega is the invariant required to survive translation and verification.",
+    "For the Lorentz profile, Omega = c^2 t^2 - x^2 is the Minkowski interval in m^2.",
+    "R0_TIR is a dimensionless trace-integrity conflict ratio.",
+    "r0_S is the time derivative of R0_TIR with unit s^-1."
+  ],
+  "equations": [
+    "X_B = D_A_to_B(X_A)",
+    "gamma = 1/sqrt(1-beta^2)",
+    "t_B = gamma*(t_A - v*x_A/c^2)",
+    "x_B = gamma*(x_A - v*t_A)",
+    "Omega = c^2*t^2 - x^2",
+    "Omega_A = Omega_B",
+    "X_(z+1) = F_z(X_z, D_z, C_z)",
+    "Xhat_z = B_z(X_(z+1), D_z, C_z)",
+    "epsilon_z = d(X_z, Xhat_z)",
+    "R0_TIR = (1/N) * sum_z min(1, abs(epsilon_z)/tau_z)",
+    "r0_S = d(R0_TIR)/dt",
+    "I(A;B) = H(A) + H(B) - H(A,B)"
+  ],
+  "assumptions": [
+    "The physical implementation is restricted to inertial observers in 1+1 dimensional special relativity.",
+    "The relative speed satisfies abs(v) < c.",
+    "A discrepancy metric and positive tolerance are explicitly declared for every compared component.",
+    "Every derivation step records inputs, conditions, units, and uncertainty.",
+    "Agreement of invariants does not by itself establish a new physical mechanism.",
+    "The 8 Hz clock, when used elsewhere, is an implementation choice rather than a universal constant."
+  ],
+  "mechanism": "A Lorentz forward trace predicts observer B's event from observer A. A backward Lorentz trace reconstructs observer A from the observed B event. The Minkowski interval is checked independently, and reconstruction residuals are normalized by declared measurement tolerances to calculate R0_TIR.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Established Lorentz transformations, Minkowski invariance, dimensional analysis, and deterministic UPI software tests",
+      "confidence": 0.9,
+      "notes": "Supports the mathematical and software framework. R0_TIR remains an audit metric, not an experimentally established new law of nature."
+    }
+  ],
+  "predictions": [
+    "For an exact Lorentz mapping and finite floating-point arithmetic, Omega drift and R0_TIR should remain near numerical precision.",
+    "For fixed tolerances, injected observer-B measurement errors should monotonically increase one or more clipped R0_TIR components until saturation.",
+    "A physical extension beyond special relativity must identify a preregistered numerical observable that differs from competing models."
+  ],
+  "falsification_conditions": [
+    "The exact backward Lorentz trace cannot reproduce observer A within declared numerical tolerances.",
+    "The Minkowski interval changes under an exact Lorentz mapping beyond declared numerical tolerance.",
+    "Independent implementations do not recover the same R0_TIR from the same inputs and tolerances.",
+    "A proposed physical extension fails its preregistered discriminating experiment."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Two declared inertial frames in 1+1 dimensional Minkowski spacetime",
+  "normalization_method": "Per-component absolute reconstruction residual divided by its positive SI tolerance, clipped to 1 before averaging",
+  "normalization_claim": "R0_TIR is bounded to [0,1] by per-component clipping before averaging.",
+  "null_model": "Observer representations are related only by the declared Lorentz transform plus numerical or measurement error; no new interaction is present.",
+  "control_condition": "Run the exact forward/backward mapping, then repeat with known injected time and position offsets or with an incorrect translation operator.",
+  "statistical_method": "Deterministic numerical verification for the reference profile; domain-specific preregistration is required before experimental use.",
+  "confounders": [
+    "Shared source data",
+    "Circular definitions of the invariant",
+    "Post hoc tolerance selection",
+    "Hidden complexity inside the translation operator",
+    "Clock synchronization error",
+    "Unit conversion error",
+    "Floating-point cancellation near null intervals"
+  ],
+  "replication_rule": "Independent implementations must recover the same transformed event, reconstructed event, invariant drift, and R0_TIR from the same declared SI inputs and tolerances.",
+  "causal_claim": false,
+  "causal_test_method": "No causal physical claim is accepted without an intervention or discriminating experiment.",
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Lorentz invariance is established physics. Internal consistency, software tests, a low R0_TIR, or a preserved invariant do not by themselves prove a new law of nature.",
+  "tags": [
+    "information-physics",
+    "duality",
+    "observer",
+    "lorentz-transform",
+    "minkowski-invariant",
+    "traceability",
+    "r0"
+  ],
+  "version": "0.2.0"
+}
