@@ -46,6 +46,16 @@ Runtime matching: `Z(t,x) = z(t,x) / z_ref(t,x)` with tolerance `abs(Z - 1) ≤ 
 
 Numerical agreement inside a declared tolerance is not evidence of physical identity or a shared mechanism.
 
+### 5. Digital qudit torus search
+
+A register with torus dimensions `(d1, d2, ..., dn)` contains
+
+```text
+N = d1 * d2 * ... * dn
+```
+
+basis states. The software implements generalized qudit shift and phase gates, local Fourier duality, phase oracles and amplitude amplification. It is a classical state-vector simulator and does not claim quantum hardware or speedup.
+
 ## Quick Start
 
 ```bash
@@ -63,10 +73,18 @@ upi debug-index data --format markdown --output upi-debug-report.md
 upi debug-index data --odins-eye --output upi-odins-eye.json
 python repo_audit.py --output repo-audit.json
 
-# Python API
+# Standalone digital qudit search
+python -m pip install ./modules/vrasi-qudit
+vrasi-qudit --dimensions 4,5 --targets 7 --top-k 5
+
+# Python APIs
 python - <<'PY'
-from upi import mass_from_frequency
+from upi import mass_from_frequency, search_torus_register
+
 print(mass_from_frequency(1e20))
+result = search_torus_register((4, 5), (7,))
+print(result.success_probability)
+print(result.ranked_states[0])
 PY
 ```
 
@@ -85,8 +103,9 @@ This repository is preconfigured for GitHub Codespaces via `.devcontainer/devcon
 
 ## Repository Structure
 
-- `src/upi/` — Core modules for physics, models, validation, graph, CLI and audit reporting
+- `src/upi/` — Core modules for physics, qudit search, models, validation, graph, CLI and audit reporting
 - `modules/vrasi-physics/` — Standalone, dependency-free VR-ASI physics kernel
+- `modules/vrasi-qudit/` — Standalone digital multi-torus qudit simulator
 - `modules/vrasi-swarm/` — Standalone 3-6-9/Gen4 coordination kernel
 - `tests/` — UPI regression and boundary test suite
 - `schemas/` — Schemas for nodes, bridges, theories and bounded workflow records
@@ -98,7 +117,7 @@ Operational manifests do not belong under `data/` unless they implement one of t
 
 ### Standalone VR-ASI physics
 
-The simulator does not need the complete UPI graph or workflow system. Its three required calculations are packaged separately and can be installed without `upi`:
+The simulator does not need the complete UPI graph or workflow system. Its required calculations are packaged separately and can be installed without `upi`:
 
 ```bash
 python -m pip install ./modules/vrasi-physics
@@ -106,6 +125,17 @@ vrasi-physics 8
 ```
 
 See [`modules/vrasi-physics/README.md`](modules/vrasi-physics/README.md) for the deliberately small API and its interpretation limits.
+
+### Digital multi-torus qudit simulator
+
+The qudit module supports arbitrary local dimensions `d >= 2`, including four or more states per torus. For example, `(4, 5)` creates a 20-state search register:
+
+```bash
+python -m pip install ./modules/vrasi-qudit
+vrasi-qudit --dimensions 4,5 --targets 7
+```
+
+The output includes mixed-radix coordinates, ranked probabilities, the selected iteration count, dual Fourier reconstruction error and the complete multi-stage trace. See [`docs/DIGITAL_QUDIT_TORUS_SEARCH.md`](docs/DIGITAL_QUDIT_TORUS_SEARCH.md).
 
 ### 3-6-9 generation 4 coordination
 
@@ -120,16 +150,17 @@ This is an auditable coordination protocol (`SYM`), not a claim of collective bi
 
 ## Important Disclaimers
 
-**UPI is NOT**: A Theory of Everything | Peer review replacement | Claim of universal 8 Hz constant
+**UPI is NOT**: A Theory of Everything | Peer review replacement | Claim of universal 8 Hz constant | Verified quantum hardware
 
-**UPI DOES**: Record stopping points | Support 6 status labels | Enable machine-readable science
+**UPI DOES**: Record stopping points | Support 6 status labels | Enable machine-readable science | Simulate declared mathematical models
 
 ## Testing
 
 ```bash
-python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v
-ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
+python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-qudit/tests/ modules/vrasi-swarm/tests/ -v
+ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-qudit/src modules/vrasi-qudit/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
 mypy src/upi repo_audit.py --ignore-missing-imports
+mypy modules/vrasi-qudit/src/vrasi_qudit
 python repo_audit.py --output repo-audit.json
 upi validate data/constants/planck.json
 ```

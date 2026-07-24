@@ -1,0 +1,101 @@
+{
+  "address": "UPI<information_physics,3,qudit_torus,digital_multi_state_search>",
+  "title": "Digital multi-torus qudit search simulator",
+  "description": "A classical state-vector implementation of finite-dimensional qudits, local Fourier duality, phase oracles, diffusion and amplitude amplification. Each declared torus is a cyclic mixed-radix coordinate with d basis states, allowing registers with more than three states per search axis. The implementation is software and does not claim quantum hardware or speedup.",
+  "status": "DER",
+  "definitions": [
+    "A qudit is a finite-dimensional quantum information carrier with local Hilbert-space dimension d >= 2.",
+    "A software torus is one cyclic coordinate j in Z_d; the term torus describes modular register topology and is not a claim that the hardware has a physical toroidal shape.",
+    "A register with torus dimensions d_1 through d_n has N = product_i d_i computational basis states.",
+    "alpha_x is the complex amplitude of basis state x and p_x = |alpha_x|^2 is its ideal measurement probability.",
+    "The computational basis and Fourier basis are dual representations connected by the normalized discrete Fourier transform.",
+    "M is the number of marked states and r is the number of amplitude-amplification iterations.",
+    "The stage trace records initialization, one forward Fourier stage per torus, one inverse stage per torus, oracle and diffusion stages, and ranked readout."
+  ],
+  "equations": [
+    "H = tensor_i C^(d_i)",
+    "N = product_i d_i",
+    "|psi> = sum_(x=0)^(N-1) alpha_x |x>",
+    "sum_x |alpha_x|^2 = 1",
+    "X_d |j> = |(j + 1) mod d>",
+    "Z_d |j> = omega_d^j |j>, where omega_d = exp(2 pi i / d)",
+    "F_d |j> = (1/sqrt(d)) sum_(k=0)^(d-1) omega_d^(j k) |k>",
+    "F_d^(-1) F_d = I_d",
+    "O_f |x> = (-1)^(f(x)) |x>",
+    "|s> = (1/sqrt(N)) sum_x |x>",
+    "D = 2 |s><s| - I",
+    "theta = asin(sqrt(M/N))",
+    "P_success(r) = sin^2((2 r + 1) theta)",
+    "r_opt approximately round(pi/(4 theta) - 1/2)",
+    "epsilon_dual = max_x |alpha_x - alpha_hat_x|"
+  ],
+  "assumptions": [
+    "The simulator uses ideal complex amplitudes and exact declared dimensions without decoherence, gate noise, leakage or readout error.",
+    "The number of marked states is known when the automatic iteration count is selected.",
+    "The phase oracle is supplied as a list of marked basis indices.",
+    "Every state-vector operation is executed classically with storage proportional to N.",
+    "Mixed-radix coordinates are ordered deterministically and mapped bijectively to flattened basis indices."
+  ],
+  "mechanism": "The register begins in a uniform state. Each torus is transformed to its Fourier-dual basis and inversely reconstructed to verify the duality invariant. A phase oracle flips marked amplitudes, and the diffusion operator reflects all amplitudes around their mean. Repetition amplifies marked-state probability before deterministic ranking of the simulated measurement distribution.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Lov K. Grover, A fast quantum mechanical algorithm for database search, arXiv:quant-ph/9605043 (1996)",
+      "notes": "Primary source for phase-based quantum search and square-root query scaling on quantum hardware."
+    },
+    {
+      "type": "calculation",
+      "source": "A. Muthukrishnan and C. R. Stroud Jr., Multivalued logic gates for quantum computation, Physical Review A 62, 052309 (2000)",
+      "notes": "Primary source for multivalued quantum logic on d-level systems."
+    },
+    {
+      "type": "calculation",
+      "source": "UPI deterministic regression suite for generalized gates, Fourier inversion, sparse local transforms, coordinate bijection and amplitude amplification",
+      "notes": "Software tests verify the implementation, not experimental quantum behavior."
+    }
+  ],
+  "primary_sources": [
+    "https://arxiv.org/abs/quant-ph/9605043",
+    "https://doi.org/10.1103/PhysRevA.62.052309"
+  ],
+  "predictions": [
+    "Every accepted gate and Fourier transform preserves total probability within declared numerical tolerance.",
+    "Applying each local Fourier transform followed by the corresponding inverse reconstructs the input state with epsilon_dual near floating-point precision.",
+    "For N = 20, M = 1 and r = 3 ideal iterations, the marked-state probability exceeds 0.99.",
+    "Coordinate-to-index and index-to-coordinate maps are exact inverses for every state in the declared mixed-radix register.",
+    "The search trace contains more than three stages whenever the register is accepted."
+  ],
+  "falsification_conditions": [
+    "Reject the implementation if a valid gate changes total probability beyond numerical tolerance.",
+    "Reject local duality if inverse Fourier reconstruction exceeds the declared error tolerance for a normalized finite input.",
+    "Reject the search implementation if its marked-state probability disagrees with the analytic amplitude-amplification model beyond numerical tolerance.",
+    "Reject the register map if any two coordinates map to the same flattened index or if round-trip conversion fails.",
+    "Do not claim quantum acceleration unless the same operations are executed on independently verified quantum hardware with an appropriate resource comparison."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Finite-dimensional complex Hilbert space represented by a classical mixed-radix state vector.",
+  "null_model": "Uniform classical ranking without phase oracle or amplitude amplification, giving marked probability M/N.",
+  "control_condition": "Run Fourier round trips without an oracle and verify that the input probability distribution is reconstructed.",
+  "confounders": [
+    "Floating-point roundoff can create small non-zero reconstruction errors.",
+    "Knowing the marked-state count is an extra input used by the automatic iteration selector.",
+    "Classical state-vector runtime and memory scale with the full basis dimension N.",
+    "The word torus can be mistaken for a physical hardware geometry rather than cyclic software coordinates."
+  ],
+  "replication_rule": "Install universal-physics-index or vrasi-qudit from the recorded Git commit, run the complete test suite, and compare stage probabilities, dual reconstruction error and ranked states for identical dimensions and targets.",
+  "causal_claim": false,
+  "verification_type": "software_test",
+  "claims_experimental_verification": false,
+  "confusion_guard": "This is a classical digital simulator of qudit mathematics. More than three basis states and complex amplitudes do not by themselves create physical superposition, entanglement, quantum coherence or Grover speedup. The torus label is a cyclic indexing architecture, not new quantum physics.",
+  "tags": [
+    "qudit",
+    "multi-state",
+    "mixed-radix",
+    "quantum-fourier-transform",
+    "amplitude-amplification",
+    "grover-search",
+    "classical-simulator",
+    "torus-register"
+  ],
+  "version": "0.1.0"
+}

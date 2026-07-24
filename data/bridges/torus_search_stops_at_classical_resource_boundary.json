@@ -1,0 +1,24 @@
+{
+  "source": "UPI<information_physics,3,qudit_torus,digital_multi_state_search>",
+  "target": "UPI<computational_physics,2,state_vector,classical_resource_boundary>",
+  "relation": "STOPS_AT",
+  "equations": [
+    "memory = O(N)",
+    "N = product_i d_i"
+  ],
+  "assumptions": [
+    "The current implementation explicitly stores the complete dense amplitude vector.",
+    "No verified quantum processor executes the indexed software path."
+  ],
+  "mechanism": "The digital engine reproduces ideal qudit linear algebra by updating all amplitudes in ordinary memory, so its verified claims stop at classical simulation and software correctness.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Inspection of UPI and vrasi-qudit dense state-vector implementations"
+    }
+  ],
+  "status": "STOP",
+  "confusion_guard": "Multi-state amplitudes, duality and Grover equations do not establish quantum hardware or quantum advantage.",
+  "stop_reason": "Physical coherence, entanglement, gate fidelity and end-to-end quantum speedup require independently verified hardware experiments and matched resource comparisons.",
+  "version": "0.1.0"
+}

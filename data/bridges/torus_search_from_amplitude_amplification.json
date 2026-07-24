@@ -1,0 +1,25 @@
+{
+  "source": "UPI<information_physics,3,qudit_torus,digital_multi_state_search>",
+  "target": "UPI<quantum_algorithms,1,amplitude_amplification,phase_oracle_diffusion>",
+  "relation": "DERIVED_FROM",
+  "equations": [
+    "O_f |x> = (-1)^(f(x)) |x>",
+    "D = 2 |s><s| - I",
+    "P_success(r) = sin^2((2 r + 1) theta)"
+  ],
+  "assumptions": [
+    "The simulator begins from the declared uniform state.",
+    "Target indices implement the Boolean marking function.",
+    "The state vector is updated in classical memory."
+  ],
+  "mechanism": "The digital search reproduces ideal phase-oracle and diffusion updates and records the resulting marked-state probability at every stage.",
+  "evidence": [
+    {
+      "type": "simulation",
+      "source": "UPI 20-state amplitude-amplification regression test"
+    }
+  ],
+  "status": "DER",
+  "confusion_guard": "Agreement with Grover probabilities validates the simulator mathematics, not physical square-root speedup.",
+  "version": "0.1.0"
+}
