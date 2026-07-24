@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from repo_audit import audit_repo
+from repo_audit import SOURCE_MANIFEST_PATH, audit_repo
 
 
 def write_required_scaffold(root: Path) -> None:
@@ -12,7 +12,7 @@ def write_required_scaffold(root: Path) -> None:
         json.dumps({"ports": {"angelica": 8080, "oden": 8081}}),
         encoding="utf-8",
     )
-    (root / "config" / "external_index_sources.json").write_text(
+    (root / SOURCE_MANIFEST_PATH).write_text(
         json.dumps(
             {
                 "operation": "upi_external_source_manifest",
@@ -51,3 +51,15 @@ def test_audit_names_the_config_path_on_parse_error(
     report = audit_repo()
 
     assert "config/ports.json" in report["critical_conflicts"][0]
+
+
+def test_audit_reports_the_canonical_source_manifest_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    write_required_scaffold(tmp_path)
+    (tmp_path / SOURCE_MANIFEST_PATH).write_text("{", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    report = audit_repo()
+
+    assert SOURCE_MANIFEST_PATH.as_posix() in report["manifest_errors"][0]

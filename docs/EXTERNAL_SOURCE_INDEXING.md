@@ -2,7 +2,7 @@
 
 UPI external indexing is a provenance pipeline, not an authority importer and not a general-purpose web crawler.
 
-The source declaration lives at `config/external_index_sources.json`. It is operational configuration, not a node, bridge, or theory record, and therefore remains outside the schema-routed `data/` index.
+The canonical source manifest lives at `config/external_source_manifest.json`. The singular name reflects that this is one manifest containing multiple source declarations. It is operational configuration, not a node, bridge, or theory record, and therefore remains outside the schema-routed `data/` index.
 
 ## Core rule
 
