@@ -1,0 +1,51 @@
+name: UPI Full Audit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: UPI validation and build audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest pytest-cov build ruff
+          pip install .
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test suite
+        run: pytest --cov
+
+      - name: Build package
+        run: python -m build
+
+      - name: Install built artifact
+        run: pip install dist/*.whl
+
+      - name: Smoke import
+        run: python -c "import upi"
+
+      - name: Dependency check
+        run: pip check
