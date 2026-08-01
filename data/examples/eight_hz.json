@@ -1,26 +1,24 @@
 {
-  "address": {
-    "domain": "BASE",
-    "generation": "G0",
-    "torus": "T_REFERENCE",
-    "node": "N_8HZ"
-  },
+  "address": "UPI<BASE,0,REFERENCE,N_8HZ>",
   "title": "8 Hz reference coordinate",
+  "description": "A configurable numerical normalization example, not a universal physical constant.",
   "status": "DER",
-  "quantities": {
-    "frequency_hz": 8.0,
-    "period_s": 0.125,
-    "energy_j": 5.30085612e-33,
-    "mass_kg": 5.897997859e-50,
-    "index_8hz": 1.0
-  },
-  "assumptions": [
-    "f is used as the declared frequency coordinate"
+  "quantities": [
+    {
+      "name": "reference_frequency",
+      "value": 8.0,
+      "unit": "Hz",
+      "reference": "Configurable UPI example"
+    }
   ],
+  "definitions": ["Z = z / z_ref", "z_ref = 8 Hz in this example"],
+  "assumptions": ["The frequency is used only as a declared normalization coordinate"],
   "evidence": [],
-  "confusion_guard": [
-    "This node does not establish 8 Hz as a universal physical constant.",
-    "A cavity frequency is not automatically a rest-mass frequency."
-  ],
-  "stop_reason": null
+  "reference_frame": "Declared numerical normalization context",
+  "normalization_method": "Z = z / z_ref",
+  "normalization_claim": "numerical_similarity_only",
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Does not establish 8 Hz as a universal constant, physical mechanism, medical frequency or rest-mass frequency.",
+  "version": "0.1.0"
 }

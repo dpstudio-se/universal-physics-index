@@ -1,0 +1,19 @@
+{
+  "pluginId": "odens-eye",
+  "version": "0.1.0",
+  "name": "Oden's Eye",
+  "description": "G0DM0D3 Multimodal Engine",
+  "entryPoint": "engine.py",
+  "runtime": "python",
+  "permissions": {
+    "file": true,
+    "network": true,
+    "exec": false,
+    "kv": true,
+    "models": true
+  },
+  "resources": {
+    "cpu": "2.0",
+    "memory": "4Gi"
+  }
+}

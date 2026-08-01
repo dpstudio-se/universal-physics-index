@@ -1,0 +1,9 @@
+﻿# .mailmap — canonical author identity mapping
+# Maps historical commit author emails to public-facing identities.
+# This does not rewrite history; it controls display in git log and GitHub contributors.
+
+# Remap personal email to GitHub noreply (name + email -> canonical identity)
+dpstudio-se <dpstudio-se@users.noreply.github.com> VR-ASI <andreas@wadenholt.se>
+
+# Also map by email only (some git versions need this)
+<dpstudio-se@users.noreply.github.com> <andreas@wadenholt.se>

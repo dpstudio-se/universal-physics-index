@@ -1,0 +1,43 @@
+{
+  "address": "UPI<physics,1,fundamental,planck_constant>",
+  "title": "Planck Constant",
+  "description": "Fundamental quantum constant relating energy and frequency. h = 6.62607015×10⁻³⁴ J·s (exact by 2019 SI definition).",
+  "status": "EST",
+  "quantities": [
+    {
+      "name": "h",
+      "value": 6.62607015e-34,
+      "unit": "J·s",
+      "reference": "2019 SI exact definition"
+    }
+  ],
+  "definitions": [
+    "Relates energy to frequency: E = hf",
+    "Defines quantum of action in quantum mechanics",
+    "Fundamental constant of nature"
+  ],
+  "equations": [
+    "E = h × f",
+    "E = ℏ × ω  (where ℏ = h/2π)"
+  ],
+  "assumptions": [
+    "Quantum mechanics is applicable",
+    "Frequency is measured in Hertz"
+  ],
+  "mechanism": "Quantum emission and absorption of electromagnetic radiation",
+  "primary_sources": [
+    "NIST SI 2019 constants",
+    "CODATA 2018 recommended values"
+  ],
+  "predictions": [
+    "Photoelectric effect: K.E. = hf - φ",
+    "Black body radiation spectrum",
+    "Quantized energy levels in atoms"
+  ],
+  "falsification_conditions": [
+    "Measured Planck constant differs from defined value",
+    "Energy-frequency relation violates E = hf in controlled experiment"
+  ],
+  "tags": ["quantum", "fundamental", "constant", "SI"],
+  "version": "0.1.0"
+}

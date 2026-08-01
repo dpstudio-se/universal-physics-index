@@ -1,0 +1,19 @@
+{
+  "pluginId": "oden-core",
+  "version": "0.1.0",
+  "name": "Oden Orchestrator",
+  "description": "Core agent orchestrator for VR-ASI-1",
+  "entryPoint": "main.py",
+  "runtime": "python",
+  "permissions": {
+    "file": true,
+    "network": true,
+    "exec": true,
+    "kv": true,
+    "models": true
+  },
+  "resources": {
+    "cpu": "1.0",
+    "memory": "1Gi"
+  }
+}
