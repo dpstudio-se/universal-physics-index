@@ -1,0 +1,17 @@
+{
+  "address": "UPI<THERMODYNAMICS,1,ENERGY_ENTROPY,FIRST_SECOND_LAWS>",
+  "title": "First and second laws of thermodynamics",
+  "description": "Energy is conserved in thermodynamic processes, while entropy production is nonnegative for an isolated macroscopic system.",
+  "status": "EST",
+  "definitions": ["U is internal energy", "Q is heat added to the system", "W is work done by the system", "S is thermodynamic entropy"],
+  "equations": ["Delta U = Q - W", "Delta S_isolated >= 0", "d S = delta Q_rev / T for a reversible process"],
+  "assumptions": ["Macroscopic thermodynamic state variables are well defined", "Sign convention: W is work done by the system", "The entropy inequality applies to an isolated total system"],
+  "evidence": [{"type": "experiment", "source": "Calorimetry, heat engines, phase equilibria, and statistical-mechanics tests", "confidence": 1.0}],
+  "primary_sources": ["Clausius and Kelvin formulations", "Modern thermodynamics and statistical mechanics"],
+  "falsification_conditions": ["A repeatable cyclic device produces net work from a single equilibrium heat bath with no other change", "An isolated macroscopic system exhibits sustained entropy decrease beyond fluctuation predictions"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "Local entropy can decrease when entropy is exported; the second law constrains the complete isolated accounting.",
+  "tags": ["thermodynamics", "energy conservation", "entropy"]
+}

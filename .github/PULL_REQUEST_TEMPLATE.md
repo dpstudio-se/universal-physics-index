@@ -19,4 +19,12 @@
 
 ## Confusion guard
 
+## Validation checklist
+
+- [ ] Tests updated or verified
+- [ ] Schema changes validated
+- [ ] Provenance information included when applicable
+- [ ] Documentation updated when behavior changes
+- [ ] External sources are traceable
+
 ## Tests

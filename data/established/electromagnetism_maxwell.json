@@ -1,0 +1,18 @@
+{
+  "address": "UPI<ELECTROMAGNETISM,1,FIELD,MAXWELL_EQUATIONS>",
+  "title": "Maxwell equations in SI form",
+  "description": "The classical electromagnetic field equations relating electric and magnetic fields to charge and current.",
+  "status": "EST",
+  "definitions": ["E is electric field", "B is magnetic flux density", "rho is charge density", "J is current density"],
+  "equations": ["div E = rho / epsilon_0", "div B = 0", "curl E = - partial B / partial t", "curl B = mu_0 J + mu_0 epsilon_0 partial E / partial t"],
+  "assumptions": ["Classical field regime", "SI units", "Macroscopic constitutive relations are separate from the vacuum equations"],
+  "evidence": [{"type": "experiment", "source": "Electrostatic, induction, radiation, antenna, and optical measurements", "confidence": 1.0}],
+  "primary_sources": ["Maxwell, A Dynamical Theory of the Electromagnetic Field (1865)", "BIPM SI Brochure"],
+  "predictions": ["Electromagnetic waves propagate in vacuum at c = 1 / sqrt(mu_0 epsilon_0) within classical theory"],
+  "falsification_conditions": ["A reproducible classical electromagnetic configuration violates the equations beyond known quantum, material, or measurement corrections"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "Maxwell theory is classical and does not replace quantum electrodynamics at quantum scales.",
+  "tags": ["electromagnetism", "fields", "light"]
+}

@@ -1,0 +1,17 @@
+{
+  "address": "UPI<CLASSICAL_MECHANICS,1,SYMMETRY,LINEAR_MOMENTUM_CONSERVATION>",
+  "title": "Conservation of linear momentum",
+  "description": "The total linear momentum of an isolated system is constant.",
+  "status": "EST",
+  "definitions": ["P is total system momentum", "F_ext is the net external force"],
+  "equations": ["P = sum_i p_i", "d P / d t = F_ext", "F_ext = 0 implies P = constant"],
+  "assumptions": ["System boundary is specified", "External impulse is zero or accounted for"],
+  "evidence": [{"type": "experiment", "source": "Collision, recoil, and particle-interaction measurements", "confidence": 1.0}],
+  "primary_sources": ["Noether, Invariante Variationsprobleme (1918)", "Standard mechanics and field-theory treatments"],
+  "falsification_conditions": ["A closed system exhibits reproducible uncompensated momentum change"],
+  "information_layer": "ACADEMIC",
+  "verification_type": "experimental_observation",
+  "claims_experimental_verification": true,
+  "confusion_guard": "Momentum of a subsystem may change through exchange with its environment.",
+  "tags": ["momentum", "conservation", "translation symmetry"]
+}
