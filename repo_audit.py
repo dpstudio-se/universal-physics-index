@@ -113,27 +113,27 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
             report["records_validated"] += 1
 
     ports_path = root / "config" / "ports.json"
-    try:
-        ports_data = _load_json(ports_path)
-        ports = ports_data.get("ports", {}) if isinstance(ports_data, dict) else {}
-        if not isinstance(ports, dict) or not ports:
-            raise ValueError("ports must be a non-empty object")
-        values = list(ports.values())
-        invalid_port = any(
-            isinstance(port, bool)
-            or not isinstance(port, int)
-            or not 1 <= port <= 65535
-            for port in values
-        )
-        if invalid_port:
-            report["port_conflicts"].append(
-                "Every configured port must be an integer in 1..65535"
+    if ports_path.is_file():
+        try:
+            ports_data = _load_json(ports_path)
+            ports = ports_data.get("ports", {}) if isinstance(ports_data, dict) else {}
+            if not isinstance(ports, dict) or not ports:
+                raise ValueError("ports must be a non-empty object")
+            values = list(ports.values())
+            invalid_port = any(
+                isinstance(port, bool)
+                or not isinstance(port, int)
+                or not 1 <= port <= 65535
+                for port in values
             )
-        if len(values) != len(set(values)):
-            report["port_conflicts"].append("Duplicate ports found in config/ports.json")
-    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
-        report["critical_conflicts"].append(f"Error reading config/ports.json: {error}")
-
+            if invalid_port:
+                report["port_conflicts"].append(
+                    "Every configured port must be an integer in 1..65535"
+                )
+            if len(values) != len(set(values)):
+                report["port_conflicts"].append("Duplicate ports found in config/ports.json")
+        except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as error:
+            report["critical_conflicts"].append(f"Error reading config/ports.json: {error}")
     source_manifest_path = root / SOURCE_MANIFEST_PATH
     try:
         source_manifest = _load_json(source_manifest_path)
