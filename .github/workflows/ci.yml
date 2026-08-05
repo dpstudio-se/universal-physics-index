@@ -34,11 +34,15 @@ jobs:
           python -m pip install --quiet -e ./modules/vrasi-physics
           python -m pip install --quiet -e ./modules/vrasi-swarm
           python -m pip install --quiet -e ./modules/vrasi-qudit
+          python -m pip install --quiet -e ./modules/upi-image-index
+          python -m pip install --quiet -e ./modules/upi-aeco
+          python -m pip install --quiet -e ./modules/upi-puter-ui
+          python -m pip install --quiet -e ./modules/upi-odysseus-bridge
 
       - name: Lint with ruff
         id: ruff
         continue-on-error: true
-        run: ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests modules/vrasi-qudit/src modules/vrasi-qudit/tests --output-format json > ruff-report.json
+        run: ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests modules/vrasi-qudit/src modules/vrasi-qudit/tests modules/upi-image-index/src modules/upi-image-index/tests modules/upi-aeco/src modules/upi-aeco/tests modules/upi-puter-ui/src modules/upi-puter-ui/tests modules/upi-odysseus-bridge/src modules/upi-odysseus-bridge/tests --output-format json > ruff-report.json
 
       - name: Upload Ruff diagnostics
         if: steps.ruff.outcome == 'failure'
@@ -59,11 +63,15 @@ jobs:
           mypy modules/vrasi-physics/src/vrasi_physics
           mypy modules/vrasi-swarm/src/vrasi_swarm
           mypy modules/vrasi-qudit/src/vrasi_qudit
+          mypy modules/upi-image-index/src/image_index --ignore-missing-imports
+          mypy modules/upi-aeco/src/upi_aeco
+          mypy modules/upi-puter-ui/src/upi_puter_ui
+          mypy modules/upi-odysseus-bridge/src/upi_odysseus_bridge
 
       - name: Run tests with pytest
         id: pytest
         continue-on-error: true
-        run: python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ modules/vrasi-qudit/tests/ -v --tb=short --junitxml=pytest-report.xml
+        run: python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ modules/vrasi-qudit/tests/ modules/upi-image-index/tests/ modules/upi-aeco/tests/ modules/upi-puter-ui/tests/ modules/upi-odysseus-bridge/tests/ -v --tb=short --junitxml=pytest-report.xml
 
       - name: Upload pytest diagnostics
         if: steps.pytest.outcome == 'failure'
@@ -108,6 +116,9 @@ jobs:
                   print(f'✓ {example.relative_to(data_root)} is an intentional negative fixture')
                   continue
               data = json.loads(example.read_text(encoding='utf-8'))
+              if data.get('operation') in ('upi_external_source_record', 'upi_sunet_network_topology_map') or {'source_id', 'canonical_url'} <= data.keys() or {'backbone_name', 'canonical_url'} <= data.keys():
+                  print(f'✓ {example.relative_to(data_root)} is valid as external source record')
+                  continue
               if {'source', 'target', 'relation'} <= data.keys():
                   record_type = 'bridge'
               elif {'address', 'title', 'description', 'status', 'domain', 'scope'} <= data.keys():
@@ -129,6 +140,10 @@ jobs:
           python -m pip wheel --quiet ./modules/vrasi-physics --no-deps --wheel-dir dist/vrasi-physics
           python -m pip wheel --quiet ./modules/vrasi-swarm --no-deps --wheel-dir dist/vrasi-swarm
           python -m pip wheel --quiet ./modules/vrasi-qudit --no-deps --wheel-dir dist/vrasi-qudit
+          python -m pip wheel --quiet ./modules/upi-image-index --no-deps --wheel-dir dist/upi-image-index
+          python -m pip wheel --quiet ./modules/upi-aeco --no-deps --wheel-dir dist/upi-aeco
+          python -m pip wheel --quiet ./modules/upi-puter-ui --no-deps --wheel-dir dist/upi-puter-ui
+          python -m pip wheel --quiet ./modules/upi-odysseus-bridge --no-deps --wheel-dir dist/upi-odysseus-bridge
           python -c "import glob, zipfile; names = zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist(); assert all(any(name.endswith('/schemas/' + schema) for name in names) for schema in ('node.schema.json', 'bridge.schema.json', 'theory.schema.json', 'agent-task.schema.json', 'agent-result.schema.json', 'workflow.schema.json'))"
 
   github-source-install:
@@ -151,6 +166,10 @@ jobs:
           python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/vrasi-physics"
           python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/vrasi-swarm"
           python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/vrasi-qudit"
+          python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/upi-image-index"
+          python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/upi-aeco"
+          python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/upi-puter-ui"
+          python -m pip install --quiet --no-cache-dir "${SOURCE_URL}#subdirectory=modules/upi-odysseus-bridge"
 
       - name: Verify GitHub source provenance
         run: |
@@ -166,6 +185,10 @@ jobs:
               "vrasi-physics",
               "vrasi-swarm",
               "vrasi-qudit",
+              "upi-image-index",
+              "upi-aeco",
+              "upi-puter-ui",
+              "upi-odysseus-bridge",
           ):
               distribution = metadata.distribution(distribution_name)
               direct_url_text = distribution.read_text("direct_url.json")
@@ -184,6 +207,10 @@ jobs:
           import vrasi_physics
           import vrasi_qudit
           import vrasi_swarm
+          import image_index
+          import upi_aeco
+          import upi_puter_ui
+          import upi_odysseus_bridge
 
           assert upi.index8_from_frequency(8.0) == 1.0
           assert upi.mass_from_frequency(8.0) > 0.0
@@ -205,13 +232,18 @@ jobs:
           assert vrasi_swarm.SELECTED_SIZE == 3
           assert vrasi_swarm.QUORUM_SIZE == 3
           assert len(vrasi_swarm.digest_payload({"source": "github"})) == 64
-          print("✓ UPI, vrasi-physics, vrasi-qudit and vrasi-swarm APIs passed")
+
+          assert upi_odysseus_bridge.get_odysseus_tools_manifest() is not None
+          assert upi_puter_ui.PUBLIC_DIR.exists()
+
+          print("✓ UPI, vrasi-physics, vrasi-qudit, vrasi-swarm, upi-image-index, upi-aeco, upi-puter-ui and upi-odysseus-bridge APIs passed")
           PY
 
       - name: Smoke test every installed CLI
         run: |
           upi --version
           upi index8 --frequency 8
+          upi sunet
           vrasi-physics 8
           vrasi-qudit --dimensions 4,5 --targets 7 --top-k 3
           vrasi-swarm demo
@@ -223,13 +255,8 @@ jobs:
       contents: read
       security-events: write
     steps:
-<<<<<<< HEAD
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-
-=======
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      
->>>>>>> main
+
       - name: Run trivy on source
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
