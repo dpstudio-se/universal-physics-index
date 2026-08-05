@@ -119,7 +119,53 @@ class UPIKernel:
                 "query": institution,
                 "matching_nodes": [n.to_dict() for n in nodes]
             }
-        return self.sunet_mapper.generate_audit_summary()
+        return {
+            "operation": "inspect_sunet",
+            "status": ScientificStatus.DER.value,
+            "verification_type": "source_metadata_check",
+            "total_nodes": len(self.sunet_mapper.nodes),
+            "summary": self.sunet_mapper.get_summary()
+        }
+
+    def run_vrasi_swarm(self, allowlist: list[str] | None = None) -> dict[str, Any]:
+        """Execute VR-ASI 3-6-9 swarm coordination consensus simulation."""
+        import vrasi_swarm
+        nodes = allowlist or ["node_alpha", "node_beta", "node_gamma", "node_delta", "node_epsilon", "node_zeta", "node_eta", "node_theta", "node_iota"]
+        coordinator = vrasi_swarm.SwarmCoordinator(allowlist=nodes)
+        for idx, node_id in enumerate(nodes[:9]):
+            coordinator.observe(vrasi_swarm.NodeObservation(node_id=node_id, payload_digest=f"digest_{idx}", score=1.0 - (idx * 0.05)))
+        selected = coordinator.select_proposers()
+        proposal = coordinator.propose(generation=4, content_digest="sha256_consensus_payload")
+        for p in selected:
+            coordinator.vote(vrasi_swarm.Vote(proposer_id=p, proposal_digest=proposal.proposal_digest, approve=True))
+        committed = coordinator.commit(proposal.proposal_digest)
+        return {
+            "operation": "run_vrasi_swarm",
+            "status": ScientificStatus.DER.value,
+            "verification_type": "software_test",
+            "protocol_phase": "3-6-9_consensus",
+            "registered_nodes": len(nodes),
+            "selected_proposers": selected,
+            "consensus_committed": committed is not None,
+            "committed_generation": committed.generation if committed else None,
+        }
+
+    def evaluate_vrasi_helical_physics(self, radius_m: float = 0.1, axial_speed: float = 0.4, frequency_hz: float = 8.0) -> dict[str, Any]:
+        """Evaluate VR-ASI 3D helical motion invariants."""
+        import math
+        import vrasi_physics
+        helix = vrasi_physics.evaluate_helical_motion(radius_m, axial_speed, 2.0 * math.pi * frequency_hz)
+        return {
+            "operation": "evaluate_vrasi_helical_physics",
+            "status": ScientificStatus.DER.value,
+            "verification_type": "software_test",
+            "radius_m": helix.radius_m,
+            "axial_speed_m_s": helix.axial_speed_m_s,
+            "total_speed_m_s": helix.total_speed_m_s,
+            "period_s": helix.period_s,
+            "curvature_per_m": helix.curvature_per_m,
+            "torsion_per_m": helix.torsion_per_m,
+        }
 
     def generate_kernel_status(self) -> dict[str, Any]:
         """Generate inside-out kernel status report."""

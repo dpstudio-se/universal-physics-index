@@ -95,6 +95,26 @@ class OdysseusToolRegistry:
                 }
             },
             {
+                "name": "run_vrasi_swarm_consensus",
+                "description": "Execute VR-ASI 3-6-9 transport-neutral swarm consensus protocol.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+            {
+                "name": "evaluate_vrasi_helical_motion",
+                "description": "Calculate VR-ASI 3D helical motion invariants and curvature/torsion.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "radius_m": {"type": "number", "description": "Helical radius in meters"},
+                        "axial_speed_m_s": {"type": "number", "description": "Axial speed in m/s"},
+                        "frequency_hz": {"type": "number", "description": "Revolutions per second in Hz"}
+                    }
+                }
+            },
+            {
                 "name": "get_physics_constant",
                 "description": "Retrieve fundamental physics constants (Planck h, Light speed c, Boltzmann kB, Elementary charge e, Avogadro NA).",
                 "parameters": {
