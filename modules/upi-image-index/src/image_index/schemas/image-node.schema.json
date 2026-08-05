@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UPI Image Node Schema",
+  "description": "Schema for image-derived UPI nodes. Extends the UPI node model with image-specific extraction layers.",
+  "type": "object",
+  "required": [
+    "address",
+    "title",
+    "description",
+    "status",
+    "image_hash_sha256",
+    "extraction_layers",
+    "generation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "address": {
+      "type": "string",
+      "pattern": "^UPI<[^,]+,[0-9]+,[^,]+,[^,>]+>$",
+      "description": "UPI address: UPI<Domain,Generation,Torus,Node>"
+    },
+    "title": {"type": "string", "minLength": 1},
+    "description": {"type": "string", "minLength": 1},
+    "status": {
+      "type": "string",
+      "enum": ["EST", "DER", "HYP", "STOP", "ERR", "SYM"]
+    },
+    "image_hash_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 hex digest of the source image file. Never the file path."
+    },
+    "extraction_layers": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/extraction_layer"},
+      "description": "Ordered list of extracted observation layers"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Increments on each re-analysis of the same image"
+    },
+    "parent_hash": {
+      "description": "SHA-256 of previous-generation node content, or null for generation 0/1",
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "prompt_fingerprint": {
+      "description": "SHA-256 of the extraction prompt used, or null",
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "information_layer": {
+      "type": "string",
+      "enum": ["PRIVATE", "PUBLIC", "ACADEMIC"]
+    },
+    "verification_type": {
+      "type": "string",
+      "enum": ["software_test", "simulation", "mathematical_check", "experimental_observation", "replication", "none"]
+    },
+    "claims_experimental_verification": {"type": "boolean"},
+    "confusion_guard": {"type": "string"},
+    "stop_reason": {"type": "string"},
+    "tags": {"type": "array", "items": {"type": "string"}},
+    "version": {"type": "string"}
+  },
+  "if": {"properties": {"status": {"const": "STOP"}}},
+  "then": {"required": ["stop_reason"]},
+  "definitions": {
+    "extraction_layer": {
+      "type": "object",
+      "required": ["layer_type", "status", "source", "content_hash", "findings", "extractor_version"],
+      "additionalProperties": false,
+      "properties": {
+        "layer_type": {
+          "type": "string",
+          "enum": [
+            "VISIBLE_TEXT",
+            "GEOMETRIC_STRUCTURE",
+            "SYMBOLIC_ELEMENT",
+            "COLOR_CHANNEL",
+            "METADATA_EXIF",
+            "SHADOW_LAYER"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["EST", "DER", "HYP", "STOP", "ERR", "SYM"]
+        },
+        "source": {"type": "string", "minLength": 1},
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "SHA-256 of findings joined by newline"
+        },
+        "findings": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "extractor_version": {"type": "string"},
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "stop_reason": {"type": "string"},
+        "confusion_guard": {"type": "string"},
+        "verification_type": {"type": "string"},
+        "claims_experimental_verification": {"type": "boolean"}
+      }
+    }
+  }
+}

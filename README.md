@@ -107,13 +107,13 @@ This repository is preconfigured for GitHub Codespaces via `.devcontainer/devcon
 - `modules/vrasi-physics/` — Standalone, dependency-free VR-ASI physics kernel
 - `modules/vrasi-qudit/` — Standalone digital multi-torus qudit simulator
 - `modules/vrasi-swarm/` — Standalone 3-6-9/Gen4 coordination kernel
+- `modules/upi-image-index/` — Image feature extraction and 5-layer UPI status indexing
+- `modules/upi-aeco/` — Autonomous Evolution Core Omega (self-evaluating evolution module)
 - `tests/` — UPI regression and boundary test suite
 - `schemas/` — Schemas for nodes, bridges, theories and bounded workflow records
-- `data/` — Schema-routed UPI nodes, bridges, theories and intentional negative fixtures
+- `data/` — Schema-routed UPI nodes, bridges, theories and external source declarations
 - `config/` — Operational configuration such as ports and external-source declarations
 - `docs/` — Specifications, derivations and scientific-boundary documentation
-
-Operational manifests do not belong under `data/` unless they implement one of the declared UPI record schemas.
 
 ### Standalone VR-ASI physics
 
@@ -157,12 +157,19 @@ This is an auditable coordination protocol (`SYM`), not a claim of collective bi
 ## Testing
 
 ```bash
+<<<<<<< HEAD
 python -m pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-qudit/tests/ modules/vrasi-swarm/tests/ -v
 ruff check src tests repo_audit.py modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-qudit/src modules/vrasi-qudit/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
 mypy src/upi repo_audit.py --ignore-missing-imports
 mypy modules/vrasi-qudit/src/vrasi_qudit
 python repo_audit.py --output repo-audit.json
 upi validate data/constants/planck.json
+=======
+pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ modules/upi-image-index/tests/ -v
+ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
+mypy src/upi            # Type checking
+upi validate data/constants/planck.json  # Schema validation
+>>>>>>> main
 ```
 
 `repo_audit.py` exits non-zero when schemas, typed data, plugin manifests, source declarations, critical files or port assignments are invalid.

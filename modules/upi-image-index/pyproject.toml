@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "upi-image-index"
+version = "0.1.0"
+description = "UPI-based image feature extraction and indexing with scientific status classification"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "jsonschema>=4.17.0",
+]
+keywords = ["upi", "image", "indexing", "knowledge-graph", "steganography"]
+
+[project.optional-dependencies]
+enhanced = [
+    "Pillow>=9.0.0",
+    "pytesseract>=0.3.10",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+upi-img = "image_index.cli:main"
+upi-image-index = "image_index.cli:main"
+
+[tool.setuptools]
+packages = ["image_index"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+image_index = ["schemas/*.json"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v --tb=short"

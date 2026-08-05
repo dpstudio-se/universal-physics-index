@@ -1,0 +1,4 @@
+# Ignore all files in this directory except README and this .gitignore
+*
+!.gitignore
+!README.md

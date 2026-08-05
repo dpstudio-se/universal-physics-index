@@ -1,0 +1,31 @@
+{
+  "version_id": "v0.1.0-initial",
+  "total_nodes": 23,
+  "status_counts": {
+    "DER": 3,
+    "EST": 14,
+    "HYP": 2,
+    "STOP": 1,
+    "SYM": 3
+  },
+  "junk_clusters": [],
+  "stop_reasons": [
+    "UPI-E007",
+    "UPI-D003",
+    "UPI-D003",
+    "UPI-E005",
+    "UPI-E007",
+    "UPI-D002",
+    "UPI-D002",
+    "UPI-D002",
+    "UPI-D002",
+    "UPI-E007"
+  ],
+  "weak_domains": [
+    "unverified_evidence_boundary",
+    "symbolic_interpretation_layer"
+  ],
+  "kernel_v_odin": 1.4823285395904264e-48,
+  "last_updated_utc": "2026-08-05T04:47:05.014915+00:00",
+  "fitness_score": 1.0
+}
