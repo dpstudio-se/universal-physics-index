@@ -437,6 +437,37 @@ pre {
   text-transform: uppercase;
 }
 
+.tools-list-box {
+  background: rgba(8, 12, 20, 0.8);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.tool-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tool-item:last-child {
+  border-bottom: none;
+}
+
+.tool-item-name {
+  color: #38bdf8;
+  font-weight: bold;
+}
+
+.tool-item-desc {
+  color: var(--text-secondary);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
 /* Footer */
 .app-footer {
   display: flex;

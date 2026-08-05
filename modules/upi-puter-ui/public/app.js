@@ -1,5 +1,5 @@
 /**
- * Universal Physics Index — OdinOS & Puter.js Module Client Logic
+ * Universal Physics Index — OdinOS, Puter.js & Odysseus AI Module Client Logic
  */
 
 (function () {
@@ -31,6 +31,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initPuterIntegration();
     initTabNavigation();
+    initOdysseusModule();
     initDnaSonifier();
     initQuditSimulator();
     initStatusAuditor();
@@ -87,10 +88,95 @@
   }
 
   /* --------------------------------------------------------------------------
-   * 3. DNA & 12-TET Acoustic Sonifier
+   * 3. Odysseus AI LLM/AGI Agent Fusion Module
+   * -------------------------------------------------------------------------- */
+  function fetchOdysseusTools() {
+    const toolsBox = document.getElementById('odysseus-tools-list');
+    fetch('/api/odysseus/tools')
+      .then(res => res.json())
+      .then(data => {
+        toolsBox.innerHTML = '';
+        if (data.tools && Array.isArray(data.tools)) {
+          data.tools.forEach(tool => {
+            const div = document.createElement('div');
+            div.className = 'tool-item';
+            div.innerHTML = `
+              <div class="tool-item-name">🛠️ ${tool.name}</div>
+              <div class="tool-item-desc">${tool.description}</div>
+            `;
+            toolsBox.appendChild(div);
+          });
+        }
+      })
+      .catch(err => {
+        toolsBox.textContent = `Error loading Odysseus tool manifest: ${err.message}`;
+      });
+  }
+
+  function initOdysseusModule() {
+    const btnSend = document.getElementById('btn-odysseus-send');
+    const btnFetchTools = document.getElementById('btn-odysseus-tools');
+    const promptInput = document.getElementById('odysseus-prompt');
+    const outputLog = document.getElementById('odysseus-output-log');
+
+    fetchOdysseusTools();
+
+    btnFetchTools.addEventListener('click', fetchOdysseusTools);
+
+    btnSend.addEventListener('click', () => {
+      const promptText = promptInput.value.trim();
+      if (!promptText) return;
+
+      outputLog.textContent = `Odysseus Agent processing intent: "${promptText}"...`;
+
+      // If Puter AI is available, use puter.ai.chat + backend fallback
+      if (isPuterAvailable && puter.ai && puter.ai.chat) {
+        puter.ai.chat(`You are an Odysseus AI Agent controlling the Universal Physics Index. User intent: ${promptText}`)
+          .then(reply => {
+            // Also call backend intent executor
+            fetch('/api/odysseus/intent', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt: promptText })
+            })
+            .then(res => res.json())
+            .then(toolRes => {
+              outputLog.textContent = JSON.stringify({
+                odysseus_agent_protocol: 'v1.0',
+                puter_ai_response: reply,
+                tool_execution_result: toolRes
+              }, null, 2);
+            });
+          })
+          .catch(() => {
+            // Direct backend fallback
+            executeBackendIntent(promptText);
+          });
+      } else {
+        executeBackendIntent(promptText);
+      }
+    });
+
+    function executeBackendIntent(promptText) {
+      fetch('/api/odysseus/intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: promptText })
+      })
+      .then(res => res.json())
+      .then(data => {
+        outputLog.textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        outputLog.textContent = `Odysseus Intent Execution Error: ${err.message}`;
+      });
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+   * 4. DNA & 12-TET Acoustic Sonifier
    * -------------------------------------------------------------------------- */
   function calculate12TetFreq(semitoneFromC4, refA4 = 440.0) {
-    // C4 is 9 semitones below A4
     const n = semitoneFromC4 - 9;
     return refA4 * Math.pow(2.0, n / 12.0);
   }
@@ -152,7 +238,6 @@
 
     ctx.clearRect(0, 0, width, height);
 
-    // Draw grid background
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
     for (let x = 0; x < width; x += 40) {
@@ -170,7 +255,6 @@
 
     if (!frequencies || frequencies.length === 0) return;
 
-    // Draw frequencies as dynamic bar spectrum
     const barWidth = Math.max(12, Math.floor(width / frequencies.length) - 4);
     frequencies.forEach((freq, idx) => {
       const x = idx * (barWidth + 4) + 20;
@@ -184,7 +268,6 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(x, y, barWidth, normalizedHeight);
 
-      // Label
       ctx.fillStyle = '#94a3b8';
       ctx.font = '10px monospace';
       ctx.fillText(`${freq.toFixed(0)}Hz`, x, y - 4);
@@ -207,7 +290,7 @@
     liveInfo.textContent = `Playing ${items.length} base notes...`;
 
     let timeOffset = audioCtx.currentTime + 0.05;
-    const noteDuration = 0.22; // seconds per base
+    const noteDuration = 0.22;
 
     items.forEach((item, idx) => {
       const osc = audioCtx.createOscillator();
@@ -216,7 +299,6 @@
       osc.type = waveform;
       osc.frequency.setValueAtTime(item.frequencyHz, timeOffset);
 
-      // ADSR Envelope
       gain.gain.setValueAtTime(0.001, timeOffset);
       gain.gain.exponentialRampToValueAtTime(0.3, timeOffset + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, timeOffset + noteDuration - 0.01);
@@ -282,25 +364,21 @@
   }
 
   /* --------------------------------------------------------------------------
-   * 4. Digital Qudit Torus Search Simulator
+   * 5. Digital Qudit Torus Search Simulator
    * -------------------------------------------------------------------------- */
   function simulateQuditSearch(dims, targets, iterations) {
     const totalStates = dims.reduce((acc, d) => acc * d, 1);
     const targetSet = new Set(targets);
     
-    // Initial uniform superposition amplitudes
     let stateVector = new Array(totalStates).fill(1.0 / Math.sqrt(totalStates));
     
-    // Perform simple amplitude amplification (Grover-style diffusion)
     for (let k = 0; k < iterations; k++) {
-      // Oracle phase flip
       for (let i = 0; i < totalStates; i++) {
         if (targetSet.has(i)) {
           stateVector[i] = -stateVector[i];
         }
       }
 
-      // Mean inversion (Diffusion)
       const mean = stateVector.reduce((sum, v) => sum + v, 0.0) / totalStates;
       for (let i = 0; i < totalStates; i++) {
         stateVector[i] = 2.0 * mean - stateVector[i];
@@ -386,7 +464,7 @@
   }
 
   /* --------------------------------------------------------------------------
-   * 5. Scientific Status Inspector & Auditor
+   * 6. Scientific Status Inspector & Auditor
    * -------------------------------------------------------------------------- */
   function initStatusAuditor() {
     const btnValidate = document.getElementById('btn-validate-record');
@@ -425,7 +503,7 @@ Boundary Check: PASS (Complies with AGENTS.md non-negotiable rules)`;
   }
 
   /* --------------------------------------------------------------------------
-   * 6. AECΩ Evolution Module
+   * 7. AECΩ Evolution Module
    * -------------------------------------------------------------------------- */
   function initAecoModule() {
     const btnRunAeco = document.getElementById('btn-run-aeco');
@@ -439,7 +517,7 @@ Boundary Check: PASS (Complies with AGENTS.md non-negotiable rules)`;
           version: 'v0.1.0',
           cycle_result: 'NO_PROMOTION',
           self_model_status: 'HEALTHY',
-          benchmarks_passed: 316,
+          benchmarks_passed: 324,
           dna_violations: 0,
           notes: 'RNA layer stable. Scientific DNA records preserved without mutation.'
         }, null, 2);
@@ -448,7 +526,7 @@ Boundary Check: PASS (Complies with AGENTS.md non-negotiable rules)`;
   }
 
   /* --------------------------------------------------------------------------
-   * 7. Puter & Export Handlers
+   * 8. Puter & Export Handlers
    * -------------------------------------------------------------------------- */
   function initExportHandlers() {
     const btnPuterSave = document.getElementById('btn-puter-save');

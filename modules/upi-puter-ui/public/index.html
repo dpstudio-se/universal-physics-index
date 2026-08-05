@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Universal Physics Index — OdinOS Puter Module</title>
-  <meta name="description" content="Machine-readable validation, classification, and acoustic/qudit visualization layer for scientific records in Puter OS & OdinOS.">
+  <title>Universal Physics Index — OdinOS & Odysseus AI Module</title>
+  <meta name="description" content="Machine-readable validation, classification, Puter OS & Odysseus AI agent control interface for scientific records.">
   <link rel="stylesheet" href="style.css">
   <!-- Puter.js v2 SDK -->
   <script src="https://js.puter.com/v2/"></script>
@@ -19,7 +19,7 @@
         </div>
         <div class="brand-text">
           <h1>Universal Physics Index</h1>
-          <span class="sub-title">OdinOS & Puter.js Runtime Engine &bull; <span id="carrier-freq">8.00 Hz</span> Reference</span>
+          <span class="sub-title">OdinOS &bull; Puter.js &bull; Odysseus AI Bridge &bull; <span id="carrier-freq">8.00 Hz</span> Reference</span>
         </div>
       </div>
       <div class="header-actions">
@@ -31,7 +31,8 @@
 
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
-      <button class="tab-btn active" data-tab="tab-dna">🧬 DNA & Acoustic Sonifier</button>
+      <button class="tab-btn active" data-tab="tab-odysseus">🤖 Odysseus LLM/AGI Fusion</button>
+      <button class="tab-btn" data-tab="tab-dna">🧬 DNA & Acoustic Sonifier</button>
       <button class="tab-btn" data-tab="tab-qudit">🌀 Qudit Torus Search</button>
       <button class="tab-btn" data-tab="tab-status">🛡️ Scientific Status Auditor</button>
       <button class="tab-btn" data-tab="tab-aeco">⚡ UPI-AEC&Omega; Evolution</button>
@@ -39,8 +40,40 @@
 
     <!-- Main Content Panels -->
     <main class="content-panel">
+      <!-- TAB 0: Odysseus LLM/AGI Fusion -->
+      <section id="tab-odysseus" class="tab-content active">
+        <div class="panel-grid">
+          <div class="card card-controls">
+            <h2>Odysseus AI Agent Command Terminal</h2>
+            <p class="description">
+              Communicates with LLM/AAI/AGI/ASI agents via the Odysseus Protocol tool call manifest (<a href="https://odysseusai.dev/" target="_blank" style="color:#38bdf8;">odysseusai.dev</a>). Fuses Puter AI (<code>puter.ai</code>) with UPI physics engines.
+            </p>
+            <div class="form-group">
+              <label for="odysseus-prompt">Natural Language Intent / Prompt:</label>
+              <textarea id="odysseus-prompt" rows="3" placeholder="Ask LLM/Odysseus agent, e.g. 'Sonify DNA sequence ATGCGATACGA and calculate energy mass equivalents'...">Sonify DNA sequence ATGCGATACGA and return trace analysis</textarea>
+            </div>
+            <div class="button-group">
+              <button id="btn-odysseus-send" class="btn btn-primary">⚡ Send to Odysseus LLM Agent</button>
+              <button id="btn-odysseus-tools" class="btn btn-secondary">📋 Fetch Odysseus Tool Manifest</button>
+            </div>
+          </div>
+
+          <div class="card card-visualizer">
+            <h2>Odysseus Agent Protocol Tool Registry</h2>
+            <div id="odysseus-tools-list" class="tools-list-box">
+              Loading Odysseus tool manifest...
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-results">
+          <h3>Odysseus Tool Execution & Intent Output</h3>
+          <pre id="odysseus-output-log">Odysseus AI Agent interface online. Submit an intent prompt or tool call.</pre>
+        </div>
+      </section>
+
       <!-- TAB 1: DNA & Acoustic Sonifier -->
-      <section id="tab-dna" class="tab-content active">
+      <section id="tab-dna" class="tab-content">
         <div class="panel-grid">
           <div class="card card-controls">
             <h2>Bio-Acoustic DNA Sonifier (4-Base & 12-TET)</h2>
@@ -224,7 +257,7 @@
 
     <!-- Footer -->
     <footer class="app-footer">
-      <span>Universal Physics Index v0.1.0-alpha &bull; OdinOS &bull; Puter.js Module</span>
+      <span>Universal Physics Index v0.1.0-alpha &bull; OdinOS &bull; Puter.js &bull; Odysseus AI Bridge</span>
       <span>Status: <span class="badge badge-est">EST Grounded</span></span>
     </footer>
   </div>

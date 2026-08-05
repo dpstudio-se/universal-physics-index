@@ -1,4 +1,4 @@
-"""Unit tests for upi-puter-ui module."""
+"""Unit tests for upi-puter-ui module and Odysseus AI Protocol integration."""
 
 from __future__ import annotations
 
@@ -31,10 +31,11 @@ def test_public_directory_structure() -> None:
     assert (PUBLIC_DIR / "app.js").exists()
 
 
-def test_index_html_contains_puter_and_boundary_rules() -> None:
-    """Verify index.html includes Puter.js SDK and scientific boundary tags."""
+def test_index_html_contains_odysseus_and_puter_fusion() -> None:
+    """Verify index.html includes Puter.js SDK, Odysseus tab, and scientific boundary tags."""
     content = (PUBLIC_DIR / "index.html").read_text(encoding="utf-8")
     assert "js.puter.com/v2" in content
+    assert "Odysseus LLM/AGI Fusion" in content
     assert "EST" in content
     assert "DER" in content
     assert "SYM" in content
