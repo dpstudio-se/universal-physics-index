@@ -60,6 +60,19 @@ class OdysseusToolRegistry:
                 }
             },
             {
+                "name": "inspect_sunet_network",
+                "description": "Audit and inspect SUNET academic optical backbone topology and NAISS supercomputing nodes.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "institution": {
+                            "type": "string",
+                            "description": "Optional university or institution name (e.g. KTH, Chalmers, Lund)"
+                        }
+                    }
+                }
+            },
+            {
                 "name": "audit_upi_node",
                 "description": "Audit a JSON UPI node record against scientific status schema rules.",
                 "parameters": {
@@ -158,6 +171,26 @@ class OdysseusIntentExecutor:
                 "errors": errors
             }
 
+        if tool_name == "inspect_sunet_network":
+            from upi.sunet import load_sunet_topology
+            mapper = load_sunet_topology()
+            inst = arguments.get("institution")
+            if inst:
+                nodes = mapper.find_nodes_by_institution(inst)
+                return {
+                    "tool": "inspect_sunet_network",
+                    "status": "DER",
+                    "verification_type": "source_metadata_check",
+                    "institution": inst,
+                    "matching_nodes": [n.to_dict() for n in nodes]
+                }
+            return {
+                "tool": "inspect_sunet_network",
+                "status": "DER",
+                "verification_type": "source_metadata_check",
+                "audit": mapper.generate_audit_summary()
+            }
+
         if tool_name == "run_aeco_evolution":
             return {
                 "tool": "run_aeco_evolution",
@@ -210,6 +243,14 @@ class OdysseusIntentExecutor:
         """Parse natural language LLM prompt into Odysseus tool intent."""
         prompt_lower = prompt.lower()
 
+        if "sunet" in prompt_lower or "network" in prompt_lower or "backbone" in prompt_lower:
+            inst = None
+            for uni in ["kth", "chalmers", "lund", "uu", "uppsala", "linköping", "liu", "umeå"]:
+                if uni in prompt_lower:
+                    inst = uni
+                    break
+            return OdysseusIntentExecutor.execute_tool("inspect_sunet_network", {"institution": inst} if inst else {})
+
         if "dna" in prompt_lower or "sonif" in prompt_lower:
             # Extract sequence or fallback
             words = prompt.replace(",", " ").replace(".", " ").split()
@@ -240,7 +281,7 @@ class OdysseusIntentExecutor:
             "status": "HYP",
             "prompt": prompt,
             "agent_protocol": "Odysseus AI v1.0",
-            "suggested_tools": ["sonify_dna", "search_qudit_torus", "get_physics_constant", "run_aeco_evolution"],
+            "suggested_tools": ["sonify_dna", "search_qudit_torus", "get_physics_constant", "run_aeco_evolution", "inspect_sunet_network"],
             "message": f"Odysseus AI Agent processed prompt: '{prompt}'. Express intent using one of the registered Odysseus tool schemas."
         }
 

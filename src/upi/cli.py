@@ -411,6 +411,15 @@ def main():
     sunet_parser.add_argument("--institution", help="Filter topology by university or institution name")
     sunet_parser.set_defaults(func=sunet_cmd)
 
+    # serve
+    serve_parser = subparsers.add_parser(
+        "serve",
+        help="Start inside-out UPI web server and Odysseus AI bridge",
+    )
+    serve_parser.add_argument("--port", type=int, default=4000, help="Port to listen on (default 4000)")
+    serve_parser.add_argument("--no-browser", action="store_true", help="Do not automatically open web browser")
+    serve_parser.set_defaults(func=serve_cmd)
+
     args = parser.parse_args()
 
     if not hasattr(args, "func"):
@@ -422,6 +431,12 @@ def main():
     except Exception as error:
         print(f"Error: {error}", file=sys.stderr)
         sys.exit(1)
+
+
+def serve_cmd(args):
+    """Start inside-out UPI web server."""
+    from .serve import run_server
+    run_server(port=args.port, open_browser=not args.no_browser)
 
 
 def sunet_cmd(args):

@@ -125,15 +125,30 @@
 
     btnSend.addEventListener('click', () => {
       const promptText = promptInput.value.trim();
+      const provider = document.getElementById('ai-provider-select')?.value || 'heuristic';
       if (!promptText) return;
 
-      outputLog.textContent = `Odysseus Agent processing intent: "${promptText}"...`;
+      outputLog.textContent = `Odysseus Agent (${provider}) processing intent: "${promptText}"...`;
 
-      // If Puter AI is available, use puter.ai.chat + backend fallback
-      if (isPuterAvailable && puter.ai && puter.ai.chat) {
+      if (provider === 'local_ollama') {
+        fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ provider: 'local_ollama', prompt: promptText })
+        })
+        .then(res => res.json())
+        .then(data => {
+          outputLog.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          outputLog.textContent = `Local AI Gateway Error: ${err.message}`;
+        });
+        return;
+      }
+
+      if (provider === 'cloud_puter' && isPuterAvailable && puter.ai && puter.ai.chat) {
         puter.ai.chat(`You are an Odysseus AI Agent controlling the Universal Physics Index. User intent: ${promptText}`)
           .then(reply => {
-            // Also call backend intent executor
             fetch('/api/odysseus/intent', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -143,25 +158,27 @@
             .then(toolRes => {
               outputLog.textContent = JSON.stringify({
                 odysseus_agent_protocol: 'v1.0',
+                provider: 'cloud_puter',
                 puter_ai_response: reply,
                 tool_execution_result: toolRes
               }, null, 2);
             });
           })
           .catch(() => {
-            // Direct backend fallback
             executeBackendIntent(promptText);
           });
-      } else {
-        executeBackendIntent(promptText);
+        return;
       }
+
+      // Default Heuristic Router
+      executeBackendIntent(promptText);
     });
 
     function executeBackendIntent(promptText) {
-      fetch('/api/odysseus/intent', {
+      fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: promptText })
+        body: JSON.stringify({ provider: 'heuristic', prompt: promptText })
       })
       .then(res => res.json())
       .then(data => {

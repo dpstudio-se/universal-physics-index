@@ -50,7 +50,15 @@
             </p>
             <div class="form-group">
               <label for="odysseus-prompt">Natural Language Intent / Prompt:</label>
-              <textarea id="odysseus-prompt" rows="3" placeholder="Ask LLM/Odysseus agent, e.g. 'Sonify DNA sequence ATGCGATACGA and calculate energy mass equivalents'...">Sonify DNA sequence ATGCGATACGA and return trace analysis</textarea>
+              <textarea id="odysseus-prompt" rows="3" placeholder="Ask LLM/Odysseus agent, e.g. 'Sonify DNA sequence ATGCGATACGA' or 'Inspect SUNET backbone topology for KTH'...">Sonify DNA sequence ATGCGATACGA and return trace analysis</textarea>
+            </div>
+            <div class="form-group" style="margin-top: 8px;">
+              <label for="ai-provider-select">AI Provider Engine:</label>
+              <select id="ai-provider-select" style="width: 100%; padding: 8px; background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-glass); border-radius: 6px;">
+                <option value="heuristic" selected>⚡ Heuristic Rule Router (Offline / Fast)</option>
+                <option value="local_ollama">💻 Local AI / Ollama / LM Studio (localhost:11434)</option>
+                <option value="cloud_puter">☁️ Puter AI (Cloud API)</option>
+              </select>
             </div>
             <div class="button-group">
               <button id="btn-odysseus-send" class="btn btn-primary">⚡ Send to Odysseus LLM Agent</button>
