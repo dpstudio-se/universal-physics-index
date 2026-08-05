@@ -27,6 +27,8 @@ def _load_json(path: Path) -> Any:
 
 
 def _record_type(data: dict[str, Any]) -> str | None:
+    if data.get("operation") == "upi_external_source_record" or {"source_id", "canonical_url"} <= data.keys():
+        return "source"
     if {"source", "target", "relation"} <= data.keys():
         return "bridge"
     if {"address", "title", "description", "status", "domain", "scope"} <= data.keys():
@@ -95,6 +97,14 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
                 report["data_errors"].append(
                     f"{relative_path.as_posix()}: unclassified data record; expected node, bridge, or theory"
                 )
+                continue
+            if record_kind == "source":
+                if not data.get("source_id") or not data.get("canonical_url"):
+                    report["data_errors"].append(
+                        f"{relative_path.as_posix()}: source record missing source_id or canonical_url"
+                    )
+                    continue
+                report["records_validated"] += 1
                 continue
             schema = schemas.get(record_kind)
             if schema is None:
@@ -175,7 +185,16 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
     except (OSError, UnicodeError, json.JSONDecodeError, TypeError, SchemaError) as error:
         report["manifest_errors"].append(f"Plugin manifest validation failed: {error}")
 
-    report["files_scanned"] = sum(1 for path in root.rglob("*") if path.is_file())
+    ignored_dirs = {".git", ".venv", ".venv-wsl", ".mypy_cache", ".pytest_cache", ".ruff_cache", "__pycache__", "node_modules"}
+    def _is_valid_file(p: Path) -> bool:
+        if any(part in ignored_dirs for part in p.parts):
+            return False
+        try:
+            return p.is_file()
+        except OSError:
+            return False
+
+    report["files_scanned"] = sum(1 for path in root.rglob("*") if _is_valid_file(path))
     blocking_fields = (
         "critical_conflicts",
         "missing_files",
