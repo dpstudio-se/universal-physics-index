@@ -27,7 +27,11 @@ def _load_json(path: Path) -> Any:
 
 
 def _record_type(data: dict[str, Any]) -> str | None:
-    if data.get("operation") == "upi_external_source_record" or {"source_id", "canonical_url"} <= data.keys():
+    if (
+        data.get("operation") in {"upi_external_source_record", "upi_sunet_network_topology_map"}
+        or {"source_id", "canonical_url"} <= data.keys()
+        or {"backbone_name", "canonical_url"} <= data.keys()
+    ):
         return "source"
     if {"source", "target", "relation"} <= data.keys():
         return "bridge"
@@ -99,9 +103,9 @@ def audit_repo(root: Path = Path(".")) -> dict[str, Any]:
                 )
                 continue
             if record_kind == "source":
-                if not data.get("source_id") or not data.get("canonical_url"):
+                if not (data.get("source_id") or data.get("backbone_name")) or not data.get("canonical_url"):
                     report["data_errors"].append(
-                        f"{relative_path.as_posix()}: source record missing source_id or canonical_url"
+                        f"{relative_path.as_posix()}: source record missing source_id/backbone_name or canonical_url"
                     )
                     continue
                 report["records_validated"] += 1

@@ -1,0 +1,109 @@
+{
+  "version": "0.1.0",
+  "operation": "upi_sunet_network_topology_map",
+  "backbone_name": "Swedish University Computer Network (Sunet)",
+  "canonical_url": "https://www.sunet.se/",
+  "upi_status": "DER",
+  "verification_type": "source_metadata_check",
+  "claims_experimental_verification": false,
+  "evidence_boundary": "This topology map establishes the declared optical backbone rings, identity federation services (SWAMID), high-performance computing centers (NAISS), and international research lightpaths (MAX IV, ESS, CERN via NORDUnet) as indexed from public SUNET service specifications. Network throughput ratings represent optical capacity limits, not physical laws or evidence of biological/metaphysical resonance.",
+  "backbone_nodes": [
+    {
+      "node_id": "SUNET-OPTICAL-RING-NORTH",
+      "name": "Sunet North DWDM Optical Ring (Stockholm - Uppsala - Sundsvall - Umeå - Luleå)",
+      "type": "backbone_ring",
+      "capacity_gbps": 400,
+      "address": "UPI<computer_science,1,network_infrastructure,sunet_north_ring>",
+      "connected_institutions": ["KTH", "SU", "UU", "UmU", "LTU"]
+    },
+    {
+      "node_id": "SUNET-OPTICAL-RING-SOUTH",
+      "name": "Sunet South DWDM Optical Ring (Stockholm - Linköping - Jönköping - Gothenburg - Lund)",
+      "type": "backbone_ring",
+      "capacity_gbps": 400,
+      "address": "UPI<computer_science,1,network_infrastructure,sunet_south_ring>",
+      "connected_institutions": ["KTH", "LiU", "GU", "Chalmers", "LU"]
+    },
+    {
+      "node_id": "SWAMID-FEDERATION-CORE",
+      "name": "SWAMID Swedish Academic Identity Federation Core",
+      "type": "identity_federation",
+      "protocol": "SAML2.0 / Shibboleth",
+      "address": "UPI<information_physics,1,identity_federation,swamid_core>",
+      "connected_institutions": ["All Swedish Universities and Colleges"]
+    },
+    {
+      "node_id": "SUNET-DRIVE-CLOUD",
+      "name": "Sunet Drive Academic Storage & Research Cloud",
+      "type": "federated_storage",
+      "capacity_petabytes": 50,
+      "address": "UPI<computer_science,1,data_storage,sunet_drive>",
+      "connected_institutions": ["NAISS Consortium", "Swedish Universities"]
+    },
+    {
+      "node_id": "NORDUNET-COPENHAGEN-GATEWAY",
+      "name": "NORDUnet Nordic Research Gateway Interconnect",
+      "type": "international_gateway",
+      "capacity_gbps": 800,
+      "address": "UPI<computer_science,1,network_infrastructure,nordunet_gateway>",
+      "connected_institutions": ["SUNET", "DeIC", "FUNET", "RHnet", "UNINETT", "GEANT", "CERN"]
+    }
+  ],
+  "hpc_research_nodes": [
+    {
+      "node_id": "NAISS-PDC-KTH",
+      "name": "PDC Center for High Performance Computing (KTH Stockholm)",
+      "facility_type": "supercomputing_center",
+      "systems": ["Dardel (HPE Cray EX)"],
+      "address": "UPI<computational_physics,1,hpc_supercomputing,pdc_kth>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-NORTH"
+    },
+    {
+      "node_id": "NAISS-NSC-LINKOPING",
+      "name": "National Supercomputer Centre (Linköping University)",
+      "facility_type": "supercomputing_center",
+      "systems": ["Tetralith", "Sigma3", "Berzelius (NVIDIA DGX SuperPOD)"],
+      "address": "UPI<computational_physics,1,hpc_supercomputing,nsc_linkoping>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-SOUTH"
+    },
+    {
+      "node_id": "NAISS-C3SE-CHALMERS",
+      "name": "Chalmers Centre for Computational Science and Engineering (Gothenburg)",
+      "facility_type": "supercomputing_center",
+      "systems": ["Alvis (GPU Cluster)"],
+      "address": "UPI<computational_physics,1,hpc_supercomputing,c3se_chalmers>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-SOUTH"
+    },
+    {
+      "node_id": "NAISS-HPC2N-UMEA",
+      "name": "High Performance Computing Center North (Umeå University)",
+      "facility_type": "supercomputing_center",
+      "systems": ["Kebnekaise"],
+      "address": "UPI<computational_physics,1,hpc_supercomputing,hpc2n_umea>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-NORTH"
+    },
+    {
+      "node_id": "NAISS-LUNARC-LUND",
+      "name": "Center for Scientific and Technical Computing (Lund University)",
+      "facility_type": "supercomputing_center",
+      "systems": ["COSMOS"],
+      "address": "UPI<computational_physics,1,hpc_supercomputing,lunarc_lund>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-SOUTH"
+    },
+    {
+      "node_id": "MAX-IV-LABORATORY-SYNCHROTRON",
+      "name": "MAX IV Synchrotron Radiation Facility (Lund)",
+      "facility_type": "synchrotron_radiation",
+      "address": "UPI<physics,1,synchrotron_radiation,max_iv>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-SOUTH"
+    },
+    {
+      "node_id": "ESS-EUROPEAN-SPALLATION-SOURCE",
+      "name": "European Spallation Source (ESS Lund / Copenhagen)",
+      "facility_type": "neutron_spallation_source",
+      "address": "UPI<physics,1,neutron_scattering,ess_spallation>",
+      "backbone_uplink": "SUNET-OPTICAL-RING-SOUTH"
+    }
+  ],
+  "confusion_guard": "SUNET network infrastructure topology represents high-speed optical packet and DWDM routing for academic research; it does not claim quantum teleportation, universal biological coherence, or hidden permission."
+}

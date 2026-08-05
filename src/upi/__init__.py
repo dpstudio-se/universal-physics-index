@@ -90,6 +90,7 @@ from .qudit import (
     uniform_state,
 )
 from .qudit_register import local_phase_gate, local_shift_gate
+from .sunet import SunetNode, SunetTopologyMapper, load_sunet_topology
 from .runtime import (
     RuntimeProfile,
     RuntimeProfileLoader,

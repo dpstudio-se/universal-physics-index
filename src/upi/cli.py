@@ -396,20 +396,20 @@ def main():
     odin_eval.add_argument("--text", help="Context text for TF1776 transparency scan")
     odin_eval.set_defaults(func=odin_eval_cmd)
 
-    # aeco-run
-    aeco_run = subparsers.add_parser(
-        "aeco-run",
-        help="Run UPI-AECΩ Autonomous Evolution Core Omega cycle",
-    )
-    aeco_run.add_argument("--version-id", default="v0.1.0-initial", help="Initial version ID")
-    aeco_run.set_defaults(func=aeco_run_cmd)
-
     # aeco-status
     aeco_status = subparsers.add_parser(
         "aeco-status",
         help="View UPI-AECΩ self-model observation snapshot",
     )
     aeco_status.set_defaults(func=aeco_status_cmd)
+
+    # sunet
+    sunet_parser = subparsers.add_parser(
+        "sunet",
+        help="Audit and map SUNET academic research network infrastructure",
+    )
+    sunet_parser.add_argument("--institution", help="Filter topology by university or institution name")
+    sunet_parser.set_defaults(func=sunet_cmd)
 
     args = parser.parse_args()
 
@@ -422,6 +422,21 @@ def main():
     except Exception as error:
         print(f"Error: {error}", file=sys.stderr)
         sys.exit(1)
+
+
+def sunet_cmd(args):
+    """Audit and map SUNET academic research network infrastructure."""
+    from .sunet import load_sunet_topology
+    mapper = load_sunet_topology()
+    if args.institution:
+        nodes = mapper.find_nodes_by_institution(args.institution)
+        print_json({
+            "operation": "upi_sunet_search",
+            "query_institution": args.institution,
+            "matching_nodes": [n.to_dict() for n in nodes]
+        })
+    else:
+        print_json(mapper.generate_audit_summary())
 
 
 if __name__ == "__main__":

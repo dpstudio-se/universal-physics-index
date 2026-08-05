@@ -18,6 +18,7 @@
     "UPI-E007",
     "UPI-D002",
     "UPI-D002",
+    "UPI-D002",
     "UPI-E007"
   ],
   "weak_domains": [
@@ -25,6 +26,6 @@
     "symbolic_interpretation_layer"
   ],
   "kernel_v_odin": 1.4823285395904264e-48,
-  "last_updated_utc": "2026-08-05T05:43:01.808121+00:00",
+  "last_updated_utc": "2026-08-05T05:47:47.783753+00:00",
   "fitness_score": 1.0
 }

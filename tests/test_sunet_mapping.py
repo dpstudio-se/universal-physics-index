@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from upi.models import Address
+from upi.sunet import load_sunet_topology
 
 
 def test_sunet_source_record_exists_and_validates() -> None:
@@ -44,3 +45,29 @@ def test_sunet_source_record_exists_and_validates() -> None:
         parsed_addr = Address.from_string(relation["target"])
         assert parsed_addr.domain in {"computer_science", "information_physics", "physics", "mathematics"}
         assert relation["status"] in {"EST", "DER", "HYP", "STOP", "ERR", "SYM"}
+
+
+def test_sunet_topology_mapper_and_hpc_nodes() -> None:
+    """Verify SUNET topology mapper loads backbone rings, NAISS HPC nodes, and SWAMID."""
+    mapper = load_sunet_topology()
+
+    assert len(mapper.nodes) >= 10
+    hpc_centers = mapper.list_hpc_centers()
+    assert len(hpc_centers) == 5
+
+    # Check PDC KTH
+    pdc_node = mapper.get_node("NAISS-PDC-KTH")
+    assert pdc_node is not None
+    assert pdc_node.name == "PDC Center for High Performance Computing (KTH Stockholm)"
+    assert pdc_node.address == "UPI<computational_physics,1,hpc_supercomputing,pdc_kth>"
+    assert "Dardel (HPE Cray EX)" in pdc_node.systems
+
+    # Check institution filtering
+    chalmers_nodes = mapper.find_nodes_by_institution("Chalmers")
+    assert len(chalmers_nodes) >= 2
+
+    # Check audit report
+    report = mapper.generate_audit_summary()
+    assert report["status"] == "DER"
+    assert report["verification_type"] == "source_metadata_check"
+    assert report["hpc_supercomputers"] == 5
