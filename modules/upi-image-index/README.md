@@ -63,11 +63,6 @@ upi-image-index/
 └── tests/
 ```
 
-## Vault
-
-Store raw image files in `vault/`. This directory is `.gitignore`d; only metadata
-hashes and extracted observations are committed. See `vault/README.md`.
-
 ## Evidence boundaries
 
 | Layer type          | Default status | Requirement to promote      |

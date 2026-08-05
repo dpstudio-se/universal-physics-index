@@ -1,9 +1,8 @@
 import json
 from pathlib import Path
 
-from jsonschema import validate
 import pytest
-
+from jsonschema import validate
 
 ROOT = Path(__file__).resolve().parents[1]
 NODE_PATH = ROOT / "data" / "examples" / "double_slit_information.json"

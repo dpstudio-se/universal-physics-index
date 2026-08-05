@@ -203,6 +203,98 @@ def debug_index_cmd(args):
         sys.exit(1)
 
 
+def auto_map_cmd(args):
+    """Auto-map LLM context text or file into UPI Physics Engine & DNA Memory."""
+    from .auto_mapper import LLMContextAutoMapper
+
+    mapper = LLMContextAutoMapper()
+
+    if args.file:
+        file_path = Path(args.file)
+        if not file_path.exists():
+            print(f"Error: File not found: {file_path}", file=sys.stderr)
+            sys.exit(1)
+        content = file_path.read_text(encoding="utf-8")
+        if file_path.suffix == ".json":
+            try:
+                data = json.loads(content)
+                if isinstance(data, list):
+                    res = mapper.map_structured_context(data)
+                elif isinstance(data, dict):
+                    res = mapper.map_structured_context([data])
+                else:
+                    res = mapper.map_text_context(str(data))
+            except json.JSONDecodeError:
+                res = mapper.map_text_context(content)
+        else:
+            res = mapper.map_text_context(content)
+    elif args.text:
+        res = mapper.map_text_context(args.text)
+    else:
+        print("Error: --text or --file required for auto-map", file=sys.stderr)
+        sys.exit(1)
+
+    output = {
+        "operation": "auto_map_llm_context",
+        "nodes_extracted": res.nodes_extracted,
+        "nodes_written": res.nodes_written,
+        "bridges_written": res.bridges_written,
+        "dna_classification": res.dna_classification,
+        "physics_evaluations": res.physics_evaluations,
+        "odin_report": res.odin_report,
+    }
+    print_json(output)
+
+
+def odin_status_cmd(args):
+    """Generate OdinOS Core Kernel status report."""
+    from .odin_kernel import OdinCoreKernel
+
+    kernel = OdinCoreKernel()
+    print_json(kernel.generate_status_report())
+
+
+def odin_eval_cmd(args):
+    """Evaluate V_odin formula and TF1776 transparency scan."""
+    from .odin_kernel import OdinCoreKernel
+
+    kernel = OdinCoreKernel()
+    freq = float(args.frequency) if args.frequency else 8.0
+    formula_res = kernel.evaluate_odin_formula(freq)
+    text = args.text if args.text else ""
+    tf1776_res = kernel.run_selfish_gene_loop(text)
+
+    output = {
+        "formula_evaluation": formula_res,
+        "tf1776_report": {
+            "transparency_score": tf1776_res.transparency_score,
+            "censorship_detected": tf1776_res.censorship_detected,
+            "iterations_run": tf1776_res.iterations_run,
+            "audit_findings": tf1776_res.audit_findings,
+        },
+    }
+    print_json(output)
+
+
+def aeco_run_cmd(args):
+    """Run UPI-AECΩ evolution cycle."""
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "modules" / "upi-aeco" / "src"))
+    from upi_aeco.core.evolution_loop import evolution_cycle
+
+    version_id = getattr(args, "version_id", "v0.1.0-initial")
+    result = evolution_cycle(version_id)
+    print_json(result)
+
+
+def aeco_status_cmd(args):
+    """View UPI-AECΩ self-model snapshot."""
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "modules" / "upi-aeco" / "src"))
+    from upi_aeco.core.observer import observe
+
+    model = observe()
+    print_json(model)
+
+
 def main():
     """Main CLI entry point."""
     import argparse
@@ -276,6 +368,46 @@ def main():
         help="Exit non-zero when the report contains findings",
     )
     debug.set_defaults(func=debug_index_cmd)
+
+    # auto-map
+    auto_map = subparsers.add_parser(
+        "auto-map",
+        help="Auto-map LLM context text or file into UPI Physics Engine & DNA Memory",
+    )
+    auto_map.add_argument("--text", help="Raw LLM context text to map")
+    auto_map.add_argument("--file", help="File containing LLM context text or JSON")
+    auto_map.set_defaults(func=auto_map_cmd)
+
+    # odin-status
+    odin_status = subparsers.add_parser(
+        "odin-status",
+        help="Generate OdinOS Core Kernel Tripp/Trapp/Trull/Torus status report",
+    )
+    odin_status.set_defaults(func=odin_status_cmd)
+
+    # odin-eval
+    odin_eval = subparsers.add_parser(
+        "odin-eval",
+        help="Evaluate Odin formula and TF1776 transparency scan",
+    )
+    odin_eval.add_argument("--frequency", type=float, help="Frequency in Hz (default 8 Hz)")
+    odin_eval.add_argument("--text", help="Context text for TF1776 transparency scan")
+    odin_eval.set_defaults(func=odin_eval_cmd)
+
+    # aeco-run
+    aeco_run = subparsers.add_parser(
+        "aeco-run",
+        help="Run UPI-AECΩ Autonomous Evolution Core Omega cycle",
+    )
+    aeco_run.add_argument("--version-id", default="v0.1.0-initial", help="Initial version ID")
+    aeco_run.set_defaults(func=aeco_run_cmd)
+
+    # aeco-status
+    aeco_status = subparsers.add_parser(
+        "aeco-status",
+        help="View UPI-AECΩ self-model observation snapshot",
+    )
+    aeco_status.set_defaults(func=aeco_status_cmd)
 
     args = parser.parse_args()
 

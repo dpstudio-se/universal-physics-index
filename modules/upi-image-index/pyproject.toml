@@ -27,6 +27,7 @@ dev = [
 
 [project.scripts]
 upi-img = "image_index.cli:main"
+upi-image-index = "image_index.cli:main"
 
 [tool.setuptools]
 packages = ["image_index"]
