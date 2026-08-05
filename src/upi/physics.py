@@ -1,12 +1,8 @@
 """Physics functions implementing core UPI equations."""
 
 import math
-<<<<<<< HEAD
 from dataclasses import dataclass
-from typing import cast
-=======
 from typing import Any, cast
->>>>>>> main
 
 from .constants import (
     AMPLITUDE_TOLERANCE_DEFAULT,

@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import math
-
 import pytest
-
 from image_index.shadow import (
     _byte_frequency_chi_square,
     _check_magic_bytes,

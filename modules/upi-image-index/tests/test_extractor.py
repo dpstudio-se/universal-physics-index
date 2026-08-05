@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import hashlib
-import json
 
 import pytest
-
 from image_index.extractor import (
     extract_all_layers,
     extract_metadata,
@@ -69,7 +67,6 @@ class TestExtractMetadata:
     def test_missing_file_graceful(self, tmp_path):
         missing = tmp_path / "nonexistent.png"
         # extract_metadata raises FileNotFoundError for missing files — that's expected
-        import pytest
         with pytest.raises((FileNotFoundError, OSError)):
             extract_metadata(missing)
 

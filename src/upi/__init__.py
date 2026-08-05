@@ -60,14 +60,11 @@ from .physics import (
     index8_from_mass,
     mass_from_frequency,
     normalize_signal,
-<<<<<<< HEAD
     normalize_value,
     normalized_match,
-    propagated_mass_uncertainty,
-=======
     note_frequency_from_semitone,
     note_name_to_frequency,
->>>>>>> main
+    propagated_mass_uncertainty,
     relativistic_total_frequency,
     signal_match,
 )
