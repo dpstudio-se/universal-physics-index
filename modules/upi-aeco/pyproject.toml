@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "upi-aeco"
+version = "0.1.0"
+description = "Autonomous Evolution Core Omega for Universal Physics Index"
+readme = "README-UPI-AECO.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+upi-aeco = "upi_aeco.__main__:main"
+
+[tool.setuptools]
+packages = ["upi_aeco", "upi_aeco.core", "upi_aeco.adapters"]
+package-dir = {"" = "src"}

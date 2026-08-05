@@ -1,0 +1,13 @@
+tasks:
+  - id: atomic_mass_freq
+    prompt: "Compute mass-frequency mapping for hydrogen."
+    expected_keyword: "frequency"
+  - id: musical_note_c4
+    prompt: "What is the acoustic frequency of C4 Middle C?"
+    expected_keyword: "261.63"
+  - id: dna_sonification_sequence
+    prompt: "Sonify DNA sequence ATGC into frequencies."
+    expected_keyword: "ATGC"
+  - id: odin_kernel_status
+    prompt: "Evaluate Odin Core tripp trapp trull torus oscillation."
+    expected_keyword: "V_Odin"

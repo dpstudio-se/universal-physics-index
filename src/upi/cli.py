@@ -276,6 +276,23 @@ def odin_eval_cmd(args):
     print_json(output)
 
 
+def aeco_run_cmd(args):
+    """Run UPI-AECΩ evolution cycle."""
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "modules" / "upi-aeco" / "src"))
+    from upi_aeco.core.evolution_loop import evolution_cycle
+
+    version_id = getattr(args, "version_id", "v0.1.0-initial")
+    result = evolution_cycle(version_id)
+    print_json(result)
+
+
+def aeco_status_cmd(args):
+    """View UPI-AECΩ self-model snapshot."""
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "modules" / "upi-aeco" / "src"))
+    from upi_aeco.core.observer import observe
+
+    model = observe()
+    print_json(model)
 
 
 def main():
@@ -376,6 +393,21 @@ def main():
     odin_eval.add_argument("--frequency", type=float, help="Frequency in Hz (default 8 Hz)")
     odin_eval.add_argument("--text", help="Context text for TF1776 transparency scan")
     odin_eval.set_defaults(func=odin_eval_cmd)
+
+    # aeco-run
+    aeco_run = subparsers.add_parser(
+        "aeco-run",
+        help="Run UPI-AECΩ Autonomous Evolution Core Omega cycle",
+    )
+    aeco_run.add_argument("--version-id", default="v0.1.0-initial", help="Initial version ID")
+    aeco_run.set_defaults(func=aeco_run_cmd)
+
+    # aeco-status
+    aeco_status = subparsers.add_parser(
+        "aeco-status",
+        help="View UPI-AECΩ self-model observation snapshot",
+    )
+    aeco_status.set_defaults(func=aeco_status_cmd)
 
     args = parser.parse_args()
 
