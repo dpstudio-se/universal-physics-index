@@ -17,9 +17,8 @@ import math
 from pathlib import Path
 from typing import Any
 
-from .classifier import ScientificStatus, build_extraction_layer, content_hash
+from .classifier import build_extraction_layer, content_hash
 from .shadow import analyze_shadow_layer
-
 
 # ---------------------------------------------------------------------------
 # Optional dependency helpers
@@ -29,7 +28,7 @@ from .shadow import analyze_shadow_layer
 def _pil() -> tuple[Any, Any] | tuple[None, None]:
     """Return (PIL.Image, PIL.ExifTags) or (None, None) if Pillow is absent."""
     try:
-        from PIL import ExifTags, Image  # type: ignore[import]
+        from PIL import ExifTags, Image
 
         return Image, ExifTags
     except ImportError:
@@ -39,7 +38,7 @@ def _pil() -> tuple[Any, Any] | tuple[None, None]:
 def _tesseract() -> Any | None:
     """Return pytesseract module or None if absent."""
     try:
-        import pytesseract  # type: ignore[import]
+        import pytesseract
 
         return pytesseract
     except ImportError:
@@ -181,7 +180,7 @@ def extract_visible_text(path: Path) -> dict[str, Any]:
             )
             pairs = [
                 (t.strip(), float(c))
-                for t, c in zip(data["text"], data["conf"])
+                for t, c in zip(data["text"], data["conf"], strict=False)
                 if t.strip() and float(c) > 60
             ]
             unique_tokens = sorted({t for t, _ in pairs})
@@ -235,7 +234,7 @@ def extract_color_channels(path: Path) -> dict[str, Any]:
             findings: list[str] = []
             means: list[float] = []
 
-            for ch_img, ch_name in zip(channels, channel_names):
+            for ch_img, ch_name in zip(channels, channel_names, strict=False):
                 pixels = list(ch_img.getdata())
                 n = len(pixels)
                 mean = sum(pixels) / n

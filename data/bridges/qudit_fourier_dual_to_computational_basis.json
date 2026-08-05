@@ -1,0 +1,23 @@
+{
+  "source": "UPI<quantum_information,1,qudit,fourier_dual_basis>",
+  "target": "UPI<quantum_information,1,finite_dimensional,hilbert_state_space>",
+  "relation": "DUAL_TO",
+  "equations": [
+    "F_d^(-1) F_d = I_d",
+    "|<k|F_d|j>|^2 = 1/d"
+  ],
+  "assumptions": [
+    "Both bases span the same finite-dimensional Hilbert space.",
+    "The normalized Fourier convention is used consistently."
+  ],
+  "mechanism": "A unitary Fourier transform changes coordinates between computational and Fourier-dual basis representations without changing the underlying state.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Finite-dimensional discrete Fourier orthogonality identity"
+    }
+  ],
+  "status": "EST",
+  "confusion_guard": "Dual basis descriptions are not two different physical systems and do not imply a hidden duplicate universe.",
+  "version": "0.1.0"
+}

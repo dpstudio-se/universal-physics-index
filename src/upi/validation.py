@@ -13,8 +13,15 @@ ERROR_MESSAGES = {
     "UPI-E011": "Reference-frame ambiguity",
     "UPI-E012": "Normalization presented as physical equivalence",
     "UPI-E013": "Correlation or association presented as causation without a causal test",
-    "UPI-E014": "Software test presented as experimental verification",
+    "UPI-E014": "Non-experimental verification presented as experimental verification",
 }
+
+
+_EXPERIMENTAL_VERIFICATION_TYPES = {
+    VerificationType.EXPERIMENTAL_OBSERVATION,
+    VerificationType.REPLICATION,
+}
+_EXPERIMENTAL_VERIFICATION_VALUES = {item.value for item in _EXPERIMENTAL_VERIFICATION_TYPES}
 
 
 def validate_scientific_boundaries(node: PhysicsNode) -> list[str]:
@@ -22,13 +29,13 @@ def validate_scientific_boundaries(node: PhysicsNode) -> list[str]:
     errors: list[str] = []
     if node.normalization_method and not node.reference_frame:
         errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
-    if node.normalization_claim == "physical_equivalence" and not node.causal_test_method:
+    if node.normalization_claim == "physical_equivalence":
         errors.append(f"UPI-E012: {ERROR_MESSAGES['UPI-E012']}")
     if node.causal_claim and not node.causal_test_method:
         errors.append(f"UPI-E013: {ERROR_MESSAGES['UPI-E013']}")
     if (
         node.claims_experimental_verification
-        and node.verification_type == VerificationType.SOFTWARE_TEST
+        and node.verification_type not in _EXPERIMENTAL_VERIFICATION_TYPES
     ):
         errors.append(f"UPI-E014: {ERROR_MESSAGES['UPI-E014']}")
     return errors
@@ -60,15 +67,13 @@ def validate_record_boundaries(data: dict[str, Any]) -> list[str]:
         errors.append(f"UPI-E007: {ERROR_MESSAGES['UPI-E007']}")
     if data.get("normalization_method") and not data.get("reference_frame"):
         errors.append(f"UPI-E011: {ERROR_MESSAGES['UPI-E011']}")
-    if data.get("normalization_claim") == "physical_equivalence" and not data.get(
-        "causal_test_method"
-    ):
+    if data.get("normalization_claim") == "physical_equivalence":
         errors.append(f"UPI-E012: {ERROR_MESSAGES['UPI-E012']}")
     if data.get("causal_claim") is True and not data.get("causal_test_method"):
         errors.append(f"UPI-E013: {ERROR_MESSAGES['UPI-E013']}")
     if (
         data.get("claims_experimental_verification") is True
-        and data.get("verification_type") == VerificationType.SOFTWARE_TEST.value
+        and data.get("verification_type") not in _EXPERIMENTAL_VERIFICATION_VALUES
     ):
         errors.append(f"UPI-E014: {ERROR_MESSAGES['UPI-E014']}")
     return errors
@@ -76,7 +81,7 @@ def validate_record_boundaries(data: dict[str, Any]) -> list[str]:
 
 def validate_json_schema(
     data: dict[str, Any],
-    schema_path: Path
+    schema_path: Path,
 ) -> tuple[bool, list[str]]:
     """Validate JSON data against a JSON schema.
 
@@ -93,7 +98,7 @@ def validate_json_schema(
         return False, ["jsonschema module not installed"]
 
     try:
-        with open(schema_path) as f:
+        with open(schema_path, encoding="utf-8") as f:
             schema = json.load(f)
     except Exception as e:
         return False, [f"Failed to load schema: {e}"]
@@ -167,15 +172,12 @@ def validate_node_json(data: dict[str, Any], schema_path: Path) -> tuple[bool, l
     """
     errors = []
 
-    # Schema validation
     is_valid, schema_errors = validate_json_schema(data, schema_path)
     if not is_valid:
         errors.extend(schema_errors)
 
-    # Additional semantic validation
-    if "status" in data:
-        if not validate_status_enum(data["status"]):
-            errors.append(f"Unknown status: {data['status']}")
+    if "status" in data and not validate_status_enum(data["status"]):
+        errors.append(f"Unknown status: {data['status']}")
 
     if data.get("status") == "STOP" and not data.get("stop_reason"):
         errors.append("STOP nodes must have stop_reason")
@@ -200,12 +202,10 @@ def validate_bridge_json(data: dict[str, Any], schema_path: Path) -> tuple[bool,
     """
     errors = []
 
-    # Schema validation
     is_valid, schema_errors = validate_json_schema(data, schema_path)
     if not is_valid:
         errors.extend(schema_errors)
 
-    # Additional semantic validation
     if not data.get("relation"):
         errors.append("Bridge must have a relation type")
 

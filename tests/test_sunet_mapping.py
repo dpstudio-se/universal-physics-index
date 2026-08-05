@@ -5,8 +5,12 @@ from upi.models import Address
 
 
 def test_sunet_source_record_exists_and_validates() -> None:
-    sources_manifest_path = Path("data/sources/external_index_sources.json")
+    sources_manifest_path = Path("config/external_source_manifest.json")
+    if not sources_manifest_path.exists():
+        sources_manifest_path = Path("data/sources/external_index_sources.json")
     sunet_record_path = Path("data/sources/sunet.json")
+    if not sunet_record_path.exists():
+        sunet_record_path = Path("config/sunet.json")
 
     assert sources_manifest_path.exists()
     assert sunet_record_path.exists()

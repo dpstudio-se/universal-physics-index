@@ -5,8 +5,12 @@ from upi.models import Address
 
 
 def test_arxiv_source_record_exists_and_validates() -> None:
-    sources_manifest_path = Path("data/sources/external_index_sources.json")
+    sources_manifest_path = Path("config/external_source_manifest.json")
+    if not sources_manifest_path.exists():
+        sources_manifest_path = Path("data/sources/external_index_sources.json")
     arxiv_record_path = Path("data/sources/arxiv.json")
+    if not arxiv_record_path.exists():
+        arxiv_record_path = Path("config/arxiv.json")
 
     assert sources_manifest_path.exists()
     assert arxiv_record_path.exists()

@@ -1,0 +1,23 @@
+{
+  "source": "UPI<information_physics,3,qudit_torus,digital_multi_state_search>",
+  "target": "UPI<quantum_information,1,multi_qudit,tensor_product_register>",
+  "relation": "DERIVED_FROM",
+  "equations": [
+    "N = product_i d_i",
+    "x = mixed_radix(j_1,...,j_n)"
+  ],
+  "assumptions": [
+    "Each software torus is one cyclic mixed-radix register coordinate.",
+    "Coordinate order is deterministic."
+  ],
+  "mechanism": "The UPI torus register uses the standard tensor-product basis cardinality and represents product coordinates with a reversible mixed-radix index.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "UPI coordinate/index bijection regression tests"
+    }
+  ],
+  "status": "DER",
+  "confusion_guard": "The torus is a cyclic software-coordinate interpretation of the register, not an established physical hardware shape.",
+  "version": "0.1.0"
+}

@@ -1,0 +1,57 @@
+{
+  "address": "UPI<quantum_information,1,multi_qudit,tensor_product_register>",
+  "title": "Multi-qudit tensor-product register",
+  "description": "Established composition rule for multiple finite-dimensional quantum systems. Local state spaces combine through a tensor product, producing a register dimension equal to the product of the local dimensions.",
+  "status": "EST",
+  "definitions": [
+    "Subsystem i has local Hilbert space H_i = C^(d_i).",
+    "The joint register is H = tensor_i H_i.",
+    "A product basis state is labeled |j_1, ..., j_n>.",
+    "The total basis dimension is N = product_i d_i."
+  ],
+  "equations": [
+    "H = tensor_(i=1)^n C^(d_i)",
+    "dim(H) = product_(i=1)^n d_i",
+    "|j_1,...,j_n> = tensor_i |j_i>",
+    "|psi> = sum_(j_1,...,j_n) alpha_(j_1,...,j_n) |j_1,...,j_n>",
+    "sum_(j_1,...,j_n) |alpha_(j_1,...,j_n)|^2 = 1"
+  ],
+  "assumptions": [
+    "Each local dimension d_i is finite and declared.",
+    "Subsystem ordering is fixed when coordinates are flattened into one index.",
+    "Tensor-product composition is used; superselection constraints are outside this node."
+  ],
+  "mechanism": "The tensor product preserves each local basis while allowing joint product states and non-factorizable superpositions. Mixed-radix indexing is a software representation of the same basis cardinality.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "John von Neumann, Mathematical Foundations of Quantum Mechanics (1932)",
+      "notes": "Foundational operator and composite-system formalism."
+    }
+  ],
+  "primary_sources": [
+    "John von Neumann, Mathematische Grundlagen der Quantenmechanik, 1932"
+  ],
+  "predictions": [
+    "A register with dimensions (d_1,...,d_n) contains exactly product_i d_i basis states.",
+    "Coordinate-to-index and index-to-coordinate maps are bijective when the same subsystem order is used.",
+    "Local identity-tensored operators leave all non-target subsystem coordinates unchanged on basis inputs."
+  ],
+  "falsification_conditions": [
+    "Reject the register mapping if any two valid coordinate tuples map to the same basis index.",
+    "Reject a local operator implementation if it changes a non-target coordinate on a basis-state test.",
+    "Reject the composition if the computed dimension differs from product_i d_i."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Ordered tensor product of finite-dimensional complex Hilbert spaces.",
+  "normalization_method": "Normalize the complete joint amplitude vector so its squared norm equals one.",
+  "normalization_claim": "Joint normalization provides a probability model but does not prove that subsystems are physically entangled.",
+  "null_model": "A direct list of independent local states with no declared joint tensor-product structure.",
+  "control_condition": "Construct basis-product states and verify exact mixed-radix round trips and local-operator isolation.",
+  "causal_claim": false,
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "A tensor-product data structure can represent entangled amplitudes, but software allocation alone is not experimental evidence of entanglement.",
+  "tags": ["tensor-product", "multi-qudit", "composite-system", "mixed-radix", "register"],
+  "version": "0.1.0"
+}

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from hashlib import sha256
 
-import pytest
-
 from image_index.classifier import (
     OCR_EST_THRESHOLD,
     ScientificStatus,
@@ -36,7 +34,7 @@ class TestContentHash:
         assert content_hash("abc") == content_hash("abc")
 
     def test_matches_stdlib_sha256(self):
-        expected = sha256("test".encode("utf-8")).hexdigest()
+        expected = sha256(b"test").hexdigest()
         assert content_hash("test") == expected
 
     def test_different_inputs_differ(self):

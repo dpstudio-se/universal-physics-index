@@ -17,7 +17,6 @@ from typing import Any
 
 from .classifier import build_extraction_layer
 
-
 # ---------------------------------------------------------------------------
 # Internal statistical helpers
 # ---------------------------------------------------------------------------
