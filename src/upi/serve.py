@@ -79,10 +79,130 @@ class UPIInsideOutHandler(SimpleHTTPRequestHandler):
             return
 
         if self.path == "/api/ai/chat":
-            # Proxy gateway supporting Local AI (Ollama / LM Studio) or heuristic fallback
+            import os
             prompt = payload.get("prompt", "")
-            provider = payload.get("provider", "heuristic") # 'local_ollama', 'cloud_puter', or 'heuristic'
+            provider = payload.get("provider", "heuristic")
+            api_key = payload.get("api_key", "").strip()
             local_endpoint = payload.get("endpoint", "http://localhost:11434/api/generate")
+
+            tool_res = OdysseusIntentExecutor.parse_and_execute_intent(prompt)
+
+            if provider == "gemini":
+                key = api_key or os.getenv("GEMINI_API_KEY", "")
+                if not key:
+                    self._send_json({
+                        "provider": "gemini",
+                        "status": "HYP",
+                        "warning": "GEMINI_API_KEY not provided. Set GEMINI_API_KEY environment variable or enter key in web UI.",
+                        "odysseus_tool_result": tool_res
+                    })
+                    return
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+                    req_body = json.dumps({"contents": [{"parts": [{"text": f"You are Odysseus AI controlling Universal Physics Index. User query: {prompt}"}]}]}).encode("utf-8")
+                    req = urllib.request.Request(url, data=req_body, headers={"Content-Type": "application/json"})
+                    with urllib.request.urlopen(req, timeout=10) as resp:
+                        res_data = json.loads(resp.read().decode("utf-8"))
+                        text = res_data["candidates"][0]["content"]["parts"][0]["text"]
+                        self._send_json({
+                            "provider": "gemini",
+                            "model": "gemini-1.5-flash",
+                            "ai_response": text,
+                            "odysseus_tool_result": tool_res
+                        })
+                        return
+                except Exception as exc:
+                    self._send_json({
+                        "provider": "gemini_fallback",
+                        "status": "HYP",
+                        "error": f"Gemini API error: {exc}",
+                        "odysseus_tool_result": tool_res
+                    })
+                    return
+
+            if provider == "grok":
+                key = api_key or os.getenv("GROK_API_KEY") or os.getenv("XAI_API_KEY", "")
+                if not key:
+                    self._send_json({
+                        "provider": "grok",
+                        "status": "HYP",
+                        "warning": "GROK_API_KEY not provided. Set GROK_API_KEY environment variable or enter key in web UI.",
+                        "odysseus_tool_result": tool_res
+                    })
+                    return
+                try:
+                    url = "https://api.x.ai/v1/chat/completions"
+                    req_body = json.dumps({
+                        "model": "grok-beta",
+                        "messages": [
+                            {"role": "system", "content": "You are Odysseus AI controlling Universal Physics Index."},
+                            {"role": "user", "content": prompt}
+                        ]
+                    }).encode("utf-8")
+                    req = urllib.request.Request(url, data=req_body, headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {key}"
+                    })
+                    with urllib.request.urlopen(req, timeout=10) as resp:
+                        res_data = json.loads(resp.read().decode("utf-8"))
+                        text = res_data["choices"][0]["message"]["content"]
+                        self._send_json({
+                            "provider": "grok",
+                            "model": "grok-beta",
+                            "ai_response": text,
+                            "odysseus_tool_result": tool_res
+                        })
+                        return
+                except Exception as exc:
+                    self._send_json({
+                        "provider": "grok_fallback",
+                        "status": "HYP",
+                        "error": f"xAI Grok API error: {exc}",
+                        "odysseus_tool_result": tool_res
+                    })
+                    return
+
+            if provider == "copilot":
+                key = api_key or os.getenv("COPILOT_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+                if not key:
+                    self._send_json({
+                        "provider": "copilot",
+                        "status": "HYP",
+                        "warning": "COPILOT_API_KEY / OPENAI_API_KEY not provided. Set environment variable or enter key in web UI.",
+                        "odysseus_tool_result": tool_res
+                    })
+                    return
+                try:
+                    url = "https://api.openai.com/v1/chat/completions"
+                    req_body = json.dumps({
+                        "model": payload.get("model", "gpt-4o"),
+                        "messages": [
+                            {"role": "system", "content": "You are Odysseus AI controlling Universal Physics Index."},
+                            {"role": "user", "content": prompt}
+                        ]
+                    }).encode("utf-8")
+                    req = urllib.request.Request(url, data=req_body, headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {key}"
+                    })
+                    with urllib.request.urlopen(req, timeout=10) as resp:
+                        res_data = json.loads(resp.read().decode("utf-8"))
+                        text = res_data["choices"][0]["message"]["content"]
+                        self._send_json({
+                            "provider": "copilot",
+                            "model": payload.get("model", "gpt-4o"),
+                            "ai_response": text,
+                            "odysseus_tool_result": tool_res
+                        })
+                        return
+                except Exception as exc:
+                    self._send_json({
+                        "provider": "copilot_fallback",
+                        "status": "HYP",
+                        "error": f"Copilot / OpenAI API error: {exc}",
+                        "odysseus_tool_result": tool_res
+                    })
+                    return
 
             if provider == "local_ollama":
                 try:
@@ -96,8 +216,6 @@ class UPIInsideOutHandler(SimpleHTTPRequestHandler):
                     with urllib.request.urlopen(req, timeout=5) as resp:
                         res_json = json.loads(resp.read().decode("utf-8"))
                         reply_text = res_json.get("response", "")
-                        # Run intent parser on prompt
-                        tool_res = OdysseusIntentExecutor.parse_and_execute_intent(prompt)
                         self._send_json({
                             "provider": "local_ollama",
                             "model": payload.get("model", "llama3"),
@@ -106,8 +224,6 @@ class UPIInsideOutHandler(SimpleHTTPRequestHandler):
                         })
                         return
                 except Exception as exc:
-                    # Fallback to heuristic router
-                    tool_res = OdysseusIntentExecutor.parse_and_execute_intent(prompt)
                     self._send_json({
                         "provider": "local_ollama_fallback",
                         "status": "HYP",
@@ -116,8 +232,7 @@ class UPIInsideOutHandler(SimpleHTTPRequestHandler):
                     })
                     return
 
-            # Default heuristic router
-            tool_res = OdysseusIntentExecutor.parse_and_execute_intent(prompt)
+            # Default Heuristic Router
             self._send_json({
                 "provider": "heuristic_router",
                 "status": "DER",

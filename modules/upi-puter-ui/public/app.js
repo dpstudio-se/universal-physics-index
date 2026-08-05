@@ -126,22 +126,23 @@
     btnSend.addEventListener('click', () => {
       const promptText = promptInput.value.trim();
       const provider = document.getElementById('ai-provider-select')?.value || 'heuristic';
+      const apiKey = document.getElementById('ai-api-key')?.value.trim() || '';
       if (!promptText) return;
 
       outputLog.textContent = `Odysseus Agent (${provider}) processing intent: "${promptText}"...`;
 
-      if (provider === 'local_ollama') {
+      if (['gemini', 'grok', 'copilot', 'local_ollama'].includes(provider)) {
         fetch('/api/ai/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ provider: 'local_ollama', prompt: promptText })
+          body: JSON.stringify({ provider: provider, prompt: promptText, api_key: apiKey })
         })
         .then(res => res.json())
         .then(data => {
           outputLog.textContent = JSON.stringify(data, null, 2);
         })
         .catch(err => {
-          outputLog.textContent = `Local AI Gateway Error: ${err.message}`;
+          outputLog.textContent = `AI Gateway Error (${provider}): ${err.message}`;
         });
         return;
       }

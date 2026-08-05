@@ -56,9 +56,16 @@
               <label for="ai-provider-select">AI Provider Engine:</label>
               <select id="ai-provider-select" style="width: 100%; padding: 8px; background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-glass); border-radius: 6px;">
                 <option value="heuristic" selected>⚡ Heuristic Rule Router (Offline / Fast)</option>
+                <option value="gemini">✨ Google Gemini AI (Gemini 1.5 Flash)</option>
+                <option value="grok">🚀 xAI Grok (Grok Beta)</option>
+                <option value="copilot">🤖 GitHub Copilot / OpenAI (GPT-4o)</option>
                 <option value="local_ollama">💻 Local AI / Ollama / LM Studio (localhost:11434)</option>
                 <option value="cloud_puter">☁️ Puter AI (Cloud API)</option>
               </select>
+            </div>
+            <div class="form-group" style="margin-top: 8px;">
+              <label for="ai-api-key">Optional Provider API Key (or set GEMINI_API_KEY / GROK_API_KEY):</label>
+              <input type="password" id="ai-api-key" placeholder="Paste optional API key..." style="width: 100%; padding: 8px; background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-glass); border-radius: 6px;" />
             </div>
             <div class="button-group">
               <button id="btn-odysseus-send" class="btn btn-primary">⚡ Send to Odysseus LLM Agent</button>
