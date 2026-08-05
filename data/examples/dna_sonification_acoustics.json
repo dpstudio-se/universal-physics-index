@@ -1,0 +1,62 @@
+{
+  "address": "UPI<biology,1,genetics,dna_sonification>",
+  "title": "DNA Nucleotide Sequence Bio-Acoustic Frequency Mapping",
+  "description": "Sonification mapping translating DNA nucleotide bases (Adenine, Cytosine, Guanine, Thymine) into acoustic pitch frequencies, musical notes, and dimensionless 8 Hz reference indices N8.",
+  "status": "DER",
+  "quantities": [
+    {
+      "name": "Adenine_A4_frequency",
+      "value": 440.0,
+      "unit": "Hz",
+      "reference": "Mapped to A4 (440.0 Hz)"
+    },
+    {
+      "name": "Cytosine_C4_frequency",
+      "value": 261.6256,
+      "unit": "Hz",
+      "reference": "Mapped to C4 (Middle C, 261.63 Hz)"
+    },
+    {
+      "name": "Guanine_G4_frequency",
+      "value": 392.0,
+      "unit": "Hz",
+      "reference": "Mapped to G4 (392.0 Hz)"
+    },
+    {
+      "name": "Thymine_E4_frequency",
+      "value": 329.6276,
+      "unit": "Hz",
+      "reference": "Mapped to E4 (329.63 Hz)"
+    }
+  ],
+  "definitions": [
+    "DNA Sonification: Algorithmic translation of nucleotide bases (A, C, G, T) or codons into acoustic frequencies, pitch notes, or musical sequences.",
+    "4-Base Harmonic Tuning: Mapping A->A4, C->C4, G->G4, T->E4 based on harmonic pitch standards.",
+    "N8 Index: Dimensionless frequency ratio N8 = f / (8 Hz) measuring acoustics against the 8 Hz reference."
+  ],
+  "equations": [
+    "f(base) = note_frequency(base)",
+    "N8 = f / (8 Hz)"
+  ],
+  "assumptions": [
+    "Sonification maps biological sequences to audible acoustic frequencies for pattern analysis.",
+    "Biological DNA code is represented as symbolic sequence metadata (DER / SYM) and does not assert physical sound emission by molecular strands without transducer systems."
+  ],
+  "mechanism": "Nucleotide sequence letters are algorithmically converted into acoustic sine wave frequencies using 12-TET musical note intervals.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "UPI Bio-Acoustic Sonification Engine",
+      "confidence": 0.9,
+      "notes": "Derived mapping for bio-acoustic sequence analysis and pattern visualization."
+    }
+  ],
+  "information_layer": "PUBLIC",
+  "tags": [
+    "dna_sonification",
+    "bio_acoustics",
+    "genetics",
+    "music_mapping",
+    "frequencies"
+  ]
+}

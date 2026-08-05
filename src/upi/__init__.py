@@ -4,6 +4,7 @@ __version__ = "0.1.0-alpha"
 __author__ = "UPI Contributors"
 __license__ = "MIT"
 
+from .auto_mapper import AutoMapperResult, LLMContextAutoMapper, MappedContextNode
 from .constants import (
     AMPLITUDE_TOLERANCE_DEFAULT,
     EPSILON_Z_DEFAULT,
@@ -43,12 +44,15 @@ from .models import (
 )
 from .physics import (
     complex_signal_match,
+    dna_sequence_to_frequencies,
     energy_from_frequency,
     frequency_from_mass,
     index8_from_frequency,
     index8_from_mass,
     mass_from_frequency,
     normalize_signal,
+    note_frequency_from_semitone,
+    note_name_to_frequency,
     relativistic_total_frequency,
     signal_match,
 )
@@ -82,6 +86,15 @@ from .workflow import (
 )
 
 __all__ = [
+    # Auto-Mapper & Odin Kernel
+    "LLMContextAutoMapper",
+    "MappedContextNode",
+    "AutoMapperResult",
+    "OdinCoreKernel",
+    "OdinCoreState",
+    "EthicSingularity",
+    "TF1776TransparencyReport",
+
     # Version
     "__version__",
     # Constants
@@ -113,6 +126,9 @@ __all__ = [
     "normalize_signal",
     "signal_match",
     "complex_signal_match",
+    "note_frequency_from_semitone",
+    "note_name_to_frequency",
+    "dna_sequence_to_frequencies",
     # Dual-observer trace physics
     "Event1D",
     "DualObserverTraceResult",

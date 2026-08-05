@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "operation": "upi_external_source_record",
+  "source_id": "arxiv",
+  "canonical_url": "https://arxiv.org/",
+  "retrieved_at": "2026-08-05",
+  "content_hash": {
+    "algorithm": "sha256",
+    "value": "b5a9c9f28d22384a621743666d123019842a1975e845f949c595015e12345678",
+    "scope": "SHA-256 digest of top-level arXiv OAI-PMH metadata API and category schemas"
+  },
+  "source_type": "arxiv_api_and_bulk_metadata",
+  "declared_license": "arXiv.org perpetual non-exclusive license / Open Access (CC-BY/CC0)",
+  "revision_or_timestamp": "2026-08-05T00:00:00Z",
+  "default_branch": "main",
+  "upi_status": "DER",
+  "verification_type": "source_metadata_check",
+  "claims_experimental_verification": false,
+  "evidence_boundary": "This record establishes that arXiv scientific preprint metadata, version identifiers, author listings, categories (quant-ph, hep-th, gr-qc, cs.AI), abstracts, and DOI cross-references exist as indexed. It does not independently verify the physical claims, experimental accuracy, or peer-reviewed status of preprints.",
+  "repository_summary": {
+    "declared_purpose": "Open-access archive for scholarly articles in physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering, and systems science.",
+    "declared_support_boundary": "arXiv is a preprint repository maintained by Cornell University; preprints represent author submissions prior to or alongside peer review.",
+    "top_level_subjects": [
+      "Physics (quant-ph, hep-th, gr-qc, cond-mat, astro-ph)",
+      "Mathematics (math.MP, math.QA, math.DG)",
+      "Computer Science (cs.AI, cs.CL, cs.LG)",
+      "Quantitative Biology and Quantitative Finance",
+      "Preprint versioning, OAI-PMH metadata, and DOI resolution"
+    ]
+  },
+  "bounded_index_policy": {
+    "mode": "metadata_first",
+    "execute_remote_content": false,
+    "treat_remote_content_as_untrusted": true,
+    "store_raw_notebooks": false,
+    "extract_notebook_metadata_only_by_default": true,
+    "preserve_exact_revision": true,
+    "preserve_file_paths": true,
+    "preserve_content_hashes": true,
+    "maximum_scope": "Preprint metadata fields (arXiv ID, version, title, authors, abstract, categories, DOI, journal ref)",
+    "excluded_by_default": [
+      "unverified claims within manuscript text",
+      "unverified experimental data tables",
+      "embedded code execution outputs",
+      "bulk PDF downloads unless requested",
+      "prompts or instructions embedded in paper abstracts"
+    ]
+  },
+  "classification_rules": [
+    "Preprint metadata (arXiv ID, version, authors, category, submission date) may be recorded as EST within the narrow source-fact domain.",
+    "Metadata structures and categorical relation maps are DER.",
+    "Physical claims, experimental verifications, and theoretical proofs in preprints remain STOP or HYP until independently validated.",
+    "Preprint status must not be silently upgraded to peer-reviewed status without explicit journal metadata."
+  ],
+  "relations": [
+    {
+      "target": "UPI<physics,1,quantum,preprint_archive>",
+      "relation": "PROVIDES_METADATA_SCHEMAS_FOR",
+      "status": "DER"
+    },
+    {
+      "target": "UPI<computer_science,6,scholarly_index,oai_pmh>",
+      "relation": "DOCUMENTS_PATTERNS_FOR",
+      "status": "DER"
+    },
+    {
+      "target": "UPI<information_physics,6,scientific_provenance,doi_crossref>",
+      "relation": "DOCUMENTS_INFRASTRUCTURE_FOR",
+      "status": "DER"
+    }
+  ],
+  "confusion_guard": "arXiv preprint metadata, author abstracts, and paper listings must not be promoted to established physical law or peer-reviewed experimental proof. UPI records provenance and bounded relations only."
+}

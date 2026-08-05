@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "upi-image-index"
+version = "0.1.0"
+description = "5-layer image extraction with UPI status classification"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+upi-image-index = "upi_image_index.__main__:main"
+
+[tool.setuptools]
+packages = ["upi_image_index"]
+package-dir = {"" = "src"}
