@@ -1,0 +1,134 @@
+{
+  "address": "UPI<IMAGE,1,TORUS_DNA,TF_RF_YGL_RO>",
+  "title": "Torus-DNA architecture with TF/RF/YGL/RO pillars",
+  "description": "Architectural diagram showing a toroidal energy ring surrounding four paired pillar structures labelled TF, RF, YGL, RO (each appearing in dual form), with a double-helix DNA strand passing through the central vertical axis. 8 Hz reference markers and tolerance annotations appear in the margins. Status is SYM: the diagram is a conceptual architecture, not a physical measurement.",
+  "status": "SYM",
+  "information_layer": "PRIVATE",
+  "image_hash_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "extraction_layers": [
+    {
+      "layer_type": "METADATA_EXIF",
+      "status": "EST",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "extension: .png",
+        "format: PNG (inferred from GitHub CDN delivery)",
+        "aspect_ratio: landscape 3:2 approx",
+        "primary_subject: torus ring + DNA helix + 4 pillar pairs"
+      ],
+      "extractor_version": "0.1.0-template",
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "stop_reason": "Template record: run 'upi-img index <file>' to compute actual hash and EXIF data."
+    },
+    {
+      "layer_type": "VISIBLE_TEXT",
+      "status": "EST",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "ocr_token: 8",
+        "ocr_token: 8 Hz",
+        "ocr_token: TF",
+        "ocr_token: RF",
+        "ocr_token: YGL",
+        "ocr_token: RO",
+        "ocr_token: 1",
+        "ocr_token: 31",
+        "ocr_token: 16",
+        "ocr_token: 30",
+        "ocr_token: ±0",
+        "ocr_token: ±12",
+        "ocr_token: ±6",
+        "ocr_token: ±0.2"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.95,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "GEOMETRIC_STRUCTURE",
+      "status": "DER",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "primary_form: torus_ring (hollow toroidal structure)",
+        "secondary_form: double_helix (vertical, central axis)",
+        "tertiary_form: 4_pillar_pairs (rectangular, arranged at cardinal positions)",
+        "quaternary_form: central_vertical_axis_column",
+        "arrow_indicators: bidirectional arrows between pillars",
+        "reference_frame: 2D image plane projection of 3D scene",
+        "symmetry: approximate 4-fold rotational symmetry",
+        "energy_visual_cues: glowing particles along torus, blue-red gradient"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.70,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "SYMBOLIC_ELEMENT",
+      "status": "SYM",
+      "source": "symbol_registry_match",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "symbol: TF → Tryckfrihetsförordningen (Swedish Freedom of the Press Act, 1766)",
+        "symbol: RF → Regeringsformen (Swedish Instrument of Government)",
+        "symbol: YGL → Yttrandefrihetsgrundlagen (Swedish Freedom of Expression Act)",
+        "symbol: RO → Riksdagsordningen (Swedish Riksdag Act)",
+        "symbol: 8 HZ → 8 Hz declared normalization reference coordinate (UPI DER)",
+        "symbol: DNA → Deoxyribonucleic acid (biology) or metaphorical dual-helix architecture",
+        "symbol: TORUS → Toroidal topology (mathematical structure)",
+        "interpretation: 4 pillars represent 4 Swedish constitutional laws (TF, RF, YGL, RO); dual appearance may indicate primar + spegel (primary + mirror) architecture"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.8,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "confusion_guard": "Symbol matches are pattern recognition, not physical evidence. SYM status never auto-promotes to DER or EST by accumulation."
+    },
+    {
+      "layer_type": "COLOR_CHANNEL",
+      "status": "DER",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "dominant_palette: deep_blue_black_background",
+        "energy_highlights: blue_white (torus ring particles)",
+        "accent_colour: red_orange (energy nodes along torus)",
+        "pillar_colour: translucent_blue_grey",
+        "helix_colour: pink_white_gradient",
+        "visual_theme: dark_space_bioluminescent",
+        "reference_frame: 2D image plane, sRGB colour space"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.70,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "SHADOW_LAYER",
+      "status": "HYP",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "analysis_mode: not_yet_run",
+        "note: run 'upi-img shadow <file>' on the actual image to compute LSB, chi-square, and entropy statistics"
+      ],
+      "extractor_version": "0.1.0-template",
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "stop_reason": "Template record. Run 'upi-img shadow vault/<image>' for statistical analysis. Independent tool verification required before promoting to EST."
+    }
+  ],
+  "generation": 0,
+  "parent_hash": null,
+  "prompt_fingerprint": null,
+  "verification_type": "software_test",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Template record: image_hash_sha256 is a placeholder. Run 'upi-img index vault/<file>' to generate a real node. Symbolic elements (TF, RF, YGL, RO as Swedish constitutional laws combined with DNA/torus metaphors) are SYM architecture — not physical evidence.",
+  "tags": ["torus", "dna", "constitutional-law", "swedish", "8hz", "symbolic", "architecture"],
+  "version": "0.1.0"
+}

@@ -33,7 +33,12 @@ jobs:
           pip install .
 
       - name: Lint
-        run: ruff check .
+        run: ruff check . --fix
+      
+      
+      - name: Rust Lint
+        run: cargo clippy --fix --allow-dirty --allow-staged
+
 
       - name: Test suite
         run: pytest --cov

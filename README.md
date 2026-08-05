@@ -83,6 +83,7 @@ This repository is preconfigured for GitHub Codespaces via
 - `src/upi/` — Core modules (physics, models, validation, CLI)
 - `modules/vrasi-physics/` — Standalone, dependency-free VR-ASI physics kernel
 - `modules/vrasi-swarm/` — Standalone 3-6-9/Gen4 coordination kernel
+- `modules/upi-image-index/` — Image feature extraction and UPI-status indexing
 - `tests/` — UPI test suite
 - `schemas/` — JSON schemas (node, bridge, theory)
 - `data/` — Example nodes, theories, STOP problems
@@ -124,7 +125,7 @@ consciousness or new physics.
 ## Testing
 
 ```bash
-pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ -v
+pytest tests/ modules/vrasi-physics/tests/ modules/vrasi-swarm/tests/ modules/upi-image-index/tests/ -v
 ruff check src tests modules/vrasi-physics/src modules/vrasi-physics/tests modules/vrasi-swarm/src modules/vrasi-swarm/tests
 mypy src/upi            # Type checking
 upi validate data/constants/planck.json  # Schema validation
