@@ -1,0 +1,6 @@
+﻿[package]
+name = "g2_ricci_flow_sim"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
