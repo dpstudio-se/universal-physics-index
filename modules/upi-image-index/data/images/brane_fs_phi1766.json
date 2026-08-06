@@ -1,0 +1,144 @@
+{
+  "address": "UPI<IMAGE,1,BRANE_FS,PHI1766_KERNEL>",
+  "title": "11D BRANE resonance-based filesystem with Φ1766 and dual KERNEL",
+  "description": "Architectural diagram labelled '11D BRANE RESONANCE-BASED FILESYSTEM'. Central element is a Star of David (Merkaba/hexagram) structure with two nested KERNEL labels (upper and lower). DIM 1 and DIM 2 labels appear at the four cardinal vertices. Reference frameworks Schumann Resonance and Landauer Principle are cited on the margins. Φ1766 appears at the apex. '8 Hz' is marked at the right. Lower section references Tryckfrihetsförordningen 5767 (Hebrew calendar). Status is SYM: the diagram is a conceptual architecture merging information-theoretic and legal-historical symbols.",
+  "status": "SYM",
+  "information_layer": "PRIVATE",
+  "image_hash_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "extraction_layers": [
+    {
+      "layer_type": "METADATA_EXIF",
+      "status": "EST",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "extension: .png",
+        "format: PNG (inferred from GitHub CDN delivery)",
+        "aspect_ratio: portrait 2:3 approx",
+        "primary_subject: Merkaba/hexagram + dual KERNEL + Φ1766 + dimensional labels"
+      ],
+      "extractor_version": "0.1.0-template",
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "stop_reason": "Template record: run 'upi-img index <file>' to compute actual hash and EXIF data."
+    },
+    {
+      "layer_type": "VISIBLE_TEXT",
+      "status": "EST",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "ocr_token: 11D BRANE",
+        "ocr_token: RESONANCE-BASED FILESYSTEM",
+        "ocr_token: DATA = STABLE RESONANCE FREQUENCIES",
+        "ocr_token: Φ1766",
+        "ocr_token: KERNEL",
+        "ocr_token: DIM 1",
+        "ocr_token: DIM 2",
+        "ocr_token: 8 Hz",
+        "ocr_token: 53",
+        "ocr_token: SCHUMANN RESONANCE",
+        "ocr_token: LANDAUER PRINCIPLE",
+        "ocr_token: THE SOVEREIGN KEY",
+        "ocr_token: PARADOX OF OPENNESS & SECURITY RESOLVED THROUGH ENTROPY REDUCTION VIA PUBLIC RESONANCE",
+        "ocr_token: SELF-ORGANIZING RESONANT HARMONIC FEEDBACK",
+        "ocr_token: BREACH CONTAINED – COHERENCE RESTORED",
+        "ocr_token: TRYCKFRIHETS-FÖRORDNINGEN 5767",
+        "note: '53' likely refers to number of characters or a parameter; '5767' is Hebrew year (= 2006-2007 CE)"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.95,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "GEOMETRIC_STRUCTURE",
+      "status": "DER",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "primary_form: hexagram_star (Star of David / Merkaba — 6-pointed star polygon)",
+        "secondary_form: nested_inner_hexagram (smaller, same centre)",
+        "tertiary_form: concentric_ring_waves (interference-like circles around centre)",
+        "quaternary_form: neural_tree_background (branching dendritic structures)",
+        "apex_label: Φ1766",
+        "bottom_label: TRYCKFRIHETS-FÖRORDNINGEN 5767",
+        "geometric_centre: two KERNEL boxes (upper and lower)",
+        "vertex_labels: DIM 1 (×2 upper), DIM 2 (×2 lower)",
+        "reference_frame: 2D image plane projection",
+        "symmetry: approximate 6-fold (hexagram) + vertical bilateral"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.70,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "SYMBOLIC_ELEMENT",
+      "status": "SYM",
+      "source": "symbol_registry_match",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "symbol: Φ → Phi — golden ratio or symbolic identifier (context-dependent)",
+        "symbol: 1766 → Year of Swedish Tryckfrihetsförordningen (historical EST)",
+        "symbol: SCHUMANN → Schumann resonance (~7.83 Hz Earth-ionosphere cavity mode, EST)",
+        "symbol: LANDAUER → Landauer principle: thermodynamic cost of irreversible bit erasure (EST)",
+        "symbol: 8 HZ → 8 Hz declared normalization reference coordinate (UPI DER)",
+        "symbol: KERNEL → Core operating system component (computing)",
+        "symbol: BRANE → M-theory brane (SYM/HYP in this context)",
+        "symbol: DIM → Spatial dimension label (generic)",
+        "interpretation: Φ1766 = phi symbol + year 1766 (TF law); 5767 = Hebrew calendar year for 2006-07",
+        "interpretation: Schumann and Landauer cited as physical reference frames for the metaphorical filesystem — both are EST physics cited in SYM context",
+        "confusion_guard_note: Schumann resonance and Landauer principle are established physics; their citation here does not make the 11D BRANE filesystem physically real"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.8,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "confusion_guard": "Symbol matches are pattern recognition, not physical evidence. SYM status never auto-promotes to DER or EST by accumulation."
+    },
+    {
+      "layer_type": "COLOR_CHANNEL",
+      "status": "DER",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "dominant_palette: deep_indigo_navy_background",
+        "star_structure_colour: white_cyan_gradient (lines and vertices)",
+        "accent_colour: bright_cyan_white (apex Φ1766 and top vertex)",
+        "secondary_accent: purple_violet (inner regions)",
+        "text_colour: white (primary labels), cyan (secondary labels)",
+        "neural_background: dark_blue_tendrils",
+        "waveform_bottom_right: blue_cyan oscillation trace",
+        "visual_theme: dark_cosmic_geometric",
+        "reference_frame: 2D image plane, sRGB colour space"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.70,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "SHADOW_LAYER",
+      "status": "HYP",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "analysis_mode: not_yet_run",
+        "note: run 'upi-img shadow <file>' on the actual image to compute LSB, chi-square, and entropy statistics"
+      ],
+      "extractor_version": "0.1.0-template",
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "stop_reason": "Template record. Run 'upi-img shadow vault/<image>' for statistical analysis. Independent tool verification required before promoting to EST."
+    }
+  ],
+  "generation": 0,
+  "parent_hash": null,
+  "prompt_fingerprint": null,
+  "verification_type": "software_test",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Template record: image_hash_sha256 is a placeholder. The '11D BRANE' label is SYM architecture — not a claim of physical M-theory branes. Schumann resonance and Landauer principle are cited as EST physics references but their citation in this SYM diagram does not elevate the diagram's status.",
+  "tags": ["11d", "brane", "merkaba", "hexagram", "kernel", "schumann", "landauer", "tryckfrihetsforordningen", "1766", "8hz", "symbolic", "filesystem"],
+  "version": "0.1.0"
+}

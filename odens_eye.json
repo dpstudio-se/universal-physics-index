@@ -1,0 +1,17 @@
+{
+  "pluginId": "odens-eye",
+  "version": "0.1.0",
+  "name": "Oden's Eye",
+  "description": "Disabled simulation manifest; no executable multimodal engine is included.",
+  "runtime": "python",
+  "mode": "simulation",
+  "enabled": false,
+  "permissions": {
+    "defaultDeny": true,
+    "capabilities": []
+  },
+  "resources": {
+    "cpu": "2.0",
+    "memory": "4Gi"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Universal Physics Index — OdinOS",
+  "title": "UPI & OdinOS Desktop Module",
+  "version": "0.1.0",
+  "description": "Interactive Web & Desktop OS interface for the Universal Physics Index engine, DNA Sonification, Qudit Torus Search, and OdinOS kernel.",
+  "index": "public/index.html",
+  "icon": "public/icon.png",
+  "category": "Science & Education",
+  "width": 1180,
+  "height": 780,
+  "resizable": true,
+  "permissions": [
+    "fs",
+    "kv",
+    "ai"
+  ],
+  "author": "dpstudio-se",
+  "license": "MIT"
+}

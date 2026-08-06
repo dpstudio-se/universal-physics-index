@@ -1,0 +1,11 @@
+{
+  "address": {"domain": "SYMBOLIC", "generation": "G1", "torus": "T_INVALID", "node": "N_PROMOTION"},
+  "title": "Intentionally invalid symbolic promotion",
+  "description": "A negative test fixture.",
+  "scientific_domain": "symbolic architecture",
+  "status": "EST",
+  "schema_version": "0.1.0",
+  "symbolic_interpretation": "An unsupported symbolic mapping presented as established.",
+  "created_date": "2026-07-17",
+  "revised_date": "2026-07-17"
+}

@@ -1,0 +1,23 @@
+{
+  "source": "UPI<quantum_information,1,qudit,generalized_weyl_gates>",
+  "target": "UPI<quantum_information,1,finite_dimensional,hilbert_state_space>",
+  "relation": "DERIVED_FROM",
+  "equations": [
+    "X_d^dagger X_d = I_d",
+    "Z_d^dagger Z_d = I_d"
+  ],
+  "assumptions": [
+    "The computational basis is an orthonormal basis of C^d.",
+    "Basis labels are interpreted modulo d."
+  ],
+  "mechanism": "The generalized gates are unitary operators defined on the finite-dimensional Hilbert space.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Direct verification of the generalized Weyl operator identities"
+    }
+  ],
+  "status": "EST",
+  "confusion_guard": "This mathematical derivation does not establish physical gate implementation or fidelity.",
+  "version": "0.1.0"
+}

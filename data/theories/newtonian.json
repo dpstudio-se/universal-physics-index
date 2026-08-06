@@ -1,0 +1,31 @@
+{
+  "address": "UPI<physics,1,classical,newtonian_mechanics>",
+  "title": "Newtonian Mechanics",
+  "description": "Classical mechanics based on Newton's laws of motion and universal gravitation. Applies to macroscopic objects at non-relativistic speeds.",
+  "status": "EST",
+  "domain": "physics",
+  "scope": "classical, macroscopic, non-relativistic",
+  "key_concepts": [
+    "Force (F)",
+    "Mass (m)",
+    "Acceleration (a)",
+    "Momentum (p = mv)",
+    "Energy (kinetic, potential)",
+    "Work",
+    "Power"
+  ],
+  "fundamental_equations": [
+    "F = ma  (Second Law)",
+    "F = G(m₁m₂)/r²  (Gravitation)",
+    "p = mv  (Momentum)",
+    "E_k = ½mv²  (Kinetic energy)",
+    "W = F·d  (Work)"
+  ],
+  "scope_limits": "Breaks down at relativistic speeds (v ~ c) and quantum scales (ℏ effects). Gravitation treated as instantaneous action at a distance.",
+  "related_theories": [
+    "UPI<physics,1,relativistic,special_relativity>",
+    "UPI<physics,1,relativistic,general_relativity>",
+    "UPI<physics,1,quantum,quantum_mechanics>"
+  ],
+  "version": "0.1.0"
+}

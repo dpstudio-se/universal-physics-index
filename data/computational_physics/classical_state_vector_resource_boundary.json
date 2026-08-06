@@ -1,0 +1,65 @@
+{
+  "address": "UPI<computational_physics,2,state_vector,classical_resource_boundary>",
+  "title": "Classical state-vector simulation resource boundary",
+  "description": "Derived computational boundary for software that explicitly stores and updates every amplitude of an N-dimensional quantum state. Such a simulator can reproduce ideal finite-dimensional linear algebra but uses classical resources proportional to the represented basis size.",
+  "status": "DER",
+  "definitions": [
+    "N is the total Hilbert-space basis dimension represented by the simulator.",
+    "A dense pure-state simulation stores N complex amplitudes.",
+    "A dense general unitary matrix contains N^2 complex entries, although structured gates can be applied more efficiently.",
+    "Quantum speedup is a hardware-and-algorithm resource claim, not a property of equation names."
+  ],
+  "equations": [
+    "memory_dense_state = O(N)",
+    "memory_dense_operator = O(N^2)",
+    "time_dense_matrix_vector = O(N^2)",
+    "N = product_i d_i",
+    "classical_amplitudes_stored = N"
+  ],
+  "assumptions": [
+    "The simulator uses a dense classical state vector.",
+    "Compression, tensor-network truncation, sparsity and problem-specific symmetries are not assumed.",
+    "The complexity statements describe asymptotic software resources, not physical energy consumption."
+  ],
+  "mechanism": "Every represented basis state requires an explicit complex number in a dense simulation. Operations must read or update these stored amplitudes, so the classical resource requirement grows with the full represented dimension.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Direct data-structure and operation-count analysis of a dense complex state vector",
+      "notes": "The bound follows from explicitly storing N amplitudes; it is a software derivation rather than an experimental result."
+    }
+  ],
+  "primary_sources": [
+    "UPI implementation source: src/upi/qudit.py",
+    "UPI standalone implementation source: modules/vrasi-qudit/src/vrasi_qudit/core.py"
+  ],
+  "predictions": [
+    "Doubling N approximately doubles dense state-vector storage when numeric representation is fixed.",
+    "A register with dimensions (d_1,...,d_n) allocates product_i d_i amplitudes.",
+    "The simulator cannot demonstrate hardware quantum advantage merely by reproducing ideal probabilities."
+  ],
+  "falsification_conditions": [
+    "Reject the stated O(N) dense storage bound if the implementation does not explicitly store one amplitude per basis state.",
+    "Revise the operation bound when a documented sparse, tensor-network or structured algorithm is used.",
+    "Reject any speedup claim that omits a matched classical baseline, hardware resources and end-to-end runtime."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Classical random-access computer executing dense complex linear algebra.",
+  "normalization_method": "Complexity is parameterized by N, the represented basis dimension.",
+  "normalization_claim": "Asymptotic resource classification does not identify physical quantum behavior.",
+  "null_model": "Ordinary dense complex-vector computation with no quantum hardware.",
+  "control_condition": "Measure allocated amplitude count and runtime growth as declared dimensions increase.",
+  "statistical_method": "For empirical benchmarks, report repeated runtime and peak-memory measurements with hardware and software versions.",
+  "confounders": [
+    "Compiler optimizations and cache behavior affect measured constants.",
+    "Sparse inputs can reduce practical work without changing the declared dense representation.",
+    "Tensor-network methods obey different bounds governed by entanglement structure and truncation."
+  ],
+  "replication_rule": "Run identical dimension sweeps on the recorded commit and report N, numeric precision, peak memory, wall time and hardware.",
+  "causal_claim": false,
+  "verification_type": "software_test",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Agreement with quantum equations does not turn classical RAM into quantum memory. More than three local states creates a qudit model, not verified quantum hardware.",
+  "tags": ["classical-simulation", "state-vector", "complexity", "resource-boundary", "quantum-speedup-guard"],
+  "version": "0.1.0"
+}

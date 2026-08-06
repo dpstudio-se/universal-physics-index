@@ -1,0 +1,23 @@
+{
+  "source": "UPI<information_physics,3,qudit_torus,digital_multi_state_search>",
+  "target": "UPI<quantum_information,1,qudit,generalized_weyl_gates>",
+  "relation": "DERIVED_FROM",
+  "equations": [
+    "X_i = I tensor ... tensor X_(d_i) tensor ... tensor I",
+    "Z_i = I tensor ... tensor Z_(d_i) tensor ... tensor I"
+  ],
+  "assumptions": [
+    "Each torus axis corresponds to one local d_i-level subsystem.",
+    "Identity operators act on every non-target axis."
+  ],
+  "mechanism": "The simulator lifts each local qudit operation into the joint register by tensoring it with identities on all other axes.",
+  "evidence": [
+    {
+      "type": "simulation",
+      "source": "UPI per-axis shift and phase isolation regression tests"
+    }
+  ],
+  "status": "DER",
+  "confusion_guard": "Local tensor action is established mathematics; the UPI torus naming and software API are derived implementation choices.",
+  "version": "0.1.0"
+}

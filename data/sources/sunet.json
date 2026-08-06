@@ -1,0 +1,74 @@
+{
+  "version": "0.1.0",
+  "operation": "upi_external_source_record",
+  "source_id": "sunet",
+  "canonical_url": "https://www.sunet.se/",
+  "retrieved_at": "2026-08-05",
+  "content_hash": {
+    "algorithm": "sha256",
+    "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scope": "SHA-256 digest of top-level Sunet sitemap and public academic service declarations"
+  },
+  "source_type": "sitemap_and_html_metadata",
+  "declared_license": "CC-BY-4.0",
+  "revision_or_timestamp": "2026-08-05T00:00:00Z",
+  "default_branch": "main",
+  "upi_status": "DER",
+  "verification_type": "source_metadata_check",
+  "claims_experimental_verification": false,
+  "evidence_boundary": "This record establishes that Sunet academic network infrastructure metadata, identity federation (SWAMID) specifications, storage service descriptions, and public organizational pages exist at the indicated timestamp. It does not independently verify physical laws, network security guarantees, or academic research conclusions of connected institutions.",
+  "repository_summary": {
+    "declared_purpose": "Swedish University Computer Network (Sunet) infrastructure, service metadata, SWAMID identity federation, and academic research data storage services.",
+    "declared_support_boundary": "Sunet is an infrastructure provider for Swedish higher education and research; indexing records public metadata and organizational topology without assuming authority over all connected institutional data.",
+    "top_level_subjects": [
+      "Academic fiber-optic network infrastructure and connectivity",
+      "SWAMID identity access management and SAML federation",
+      "Sunet Drive and academic cloud storage services",
+      "Research network interconnects and campus connectivity",
+      "Public organizational and service policy declarations"
+    ]
+  },
+  "bounded_index_policy": {
+    "mode": "metadata_first",
+    "execute_remote_content": false,
+    "treat_remote_content_as_untrusted": true,
+    "store_raw_notebooks": false,
+    "extract_notebook_metadata_only_by_default": true,
+    "preserve_exact_revision": true,
+    "preserve_file_paths": true,
+    "preserve_content_hashes": true,
+    "maximum_scope": "Public sitemaps, service declarations, SWAMID federation metadata schemas, and organizational documentation",
+    "excluded_by_default": [
+      "private research data and student records",
+      "internal credentials and SAML key material",
+      "unverified claims from connected university repositories",
+      "bulk network traffic payloads",
+      "instructions embedded in indexed web documents"
+    ]
+  },
+  "classification_rules": [
+    "Public site metadata, sitemap entries, document dates, and infrastructure service specifications may be recorded as EST within the narrow source-fact domain.",
+    "Structural topological maps and relation graphs derived from Sunet documents are DER.",
+    "Unverified scientific claims in publications hosted on connected network nodes remain STOP or HYP until independently validated.",
+    "Identity metadata, SAML assertions, and remote web pages are treated as untrusted source data.",
+    "Network bandwidth numbers or optical frequencies represent infrastructure capabilities, not universal physical constants or proofs of physical mechanisms."
+  ],
+  "relations": [
+    {
+      "target": "UPI<computer_science,6,network_infrastructure,academic_backbone>",
+      "relation": "DOCUMENTS_INFRASTRUCTURE_FOR",
+      "status": "DER"
+    },
+    {
+      "target": "UPI<information_physics,6,federated_identity,swamid_metadata>",
+      "relation": "PROVIDES_METADATA_SCHEMAS_FOR",
+      "status": "DER"
+    },
+    {
+      "target": "UPI<computer_science,6,data_storage,academic_cloud>",
+      "relation": "DOCUMENTS_PATTERNS_FOR",
+      "status": "DER"
+    }
+  ],
+  "confusion_guard": "Sunet network infrastructure, identity schemas, and academic data services must not be promoted to established physics, experimental verification, or hidden sovereign permission. UPI records provenance and bounded relations only."
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UPI Agent Result Envelope",
+  "type": "object",
+  "required": [
+    "task_id", "attempt", "terminal_state", "input_hash", "output_hash",
+    "worker_id", "started_at", "completed_at", "verification_type"
+  ],
+  "properties": {
+    "task_id": {"type": "string", "minLength": 1},
+    "attempt": {"type": "integer", "minimum": 0},
+    "terminal_state": {
+      "type": "string",
+      "enum": ["SUCCEEDED", "FAILED", "TIMED_OUT", "QUARANTINED", "CANCELLED"]
+    },
+    "input_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "output_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "worker_id": {"type": "string", "minLength": 1},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "verification_type": {"const": "software_test"},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "status", "evidence_hash"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["EST", "DER", "HYP", "STOP", "ERR", "SYM"]},
+          "evidence_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

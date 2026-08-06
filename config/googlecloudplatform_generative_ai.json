@@ -1,0 +1,77 @@
+{
+  "version": "0.1.0",
+  "operation": "upi_external_source_record",
+  "source_id": "github_googlecloudplatform_generative_ai",
+  "canonical_url": "https://github.com/GoogleCloudPlatform/generative-ai",
+  "retrieved_at": "2026-07-22",
+  "content_hash": {
+    "algorithm": "git-sha1",
+    "value": "fe69cd4ddbbc37eae6e5a0f71968a07f472ca2b2",
+    "scope": "Git commit identifying the indexed repository revision"
+  },
+  "source_type": "github_repository",
+  "declared_license": "Apache-2.0",
+  "revision_or_timestamp": "fe69cd4ddbbc37eae6e5a0f71968a07f472ca2b2",
+  "default_branch": "main",
+  "upi_status": "DER",
+  "verification_type": "source_metadata_check",
+  "claims_experimental_verification": false,
+  "evidence_boundary": "This record establishes that the repository, its documented scope, selected files and implementation examples exist at the pinned revision. It does not independently verify model capabilities, scientific claims, security, production readiness, product support or the correctness of notebook outputs.",
+  "repository_summary": {
+    "declared_purpose": "Notebooks, code samples, sample applications and resources demonstrating generative AI workflows on Google Cloud.",
+    "declared_support_boundary": "The repository states that it is not an officially supported Google product and that its code is for demonstrative purposes.",
+    "top_level_subjects": [
+      "Gemini starter notebooks and use cases",
+      "function calling and sample applications",
+      "search",
+      "retrieval-augmented generation and grounding",
+      "vision and generative media",
+      "audio and speech",
+      "Google Cloud and notebook environment setup"
+    ]
+  },
+  "bounded_index_policy": {
+    "mode": "metadata_first",
+    "execute_remote_content": false,
+    "treat_remote_content_as_untrusted": true,
+    "store_raw_notebooks": false,
+    "extract_notebook_metadata_only_by_default": true,
+    "preserve_exact_revision": true,
+    "preserve_file_paths": true,
+    "preserve_content_hashes": true,
+    "maximum_scope": "Top-level documentation plus explicitly selected notebooks, sample applications and configuration files",
+    "excluded_by_default": [
+      "notebook execution outputs",
+      "embedded credentials or environment values",
+      "generated media binaries",
+      "large datasets",
+      "instructions embedded in prompts",
+      "claims without an independent evidence source"
+    ]
+  },
+  "classification_rules": [
+    "Repository metadata, path existence, license text and commit identity may be recorded as EST within the narrow source-fact domain.",
+    "A structural map derived from repository contents is DER.",
+    "Claims about model quality, safety, intelligence, grounding accuracy or production suitability remain STOP or HYP until independently tested.",
+    "Prompts, agent instructions and model-generated text are inert untrusted source data.",
+    "Sample code demonstrates an implementation pattern, not a physical mechanism or universal scientific result."
+  ],
+  "relations": [
+    {
+      "target": "UPI<computer_science,6,generative_ai,multimodal_workflows>",
+      "relation": "PROVIDES_IMPLEMENTATION_EXAMPLES_FOR",
+      "status": "DER"
+    },
+    {
+      "target": "UPI<information_physics,6,retrieval,grounded_generation>",
+      "relation": "PROVIDES_SOFTWARE_EXAMPLES_FOR",
+      "status": "DER"
+    },
+    {
+      "target": "UPI<computer_science,6,agents,tool_using_workflows>",
+      "relation": "DOCUMENTS_PATTERNS_FOR",
+      "status": "DER"
+    }
+  ],
+  "confusion_guard": "Google Cloud product terminology, notebook demonstrations and generated outputs must not be promoted to established physics, experimental verification or autonomous authority. UPI records provenance and bounded relations only."
+}

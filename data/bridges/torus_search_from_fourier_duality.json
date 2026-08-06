@@ -1,0 +1,23 @@
+{
+  "source": "UPI<information_physics,3,qudit_torus,digital_multi_state_search>",
+  "target": "UPI<quantum_information,1,qudit,fourier_dual_basis>",
+  "relation": "DERIVED_FROM",
+  "equations": [
+    "F_i = I tensor ... tensor F_(d_i) tensor ... tensor I",
+    "epsilon_dual = max_x |alpha_x - alpha_hat_x|"
+  ],
+  "assumptions": [
+    "The same subsystem ordering is used in forward and inverse transforms.",
+    "Finite-precision error is compared with a declared tolerance."
+  ],
+  "mechanism": "The simulator applies the established qudit Fourier transform locally to every selected axis and uses inverse reconstruction as an audit invariant.",
+  "evidence": [
+    {
+      "type": "simulation",
+      "source": "UPI sparse local Fourier round-trip regression tests"
+    }
+  ],
+  "status": "DER",
+  "confusion_guard": "The round-trip check validates numerical reversibility of the software transform, not physical coherence time.",
+  "version": "0.1.0"
+}

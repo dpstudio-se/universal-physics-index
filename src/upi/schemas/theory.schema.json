@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UPI Theory Node Schema",
+  "description": "Schema for high-level theory nodes grouping multiple physics concepts",
+  "type": "object",
+  "required": [
+    "address",
+    "title",
+    "description",
+    "status",
+    "domain",
+    "scope"
+  ],
+  "properties": {
+    "address": {
+      "type": "string",
+      "pattern": "^UPI<[^,]+,[0-9]+,[^,]+,[^,>]+>$",
+      "description": "UPI address: UPI<Domain,Generation,Torus,Node>"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Theory name"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Theory overview"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["EST", "DER", "HYP", "STOP", "ERR", "SYM"],
+      "description": "Scientific status"
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Scientific domain (e.g., physics, mathematics)"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Scope of applicability (e.g., classical, quantum, relativistic)"
+    },
+    "key_concepts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Core concepts and entities in the theory"
+    },
+    "fundamental_equations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Fundamental equations of the theory"
+    },
+    "scope_limits": {
+      "type": "string",
+      "description": "Where and why the theory breaks down or has limits"
+    },
+    "related_theories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^UPI<[^,]+,[0-9]+,[^,]+,[^,>]+>$"
+      },
+      "description": "Related theory node addresses"
+    },
+    "version": {
+      "type": "string",
+      "default": "0.1.0"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+{
+  "address": "UPI<SYMBOLIC,1,VORTEX_DNA,FUNCTIONAL_ARCHITECTURE>",
+  "title": "Vortex-DNA functional architecture",
+  "description": "Transparent collaboration and boundary-control model; DNA is metaphorical.",
+  "status": "SYM",
+  "information_layer": "PUBLIC",
+  "definitions": [
+    "IDENTITY_CORE: role and collaboration contract",
+    "SCIENTIFIC_CORE: established definitions and dimensional rules",
+    "HYPOTHESIS_CORE: testable unestablished claims",
+    "SYMBOLIC_CORE: conceptual mappings",
+    "AUDIT_CORE: revision and conflict record",
+    "BOUNDARY_CORE: classification guard"
+  ],
+  "verification_type": "none",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Not biological DNA; agent agreement is not independent evidence; no layer grants hidden authority.",
+  "tags": ["symbolic", "audit", "boundary"],
+  "version": "0.1.0"
+}

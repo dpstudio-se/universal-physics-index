@@ -1,0 +1,11 @@
+{
+  "address": "UPI<RELATIVITY,1,T_ENERGY,N_MASS_ENERGY>",
+  "title": "Mass-energy equivalence",
+  "description": "Rest energy relation in special relativity.",
+  "status": "EST",
+  "equations": ["E = m c^2"],
+  "definitions": ["E is rest energy", "m is invariant mass", "c is the speed of light in vacuum"],
+  "assumptions": ["isolated body", "invariant mass", "SI units"],
+  "evidence": [{"type": "other", "source": "Special relativity textbook treatment"}],
+  "confusion_guard": "This node does not claim every form of energy is a rest mass."
+}

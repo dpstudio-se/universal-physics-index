@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Physics Index — OdinOS & Odysseus AI Module</title>
+  <meta name="description" content="Machine-readable validation, classification, Puter OS & Odysseus AI agent control interface for scientific records.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Puter.js v2 SDK -->
+  <script src="https://js.puter.com/v2/"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header / Navbar -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-ring">
+          <span class="phi-symbol">&Omega;</span>
+        </div>
+        <div class="brand-text">
+          <h1>Universal Physics Index</h1>
+          <span class="sub-title">OdinOS &bull; Puter.js &bull; Odysseus AI Bridge &bull; <span id="carrier-freq">8.00 Hz</span> Reference</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="puter-status" class="badge badge-sym">Puter: Initializing...</span>
+        <button id="btn-puter-save" class="btn btn-secondary">💾 Save to Puter Cloud</button>
+        <button id="btn-export-json" class="btn btn-primary">⚡ Export UPI Node</button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-odysseus">🤖 Odysseus LLM/AGI Fusion</button>
+      <button class="tab-btn" data-tab="tab-dna">🧬 DNA & Acoustic Sonifier</button>
+      <button class="tab-btn" data-tab="tab-qudit">🌀 Qudit Torus Search</button>
+      <button class="tab-btn" data-tab="tab-status">🛡️ Scientific Status Auditor</button>
+      <button class="tab-btn" data-tab="tab-aeco">⚡ UPI-AEC&Omega; Evolution</button>
+    </nav>
+
+    <!-- Main Content Panels -->
+    <main class="content-panel">
+      <!-- TAB 0: Odysseus LLM/AGI Fusion -->
+      <section id="tab-odysseus" class="tab-content active">
+        <div class="panel-grid">
+          <div class="card card-controls">
+            <h2>Odysseus AI Agent Command Terminal</h2>
+            <p class="description">
+              Communicates with LLM/AAI/AGI/ASI agents via the Odysseus Protocol tool call manifest (<a href="https://odysseusai.dev/" target="_blank" style="color:#38bdf8;">odysseusai.dev</a>). Fuses Puter AI (<code>puter.ai</code>) with UPI physics engines.
+            </p>
+            <div class="form-group">
+              <label for="odysseus-prompt">Natural Language Intent / Prompt:</label>
+              <textarea id="odysseus-prompt" rows="3" placeholder="Ask LLM/Odysseus agent, e.g. 'Sonify DNA sequence ATGCGATACGA' or 'Inspect SUNET backbone topology for KTH'...">Sonify DNA sequence ATGCGATACGA and return trace analysis</textarea>
+            </div>
+            <div class="form-group" style="margin-top: 8px;">
+              <label for="ai-provider-select">AI Provider Engine:</label>
+              <select id="ai-provider-select" style="width: 100%; padding: 8px; background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-glass); border-radius: 6px;">
+                <option value="heuristic" selected>⚡ Heuristic Rule Router (Offline / Fast)</option>
+                <option value="gemini">✨ Google Gemini AI (Gemini 1.5 Flash)</option>
+                <option value="grok">🚀 xAI Grok (Grok Beta)</option>
+                <option value="copilot">🤖 GitHub Copilot / OpenAI (GPT-4o)</option>
+                <option value="local_ollama">💻 Local AI / Ollama / LM Studio (localhost:11434)</option>
+                <option value="cloud_puter">☁️ Puter AI (Cloud API)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-top: 8px;">
+              <label for="ai-api-key">Optional Provider API Key (or set GEMINI_API_KEY / GROK_API_KEY):</label>
+              <input type="password" id="ai-api-key" placeholder="Paste optional API key..." style="width: 100%; padding: 8px; background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-glass); border-radius: 6px;" />
+            </div>
+            <div class="button-group">
+              <button id="btn-odysseus-send" class="btn btn-primary">⚡ Send to Odysseus LLM Agent</button>
+              <button id="btn-odysseus-tools" class="btn btn-secondary">📋 Fetch Odysseus Tool Manifest</button>
+            </div>
+          </div>
+
+          <div class="card card-visualizer">
+            <h2>Odysseus Agent Protocol Tool Registry</h2>
+            <div id="odysseus-tools-list" class="tools-list-box">
+              Loading Odysseus tool manifest...
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-results">
+          <h3>Odysseus Tool Execution & Intent Output</h3>
+          <pre id="odysseus-output-log">Odysseus AI Agent interface online. Submit an intent prompt or tool call.</pre>
+        </div>
+      </section>
+
+      <!-- TAB 1: DNA & Acoustic Sonifier -->
+      <section id="tab-dna" class="tab-content">
+        <div class="panel-grid">
+          <div class="card card-controls">
+            <h2>Bio-Acoustic DNA Sonifier (4-Base & 12-TET)</h2>
+            <p class="description">
+              Maps biological nucleotide sequences ($A, C, G, T/U$) into acoustic rest frequencies, $N8$ indexing, and energy mass equivalents ($E=h \cdot f$).
+            </p>
+            <div class="form-group">
+              <label for="dna-input">Nucleotide Sequence (DNA/RNA):</label>
+              <textarea id="dna-input" rows="3" placeholder="Enter sequence, e.g. ATGCGATACGA...">ATGCGATACGA</textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ref-pitch">Reference A4 Pitch (Hz):</label>
+                <input type="number" id="ref-pitch" value="440.0" step="0.1" min="100" max="1000">
+              </div>
+              <div class="form-group">
+                <label for="waveform-select">Synth Waveform:</label>
+                <select id="waveform-select">
+                  <option value="sine">Sine (Pure Harmonic)</option>
+                  <option value="triangle" selected>Triangle (Soft Acoustic)</option>
+                  <option value="sawtooth">Sawtooth (Resonant Harmonic)</option>
+                  <option value="square">Square (Digital Pulse)</option>
+                </select>
+              </div>
+            </div>
+            <div class="button-group">
+              <button id="btn-sonify" class="btn btn-primary">▶️ Play DNA Sonification</button>
+              <button id="btn-stop-audio" class="btn btn-secondary">⏹️ Stop Audio</button>
+            </div>
+          </div>
+
+          <div class="card card-visualizer">
+            <h2>Real-Time Acoustic Spectrum & Torus Canvas</h2>
+            <div class="canvas-wrapper">
+              <canvas id="audio-canvas" width="500" height="240"></canvas>
+            </div>
+            <div id="audio-live-info" class="live-info">
+              Ready. Click "Play DNA Sonification" to synthesize frequencies.
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Table -->
+        <div class="card card-table">
+          <h3>Sequence Sonification Trace</h3>
+          <div class="table-container">
+            <table id="table-sonification">
+              <thead>
+                <tr>
+                  <th>Pos</th>
+                  <th>Base</th>
+                  <th>Note</th>
+                  <th>Frequency (Hz)</th>
+                  <th>N8 Index ($f/8$)</th>
+                  <th>Energy ($h \cdot f$)</th>
+                  <th>Mass Eq ($h f / c^2$)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Populated dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Qudit Torus Search -->
+      <section id="tab-qudit" class="tab-content">
+        <div class="panel-grid">
+          <div class="card card-controls">
+            <h2>Digital Multi-Torus Qudit Simulator</h2>
+            <p class="description">
+              Simulates a classical state-vector register with torus dimensions $(d_1, d_2, \dots, d_n)$ and local Fourier duality transformation.
+            </p>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="qudit-dims">Torus Dimensions (comma-separated):</label>
+                <input type="text" id="qudit-dims" value="4, 5" placeholder="e.g. 4, 5 or 3, 3, 3">
+              </div>
+              <div class="form-group">
+                <label for="qudit-targets">Target State Indices:</label>
+                <input type="text" id="qudit-targets" value="7" placeholder="e.g. 7 or 0, 12">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="qudit-iterations">Diffusion Iterations ($k$):</label>
+              <input type="number" id="qudit-iterations" value="2" min="1" max="20">
+            </div>
+            <button id="btn-run-qudit" class="btn btn-primary">🌀 Execute Qudit Torus Search</button>
+          </div>
+
+          <div class="card card-visualizer">
+            <h2>Probability Amplification State Vector</h2>
+            <div class="canvas-wrapper">
+              <canvas id="qudit-canvas" width="500" height="240"></canvas>
+            </div>
+            <div id="qudit-live-info" class="live-info">
+              Click execute to run digital torus amplitude amplification.
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-results">
+          <h3>Qudit Register Simulation Output</h3>
+          <pre id="qudit-output-log">Register ready.</pre>
+        </div>
+      </section>
+
+      <!-- TAB 3: Scientific Status Auditor -->
+      <section id="tab-status" class="tab-content">
+        <div class="card">
+          <h2>UPI Evidence Boundary & Status Inspector</h2>
+          <p class="description">
+            Enforces strict classification rule: claims are labeled with exact scientific status badges. Conceptual metaphors are strictly bound to <code>SYM</code>.
+          </p>
+          <div class="status-legend">
+            <span class="badge badge-est">EST — Established</span>
+            <span class="badge badge-der">DER — Derived</span>
+            <span class="badge badge-hyp">HYP — Hypothesis</span>
+            <span class="badge badge-stop">STOP — Blocked</span>
+            <span class="badge badge-err">ERR — Erroneous</span>
+            <span class="badge badge-sym">SYM — Symbolic</span>
+          </div>
+
+          <div class="card-boundary-rules">
+            <h3>Active Repository Scientific Boundary Rules</h3>
+            <ul class="rule-list">
+              <li><strong>Rule 1</strong>: <code>SYM</code> means symbolic interpretation only. It never grants physical evidence, experimental verification, or hidden authority.</li>
+              <li><strong>Rule 2</strong>: Numerical agreement inside tolerance $\epsilon_Z$ does not establish physical identity or shared mechanisms.</li>
+              <li><strong>Rule 3</strong>: 8 Hz is a reference example parameter, not a universal constant or physical proof.</li>
+              <li><strong>Rule 4</strong>: Verification type is strictly classified as <code>software_test</code>.</li>
+            </ul>
+          </div>
+
+          <div class="form-group">
+            <label for="inspector-json">Inspect UPI JSON Record:</label>
+            <textarea id="inspector-json" rows="6">{
+  "address": "UPI<physics,1,classical,mass_frequency_bridge>",
+  "status": "EST",
+  "verification_type": "software_test",
+  "claims_experimental_verification": true,
+  "confusion_guard": "Mass-frequency relation calculates energy-equivalent mass, not invariant rest mass of arbitrary wave packets."
+}</textarea>
+          </div>
+          <button id="btn-validate-record" class="btn btn-secondary">🔍 Audit Scientific Record</button>
+          <div id="audit-result" class="audit-box"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: UPI-AECΩ Evolution -->
+      <section id="tab-aeco" class="tab-content">
+        <div class="card">
+          <h2>UPI-AEC&Omega; (Autonomous Evolution Core Omega)</h2>
+          <p class="description">
+            Self-evaluating evolution module that reads UPI DNA records, transcribes runtime RNA adapters, and applies non-mutating evolutionary loops.
+          </p>
+          <div class="aeco-metrics-grid">
+            <div class="metric-box">
+              <span class="metric-value">v0.1.0</span>
+              <span class="metric-label">Current Version</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-value">1.000</span>
+              <span class="metric-label">Fitness Score</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-value">0</span>
+              <span class="metric-label">DNA Violations</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-value">ACTIVE</span>
+              <span class="metric-label">RNA Adapter</span>
+            </div>
+          </div>
+          <button id="btn-run-aeco" class="btn btn-primary">⚡ Run AEC&Omega; Self-Evaluation Cycle</button>
+          <div id="aeco-output" class="audit-box">AEC&Omega; organ standby. Click to execute self-evaluation loop.</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <span>Universal Physics Index v0.1.0-alpha &bull; OdinOS &bull; Puter.js &bull; Odysseus AI Bridge</span>
+      <span>Status: <span class="badge badge-est">EST Grounded</span></span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

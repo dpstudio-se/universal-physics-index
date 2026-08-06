@@ -1,0 +1,23 @@
+{
+  "source": "UPI<quantum_information,1,finite_dimensional,hilbert_state_space>",
+  "target": "UPI<quantum_information,1,measurement,born_probability_rule>",
+  "relation": "MEASURED_BY",
+  "equations": [
+    "p_j = |<j|psi>|^2",
+    "sum_j p_j = 1"
+  ],
+  "assumptions": [
+    "The state is normalized.",
+    "The measurement basis is orthonormal and complete."
+  ],
+  "mechanism": "Projection amplitudes from the Hilbert-space state are converted to ideal outcome probabilities by squared magnitude.",
+  "evidence": [
+    {
+      "type": "other",
+      "source": "Max Born, probability interpretation of quantum amplitudes, 1926"
+    }
+  ],
+  "status": "EST",
+  "confusion_guard": "Computing ideal probabilities in software is not an actual physical measurement event.",
+  "version": "0.1.0"
+}

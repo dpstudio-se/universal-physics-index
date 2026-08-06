@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vrasi-swarm"
+version = "0.1.0"
+description = "Standalone 3-6-9 coordination kernel for VR-ASI networks"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/dpstudio-se/universal-physics-index/tree/main/modules/vrasi-swarm"
+Repository = "https://github.com/dpstudio-se/universal-physics-index.git"
+Issues = "https://github.com/dpstudio-se/universal-physics-index/issues"
+
+[project.scripts]
+vrasi-swarm = "vrasi_swarm.__main__:main"
+
+[tool.setuptools]
+packages = ["vrasi_swarm"]
+package-dir = {"" = "src"}

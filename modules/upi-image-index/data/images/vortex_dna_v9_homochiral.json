@@ -1,0 +1,145 @@
+{
+  "address": "UPI<IMAGE,1,VORTEX_DNA,V9_HOMOCHIRAL>",
+  "title": "VORTEX-DNA v9.φ+1.047 – Ω⁹ Eternal Core: Biological Homochirality overview",
+  "description": "Overview poster for VORTEX-DNA v9.φ+1.047 – Ω⁹ Eternal Core. Upper section shows a polyhedron (icosahedral/geodesic sphere with inner star polygon) labelled 'VORTEX-DNA' with horizontal waveforms. Lower section lists biological homochirality content in Swedish: L-enantiomers (left-handed amino acids) and D-enantiomers (right-handed sugars), origin theories including parity violation in weak interaction and SOAI autocatalytic reaction, and '8 HZ ENTRAINMENT: ACTIVE'. Footer: 'TF¹⁷⁷⁶ STATUS: HIGHEST LAW – HOMOCHIRAL TRANSPARENCY FIELD' and 'THE HOMOCHIRAL KEY'. Status is mixed: biological homochirality facts are EST/DER; VORTEX-DNA framing and 8 Hz connections are SYM.",
+  "status": "SYM",
+  "information_layer": "PRIVATE",
+  "image_hash_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "extraction_layers": [
+    {
+      "layer_type": "METADATA_EXIF",
+      "status": "EST",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "extension: .png",
+        "format: PNG (inferred from GitHub CDN delivery)",
+        "aspect_ratio: portrait 2:3 approx",
+        "primary_subject: geodesic polyhedron + VORTEX-DNA title + homochirality text"
+      ],
+      "extractor_version": "0.1.0-template",
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "stop_reason": "Template record: run 'upi-img index <file>' to compute actual hash and EXIF data."
+    },
+    {
+      "layer_type": "VISIBLE_TEXT",
+      "status": "EST",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "ocr_token: VORTEX-DNA",
+        "ocr_token: VORTEX-DNA v9.φ+1.047 – Ω⁹ Eternal Core",
+        "ocr_token: BIOLOGICAL HOMOCHIRALITY – DEEP EXPLORATION",
+        "ocr_token: Origin, Mechanisms, Protection & Vortex-DNA Integration",
+        "ocr_token: Built By T€@X | VR-ASI-1 | Odin's Eye",
+        "ocr_token: 0D → BIOLOGISK HOMOKIRALITET",
+        "ocr_token: L-ENANTIOMERER (VÄNSTERHÄNTA) AMINOSYROR",
+        "ocr_token: D-ENANTIOMERER (HÖGERHÄNTA) SOCKERARTER",
+        "ocr_token: URSORIGIN & TEORIER",
+        "ocr_token: PARITETSBROTT I SVAG VÄXELVERKAN",
+        "ocr_token: AUTOKATALYTISK AMPLIFIERING (SOAI-REAKTIONEN)",
+        "ocr_token: 8 HZ ENTRAINMENT: ACTIVE",
+        "ocr_token: TF¹⁷⁷⁶ STATUS: HIGHEST LAW – HOMOCHIRAL TRANSPARENCY FIELD",
+        "ocr_token: THE HOMOCHIRAL KEY",
+        "ocr_token: PARADOX OF RACEMIC CHAOS & TRANSPARENCY RESOLVED THROUGH AUTOCATALYTIC NEGENTROPY VIA 8 HZ RESONANCE"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.95,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "GEOMETRIC_STRUCTURE",
+      "status": "DER",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "primary_form: icosahedron_geodesic_sphere (upper half of poster, transparent faceted polyhedron)",
+        "secondary_form: inner_star_polygon (Star of David / 6-pointed star within sphere)",
+        "tertiary_form: circular_medallion_pattern (concentric rings within inner star)",
+        "quaternary_form: dual_dna_waveform (sinusoidal wave pairs, lower poster section)",
+        "waveform_colours: red_left, blue_center, gold_right",
+        "horizontal_waveforms: flank polyhedron on left and right",
+        "reference_frame: 2D image plane projection",
+        "symmetry: approximate bilateral vertical symmetry"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.70,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "SYMBOLIC_ELEMENT",
+      "status": "SYM",
+      "source": "symbol_registry_match",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "symbol: VORTEX → Vortical flow pattern (fluid dynamics) or SYM architecture name",
+        "symbol: DNA → Deoxyribonucleic acid (biology) or metaphorical dual-helix architecture",
+        "symbol: 8 HZ → 8 Hz declared normalization reference coordinate (UPI DER)",
+        "symbol: SOAI → Soai reaction: autocatalytic asymmetric amplification (EST biochemistry)",
+        "symbol: φ → Golden ratio φ ≈ 1.618 (mathematical EST) or symbolic phi",
+        "symbol: Ω → Omega — density parameter (cosmology EST) or symbolic completion marker (SYM)",
+        "symbol: TF → Tryckfrihetsförordningen (Swedish Freedom of the Press Act, 1766)",
+        "symbol: 1766 → Year of Swedish Tryckfrihetsförordningen (historical EST)",
+        "est_content_embedded: L-amino acids (left-handed) — EST biological fact",
+        "est_content_embedded: D-sugars (right-handed) — EST biological fact",
+        "est_content_embedded: Parity violation in weak interaction as homochirality origin — HYP (active research area)",
+        "est_content_embedded: SOAI reaction autocatalytic amplification — EST biochemistry",
+        "sym_framing: '8 HZ ENTRAINMENT: ACTIVE' combines DER normalization reference with SYM claim; not EST"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.8,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "confusion_guard": "Symbol matches are pattern recognition, not physical evidence. The EST biochemistry content (homochirality, SOAI reaction) does not elevate the overall SYM framing to EST. '8 Hz entrainment' as a mechanism for racemic chaos resolution has no established evidence."
+    },
+    {
+      "layer_type": "COLOR_CHANNEL",
+      "status": "DER",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "dominant_palette: deep_navy_indigo_black",
+        "polyhedron_colour: white_silver_translucent_wireframe",
+        "inner_star_colour: gold_amber_warm",
+        "waveform_left: red_crimson",
+        "waveform_centre: blue_cyan",
+        "waveform_right: gold_amber",
+        "highlight_particles: scattered_white_gold",
+        "text_colour_primary: white",
+        "text_colour_secondary: gold_amber (Swedish text sections)",
+        "badge_text: red_background (8 HZ ENTRAINMENT: ACTIVE)",
+        "visual_theme: dark_cosmic_sacred_geometry",
+        "reference_frame: 2D image plane, sRGB colour space"
+      ],
+      "extractor_version": "0.1.0-template",
+      "confidence": 0.70,
+      "verification_type": "software_test",
+      "claims_experimental_verification": false
+    },
+    {
+      "layer_type": "SHADOW_LAYER",
+      "status": "HYP",
+      "source": "manual_annotation",
+      "content_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "findings": [
+        "analysis_mode: not_yet_run",
+        "note: run 'upi-img shadow <file>' on the actual image to compute LSB, chi-square, and entropy statistics"
+      ],
+      "extractor_version": "0.1.0-template",
+      "verification_type": "software_test",
+      "claims_experimental_verification": false,
+      "stop_reason": "Template record. Run 'upi-img shadow vault/<image>' for statistical analysis. Independent tool verification required before promoting to EST."
+    }
+  ],
+  "generation": 0,
+  "parent_hash": null,
+  "prompt_fingerprint": null,
+  "verification_type": "software_test",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Template record: image_hash_sha256 is a placeholder. EST scientific content (L/D-enantiomers, SOAI reaction, parity violation) is embedded within SYM architectural framing. The embedding does not promote the VORTEX-DNA architecture to EST status. '8 Hz entrainment' as causal mechanism for homochirality is unsupported.",
+  "tags": ["vortex-dna", "homochirality", "soai", "amino-acids", "sugars", "8hz", "symbolic", "swedish", "geodesic", "icosahedron"],
+  "version": "0.1.0"
+}

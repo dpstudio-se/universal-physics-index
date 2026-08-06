@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UPI Bridge Schema",
+  "description": "Schema for typed graph relations (bridges) between UPI nodes",
+  "type": "object",
+  "required": [
+    "source",
+    "target",
+    "relation",
+    "status"
+  ],
+  "properties": {
+    "source": {
+      "type": "string",
+      "pattern": "^UPI<[^,]+,[0-9]+,[^,]+,[^,>]+>$",
+      "description": "Source node UPI address"
+    },
+    "target": {
+      "type": "string",
+      "pattern": "^UPI<[^,]+,[0-9]+,[^,]+,[^,>]+>$",
+      "description": "Target node UPI address"
+    },
+    "relation": {
+      "type": "string",
+      "enum": [
+        "DERIVED_FROM",
+        "CAUSES",
+        "DUAL_TO",
+        "EQUIVALENT_WITHIN",
+        "COARSE_GRAINS_TO",
+        "COMPACTIFIES_TO",
+        "EMERGES_AS",
+        "FORM_SIMILAR",
+        "TOPOLOGY_SHARED",
+        "MECHANISM_SHARED",
+        "CANDIDATE_BRIDGE",
+        "CONTRADICTS",
+        "STOPS_AT",
+        "REPRESENTS",
+        "MEASURED_BY",
+        "FALSIFIED_BY"
+      ],
+      "description": "Type of relation (must not be empty)"
+    },
+    "equations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "mechanism": {
+      "type": "string",
+      "description": "Physical or mathematical mechanism connecting source and target"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "source"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["experiment", "observation", "calculation", "simulation", "other"]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "date": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["EST", "DER", "HYP", "STOP", "ERR", "SYM"],
+      "description": "Scientific status of the bridge"
+    },
+    "confusion_guard": {
+      "type": "string",
+      "description": "Warning about common misinterpretations"
+    },
+    "stop_reason": {
+      "type": "string",
+      "description": "Required if status='STOP': why the bridge is incomplete"
+    },
+    "version": {
+      "type": "string",
+      "default": "0.1.0"
+    }
+  },
+  "additionalProperties": false,
+  "if": {
+    "properties": {
+      "status": {"const": "STOP"}
+    }
+  },
+  "then": {
+    "required": ["stop_reason"]
+  }
+}

@@ -1,0 +1,48 @@
+services:
+  angelica:
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "8080"
+      SERVICE_NAME: angelica
+    volumes:
+      - ./simulator:/app:ro
+    ports:
+      - "${PORT_ANGELICA:-8080}:8080"
+
+  puter-mock:
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "4000"
+      SERVICE_NAME: puter
+    volumes:
+      - ./simulator:/app:ro
+    ports:
+      - "${PORT_PUTER:-4000}:4000"
+
+  oden-mock:
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "8081"
+      SERVICE_NAME: oden
+    volumes:
+      - ./simulator:/app:ro
+    ports:
+      - "${PORT_ODEN:-8081}:8081"
+
+  odens-eye-mock:
+    image: python:3.13-slim
+    command: python3 mock_gateway.py
+    working_dir: /app
+    environment:
+      PORT: "8082"
+      SERVICE_NAME: odens-eye
+    volumes:
+      - ./simulator:/app:ro
+    ports:
+      - "${PORT_ODENS_EYE:-8082}:8082"

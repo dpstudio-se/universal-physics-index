@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vrasi-qudit"
+version = "0.1.0"
+description = "Classical multi-torus qudit state-vector and search simulator"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/dpstudio-se/universal-physics-index/tree/main/modules/vrasi-qudit"
+Repository = "https://github.com/dpstudio-se/universal-physics-index.git"
+Issues = "https://github.com/dpstudio-se/universal-physics-index/issues"
+
+[project.scripts]
+vrasi-qudit = "vrasi_qudit.__main__:main"
+
+[tool.setuptools]
+packages = ["vrasi_qudit"]
+package-dir = {"" = "src"}

@@ -1,0 +1,55 @@
+{
+  "address": "UPI<quantum_information,1,qudit,fourier_dual_basis>",
+  "title": "Qudit Fourier-dual basis",
+  "description": "Established normalized discrete Fourier transform on a d-level quantum system. It maps computational-basis states to a mutually unbiased Fourier basis and is inverted by the conjugate transform.",
+  "status": "EST",
+  "definitions": [
+    "F_d is the normalized discrete Fourier transform on C^d.",
+    "The computational and Fourier bases are dual representations connected by F_d.",
+    "Mutually unbiased means every overlap magnitude between the two bases equals 1/sqrt(d)."
+  ],
+  "equations": [
+    "F_d |j> = (1/sqrt(d)) sum_(k=0)^(d-1) exp(2 pi i j k / d) |k>",
+    "F_d^dagger F_d = I_d",
+    "F_d^(-1) = F_d^dagger",
+    "|<k|F_d|j>|^2 = 1/d"
+  ],
+  "assumptions": [
+    "The local state space has finite dimension d >= 2.",
+    "The transform uses exact roots of unity in the mathematical model.",
+    "Numerical implementations use finite-precision complex arithmetic."
+  ],
+  "mechanism": "The transform redistributes each basis amplitude across all Fourier labels with phase factors determined by roots of unity while preserving the inner product.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Daniel Gottesman, Fault-Tolerant Quantum Computation with Higher-Dimensional Systems, arXiv:quant-ph/9802007",
+      "notes": "Uses higher-dimensional Fourier and generalized Pauli structure."
+    }
+  ],
+  "primary_sources": [
+    "https://arxiv.org/abs/quant-ph/9802007"
+  ],
+  "predictions": [
+    "Fourier transformation followed by its inverse reconstructs every normalized finite input state.",
+    "The transform preserves total probability.",
+    "Every computational-basis state produces a uniform Fourier-basis probability distribution."
+  ],
+  "falsification_conditions": [
+    "Reject the implementation if F_d^dagger F_d differs from identity beyond tolerance.",
+    "Reject dual reconstruction if max_j |alpha_j - alpha_hat_j| exceeds the declared tolerance.",
+    "Reject mutual unbiasedness if any basis-overlap probability differs from 1/d beyond tolerance."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Computational and Fourier bases of C^d.",
+  "normalization_method": "Use the factor 1/sqrt(d) in both forward and inverse transforms.",
+  "normalization_claim": "Unitary normalization preserves probability but does not demonstrate quantum coherence in hardware.",
+  "null_model": "An unnormalized discrete transform that changes the vector norm.",
+  "control_condition": "Perform forward and inverse transforms on basis states and randomly generated normalized vectors.",
+  "causal_claim": false,
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Fourier duality is a basis transformation. It does not imply hidden dimensions, faster-than-light communication or physical toroidal geometry.",
+  "tags": ["qudit", "fourier-transform", "dual-basis", "unitary", "mutually-unbiased"],
+  "version": "0.1.0"
+}

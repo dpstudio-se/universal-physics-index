@@ -1,0 +1,86 @@
+{
+  "address": "UPI<biology,6,chirality,biological_homochirality>",
+  "title": "Biological homochirality and symmetry-breaking amplification",
+  "description": "A bounded node separating observed biological handedness, demonstrated asymmetric autocatalysis, and unresolved origin mechanisms.",
+  "status": "HYP",
+  "definitions": [
+    "Terrestrial proteins predominantly use L-amino acids and nucleic acids predominantly use D-sugars.",
+    "Homochirality is strong enrichment of one enantiomeric family.",
+    "Enantiomeric excess is ee = abs(x-y)/(x+y).",
+    "The Soai reaction demonstrates asymmetric autocatalytic amplification in a laboratory chemical system."
+  ],
+  "equations": [
+    "ee = abs(x-y)/(x+y)",
+    "dx/dt = k1*x*(a-x-y) - k2*x*y + epsilon",
+    "dy/dt = k1*y*(a-x-y) - k2*x*y - epsilon",
+    "dDelta/dt = k1*(a-x-y)*Delta + 2*epsilon, where Delta = x-y"
+  ],
+  "assumptions": [
+    "The kinetic equations are a simplified symmetry-breaking model, not a complete Soai mechanism.",
+    "Parameters, initial conditions, noise and environmental boundaries must be declared.",
+    "Parity violation, minerals, photochemistry, extraterrestrial delivery and flow are candidate mechanisms, not a settled cause.",
+    "No universal role for an 8 Hz drive in prebiotic homochirality is established."
+  ],
+  "mechanism": "A small deterministic or stochastic chiral imbalance may be amplified when reaction kinetics provide same-handed positive feedback and sufficient cross-inhibition or selection.",
+  "evidence": [
+    {
+      "type": "observation",
+      "source": "Established stereochemistry of terrestrial proteins and nucleic acids",
+      "confidence": 0.99,
+      "notes": "Supports biological homochirality, not a unique origin mechanism."
+    },
+    {
+      "type": "experiment",
+      "source": "Laboratory asymmetric autocatalysis exemplified by the Soai reaction",
+      "confidence": 0.95,
+      "notes": "Demonstrates amplification in a particular chemical system."
+    },
+    {
+      "type": "calculation",
+      "source": "Simplified Frank-type symmetry-breaking kinetics",
+      "confidence": 0.75,
+      "notes": "Demonstrates possible amplification under declared assumptions."
+    }
+  ],
+  "predictions": [
+    "For symmetric initial conditions and epsilon = 0, a deterministic symmetric model remains racemic unless instability or noise breaks symmetry.",
+    "Increasing abs(epsilon) should reduce the expected time to a declared ee threshold in an amplifying parameter regime.",
+    "Any frequency-specific effect requires sham and neighboring-frequency controls."
+  ],
+  "falsification_conditions": [
+    "Independent implementations cannot reproduce the declared trajectories.",
+    "A proposed origin mechanism produces no reproducible bias under blinded controls.",
+    "A claimed frequency effect does not differ from sham or neighboring-frequency controls."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Declared reaction network, environment, concentrations, temperature and time interval",
+  "normalization_method": "Non-negative concentrations and enantiomeric excess in [0,1]",
+  "normalization_claim": "ee is bounded to [0,1] when x+y is non-zero.",
+  "null_model": "The observed bias arises from fluctuation, contamination or uncontrolled environmental asymmetry.",
+  "control_condition": "Use racemic inputs, blanks, contamination controls, sham drives and blinded analysis as applicable.",
+  "statistical_method": "Preregistered effect estimation and model comparison using replicate distributions.",
+  "confounders": [
+    "Chiral contamination",
+    "Undeclared surfaces or seed crystals",
+    "Sampling asymmetry",
+    "Temperature gradients",
+    "Post hoc parameter tuning",
+    "Conflation of molecular chirality with macroscopic vortex handedness"
+  ],
+  "replication_rule": "Independent laboratories or implementations must reproduce the claimed magnitude and uncertainty under the same declared conditions.",
+  "causal_claim": false,
+  "causal_test_method": "Manipulate one proposed symmetry-breaking factor while holding reaction and measurement conditions under blinded control.",
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "Biological homochirality and laboratory asymmetric autocatalysis are established phenomena. A unique cosmic, magnetic, hydrodynamic or 8 Hz origin mechanism is not established.",
+  "tags": [
+    "biology",
+    "chirality",
+    "homochirality",
+    "asymmetric-autocatalysis",
+    "symmetry-breaking",
+    "frank-model",
+    "soai-reaction"
+  ],
+  "version": "0.1.0"
+}

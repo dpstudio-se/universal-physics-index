@@ -1,0 +1,55 @@
+{
+  "address": "UPI<quantum_information,1,finite_dimensional,hilbert_state_space>",
+  "title": "Finite-dimensional Hilbert state space",
+  "description": "Established mathematical state-space framework for a finite d-level quantum system. Pure states are normalized rays in the complex vector space C^d, observables are represented by Hermitian operators, and valid closed-system basis changes are unitary.",
+  "status": "EST",
+  "definitions": [
+    "H_d is a d-dimensional complex Hilbert space with d >= 2.",
+    "A pure state is represented by a normalized vector |psi> up to an overall complex phase.",
+    "An orthonormal basis {|j>} satisfies <j|k> = delta_jk.",
+    "A unitary operator U satisfies U^dagger U = I."
+  ],
+  "equations": [
+    "H_d = C^d",
+    "|psi> = sum_(j=0)^(d-1) alpha_j |j>",
+    "sum_j |alpha_j|^2 = 1",
+    "<j|k> = delta_jk",
+    "U^dagger U = I_d"
+  ],
+  "assumptions": [
+    "The system is modeled with a finite declared dimension d.",
+    "The state is pure unless a density operator is explicitly introduced.",
+    "Global phase is physically unobservable in standard quantum mechanics."
+  ],
+  "mechanism": "The inner product defines normalization, orthogonality and transition amplitudes. Unitary maps preserve the inner product and therefore preserve total probability.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "John von Neumann, Mathematical Foundations of Quantum Mechanics (1932)",
+      "notes": "Foundational formalization of quantum states and operators in Hilbert space."
+    }
+  ],
+  "primary_sources": [
+    "John von Neumann, Mathematische Grundlagen der Quantenmechanik, 1932"
+  ],
+  "predictions": [
+    "Every unitary basis transformation preserves the norm of every state vector.",
+    "Orthonormal basis expansion reconstructs the original vector exactly in exact arithmetic."
+  ],
+  "falsification_conditions": [
+    "Reject a proposed closed-system state transformation if it fails U^dagger U = I within the declared numerical tolerance.",
+    "Reject a state as normalized if sum_j |alpha_j|^2 differs from one beyond tolerance."
+  ],
+  "information_layer": "ACADEMIC",
+  "reference_frame": "Abstract finite-dimensional complex Hilbert space.",
+  "normalization_method": "Normalize by the square root of sum_j |alpha_j|^2.",
+  "normalization_claim": "Normalization fixes total probability to one but does not prove physical preparation of the state.",
+  "null_model": "An arbitrary non-normalized complex vector with no valid probability interpretation.",
+  "control_condition": "Apply a declared unitary and its inverse and verify state reconstruction.",
+  "causal_claim": false,
+  "verification_type": "mathematical_check",
+  "claims_experimental_verification": false,
+  "confusion_guard": "A complex vector in software is a mathematical representation. It is not by itself a physically prepared quantum state.",
+  "tags": ["hilbert-space", "qudit", "state-vector", "unitary", "normalization"],
+  "version": "0.1.0"
+}

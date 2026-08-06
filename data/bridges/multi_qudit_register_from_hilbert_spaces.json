@@ -1,0 +1,23 @@
+{
+  "source": "UPI<quantum_information,1,multi_qudit,tensor_product_register>",
+  "target": "UPI<quantum_information,1,finite_dimensional,hilbert_state_space>",
+  "relation": "DERIVED_FROM",
+  "equations": [
+    "H = tensor_i H_i",
+    "dim(H) = product_i dim(H_i)"
+  ],
+  "assumptions": [
+    "Subsystem order is declared and fixed.",
+    "Each local space is finite-dimensional."
+  ],
+  "mechanism": "Composite systems use the tensor product of their local Hilbert spaces, producing product-basis coordinates and a total dimension equal to the product of local dimensions.",
+  "evidence": [
+    {
+      "type": "calculation",
+      "source": "Standard tensor-product dimension identity"
+    }
+  ],
+  "status": "EST",
+  "confusion_guard": "Tensor-product composition permits entangled states but does not prove that a particular software state is physically entangled.",
+  "version": "0.1.0"
+}

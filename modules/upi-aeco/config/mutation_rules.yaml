@@ -1,0 +1,16 @@
+rules:
+  allowed:
+    - prompt_template
+    - odin_tripp_weight
+    - odin_trapp_weight
+    - odin_trull_weight
+    - odin_torus_weight
+    - swarm_heuristic_threshold
+  forbidden:
+    - dna_records
+    - schemas
+    - scientific_status
+    - safety_rules
+  thresholds:
+    min_improvement: 0.02
+    max_candidates: 4
