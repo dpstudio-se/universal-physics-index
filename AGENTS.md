@@ -99,13 +99,26 @@ Prefer an honest `STOP` over an unsupported explanation.
   contracts.
 - Keep biological, cosmological, or metaphysical language explicitly marked as metaphor when used.
 
+## Protected README identity (mandatory)
+
+Top-level `README.md` and `README.sv.md` are **identity-protected**. Do **not** wholesale-replace
+them with ToE manifestos, product pitches, chat dumps, or unrelated project titles.
+
+1. H1 must remain `# Universal-Physics-Index-UPI` (see `config/readme_identity.json`).
+2. Keep required anchors/sections; speculative ToE text only under an **Example only** / `SYM` block.
+3. Prefer additive edits. If an anchor must change, update `config/readme_identity.json` in the
+   **same** change and run `pytest tests/test_readme_identity.py -v`.
+4. Policy doc: `docs/README_IDENTITY.md`. CI fails when identity anchors are removed.
+
+Violating this is an `ERR`-class process failure for agent work, not a valid “rewrite for clarity”.
+
 ## Source-of-truth order
 
 When repository materials disagree, prefer:
 
 1. tests and executable validation behavior
 2. schemas and code in `src/upi/`
-3. top-level `README.md`
+3. top-level `README.md` (identity-protected; not a free-form manifesto surface)
 4. focused documents under `docs/`
 5. examples and symbolic illustrations
 

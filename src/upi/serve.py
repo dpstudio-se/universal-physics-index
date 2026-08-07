@@ -10,11 +10,12 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from typing import Any
 
-from .kernel import get_kernel
 from upi_odysseus_bridge import (
     OdysseusIntentExecutor,
     get_odysseus_tools_manifest,
 )
+
+from .kernel import get_kernel
 
 PUBLIC_DIR = Path(__file__).resolve().parents[2] / "modules" / "upi-puter-ui" / "public"
 

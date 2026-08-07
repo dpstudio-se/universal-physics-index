@@ -90,7 +90,6 @@ from .qudit import (
     uniform_state,
 )
 from .qudit_register import local_phase_gate, local_shift_gate
-from .sunet import SunetNode, SunetTopologyMapper, load_sunet_topology
 from .runtime import (
     RuntimeProfile,
     RuntimeProfileLoader,
@@ -100,6 +99,7 @@ from .runtime import (
     get_runtime_loader,
     register_profile,
 )
+from .sunet import SunetNode, SunetTopologyMapper, load_sunet_topology
 from .validation import (
     validate_bridge_consistency,
     validate_bridge_json,
@@ -231,4 +231,8 @@ __all__ = [
     "validate_bridge_json",
     "validate_scientific_boundaries",
     "validate_record_boundaries",
+    # SUNET topology
+    "SunetNode",
+    "SunetTopologyMapper",
+    "load_sunet_topology",
 ]

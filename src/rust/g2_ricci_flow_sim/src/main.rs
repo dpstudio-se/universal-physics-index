@@ -1,50 +1,64 @@
-﻿use std::fs::File;
-use std::io::Write;
+//! Toy RK4 demo (software only).
+//!
+//! Status: SYM illustration — NOT validated G₂ Ricci-flow physics,
+//! NOT Omega-1766, NOT a Theory of Everything claim.
+//! verification_type when tested: software_test.
 
-/// Beräknar tidsderivatan da/d(tau) för 7D G2 Ricci-flödet med torsion[cite: 1]
-fn ricci_derivative(a: f64) -> f64 {
-    let ricci_term = -0.5 / (a * a * a);
-    let l_planck_pow6: f64 = 1.0e-6;
-    let torsion_pressure = 0.002 * l_planck_pow6 / (a.powi(6) + 1.0e-12);
-    ricci_term + torsion_pressure
+use std::fs::File;
+use std::io::{BufWriter, Write};
+
+const DEMO_ALPHA: f64 = 1.0e-3;
+const DEMO_BETA: f64 = 1.0e-3;
+const DEMO_GAMMA: f64 = 1.0e-6;
+
+fn rhs(a: f64, t: f64) -> (f64, f64) {
+    let da = -DEMO_ALPHA * a.powi(3) * t.powi(2);
+    let dt = -DEMO_BETA * a.powi(2) * t + DEMO_GAMMA * a * t.powi(3);
+    (da, dt)
 }
 
-fn main() {
-    println!("=== Advanced 7D G2 Ricci Flow & Torsion Simulation (RK4 Engine) ===");
+fn rk4_step(a: f64, t: f64, d_tau: f64) -> (f64, f64) {
+    let (k1_a, k1_t) = rhs(a, t);
+    let (k2_a, k2_t) = rhs(a + 0.5 * d_tau * k1_a, t + 0.5 * d_tau * k1_t);
+    let (k3_a, k3_t) = rhs(a + 0.5 * d_tau * k2_a, t + 0.5 * d_tau * k2_t);
+    let (k4_a, k4_t) = rhs(a + d_tau * k3_a, t + d_tau * k3_t);
+    let a_next = a + (d_tau / 6.0) * (k1_a + 2.0 * k2_a + 2.0 * k3_a + k4_a);
+    let t_next = t + (d_tau / 6.0) * (k1_t + 2.0 * k2_t + 2.0 * k3_t + k4_t);
+    (a_next, t_next)
+}
 
-    let mut tau: f64 = 0.0;
-    let mut a: f64 = 2.0;
-    let d_tau: f64 = 0.00005; // Finare steglängd för RK4
-    let steps: usize = 100000;
+fn main() -> std::io::Result<()> {
+    let mut a = 2.0_f64;
+    let mut t = 0.5_f64;
+    let d_tau = 1.0e-4_f64;
+    let steps = 5_000_usize;
+    let sample_every = 50_usize;
 
-    let mut results: Vec<(f64, f64)> = Vec::with_capacity(steps / 500);
+    let file = File::create("ricci_flow_trajectory_rk4.csv")?;
+    let mut w = BufWriter::new(file);
+    writeln!(
+        w,
+        "# SYM toy RK4 demo — not physical Ricci flow / not Omega-1766"
+    )?;
+    writeln!(w, "tau,scale_factor_a,torsion_T")?;
+    writeln!(w, "0.0,{a},{t}")?;
 
-    for step in 0..steps {
-        // Runge-Kutta 4 (RK4) steg
-        let k1 = ricci_derivative(a);
-        let k2 = ricci_derivative(a + 0.5 * d_tau * k1);
-        let k3 = ricci_derivative(a + 0.5 * d_tau * k2);
-        let k4 = ricci_derivative(a + d_tau * k3);
-
-        let da_dtau = (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0;
-
-        a += da_dtau * d_tau;
-        tau += d_tau;
-
-        if a < 0.1 {
-            a = 0.1;
+    for i in 1..=steps {
+        let (a_next, t_next) = rk4_step(a, t, d_tau);
+        a = a_next;
+        t = t_next;
+        if !a.is_finite() || !t.is_finite() {
+            eprintln!("non-finite state at step {i}");
+            std::process::exit(1);
         }
-
-        if step % 500 == 0 {
-            results.push((tau, a));
-            println!("Tau: {:.4} | Metric scale a(tau): {:.6}", tau, a);
+        if i % sample_every == 0 || i == steps {
+            let tau = i as f64 * d_tau;
+            writeln!(w, "{tau},{a},{t}")?;
         }
     }
 
-    let mut file = File::create("ricci_flow_trajectory_rk4.csv").expect("Kunde inte skapa fil");
-    writeln!(file, "tau,scale_factor_a").unwrap();
-    for (t, scale) in results {
-        writeln!(file, "{},{}", t, scale).unwrap();
-    }
-    println!("\nSimulering klar! RK4-trajektoria sparad till 'ricci_flow_trajectory_rk4.csv'.");
+    println!(
+        "Wrote ricci_flow_trajectory_rk4.csv (toy RK4 demo only; not physical G2 Ricci flow)."
+    );
+    Ok(())
 }

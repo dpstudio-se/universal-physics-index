@@ -129,6 +129,18 @@ Include `confusion_guard` fields to prevent common misinterpretations:
 "confusion_guard": "Dark matter is not antimatter, dark energy, or ordinary matter in unknown form."
 ```
 
+## Protected docs (README)
+
+Do **not** replace `README.md` / `README.sv.md` wholesale with theory manifestos or other project
+identities. Anchors are enforced by `config/readme_identity.json` and
+`tests/test_readme_identity.py`. See `docs/README_IDENTITY.md`.
+
+If you touch README identity strings:
+
+1. Keep H1: `# Universal-Physics-Index-UPI`
+2. Update `config/readme_identity.json` when anchors intentionally change
+3. Run `pytest tests/test_readme_identity.py -v`
+
 ## Submission Process
 
 1. **Fork** the repository
@@ -146,6 +158,7 @@ Include `confusion_guard` fields to prevent common misinterpretations:
 
 - [ ] JSON validates against schema (`upi validate`)
 - [ ] Tests pass: `pytest tests/ -v`
+- [ ] README identity intact (or anchors updated + `test_readme_identity` green)
 - [ ] Linting passes: `ruff check src tests`
 - [ ] Type checking passes: `mypy src/upi`
 - [ ] Docstrings added/updated

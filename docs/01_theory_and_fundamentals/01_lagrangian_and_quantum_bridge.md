@@ -1,3 +1,5 @@
-# 01 Lagrangian And Quantum Bridge
+# 01 — Lagrangian and quantum bridge (placeholder)
 
-*Content pending upload from blueprint.*
+**Status: `SYM`**
+
+*Content pending. Not an established Lagrangian of everything.*

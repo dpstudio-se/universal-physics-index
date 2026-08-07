@@ -1,25 +1,54 @@
-﻿import pandas as pd
-import matplotlib.pyplot as plt
+#!/usr/bin/env python3
+"""Optional plot helper for toy Ricci-demo CSV output.
 
-def plot_trajectory():
-    # Läs in RK4-data
-    df = pd.read_csv('ricci_flow_trajectory_rk4.csv')
+Status: SYM visualization helper only. Requires pandas/matplotlib if used.
+Does not establish physical meaning of the trajectory.
+"""
 
-    # Skapa plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(df['tau'], df['scale_factor_a'], color='orange', linewidth=2, label='a(tau)')
-    
-    plt.title('7D G2 Ricci Flow: Metric Scale Evolution (RK4)', fontsize=14)
-    plt.xlabel('Proper Time (tau)', fontsize=12)
-    plt.ylabel('Metric Scale Factor a(tau)', fontsize=12)
-    plt.grid(True, linestyle='--', alpha=0.6)
-    plt.legend()
-    plt.style.use('dark_background')
+from __future__ import annotations
 
-    # Spara
-    output_path = 'src/python/ricci_flow_trajectory_rk4.png'
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f'Visualisering sparad till {output_path}')
+import argparse
+from pathlib import Path
 
-if __name__ == '__main__':
-    plot_trajectory()
+
+def plot_trajectory(csv_path: Path, output: Path | None = None) -> None:
+    try:
+        import matplotlib.pyplot as plt
+        import pandas as pd
+    except ImportError as exc:  # pragma: no cover - optional deps
+        raise SystemExit(
+            "plot_ricci_flow requires pandas and matplotlib (optional extras)."
+        ) from exc
+
+    df = pd.read_csv(csv_path, comment="#")
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(df["tau"], df["scale_factor_a"], label="a (toy scale)")
+    ax.plot(df["tau"], df["torsion_T"], label="T (toy torsion-like)")
+    ax.set_xlabel("tau (demo time)")
+    ax.set_ylabel("state")
+    ax.set_title("Toy RK4/Euler trajectory (not physical Ricci flow)")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    out = output or csv_path.with_suffix(".png")
+    fig.tight_layout()
+    fig.savefig(out, dpi=120)
+    plt.close(fig)
+    print(f"Wrote {out}")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Plot toy Ricci-demo CSV.")
+    parser.add_argument(
+        "csv_path",
+        type=Path,
+        nargs="?",
+        default=Path("ricci_flow_trajectory_rk4.csv"),
+    )
+    parser.add_argument("-o", "--output", type=Path, default=None)
+    args = parser.parse_args(argv)
+    plot_trajectory(args.csv_path, args.output)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

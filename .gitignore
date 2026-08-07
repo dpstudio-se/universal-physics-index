@@ -133,3 +133,7 @@ dmypy.json
 # Project-specific
 report.json
 *.tmp
+
+# Generated simulator / demo artifacts (do not commit)
+ricci_flow_trajectory*.csv
+toy_spectrum.csv

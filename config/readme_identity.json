@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Hard identity anchors for top-level README files. CI/tests fail if agents or PRs replace the project identity with unrelated manifestos.",
+  "files": {
+    "README.md": {
+      "path": "README.md",
+      "required_h1": "# Universal-Physics-Index-UPI",
+      "required_substrings": [
+        "Universal Physics Index",
+        "machine-readable",
+        "classification, validation, and audit layer",
+        "not a new physical theory",
+        "`EST`",
+        "`DER`",
+        "`HYP`",
+        "`STOP`",
+        "`ERR`",
+        "`SYM`",
+        "8 Hz",
+        "CONTRIBUTING.md",
+        "AGENTS.md",
+        "Example only: information-theoretic ToE blueprint (non-authoritative)",
+        "upi validate"
+      ],
+      "forbidden_as_h1": [
+        "# THE UNIFIED BLUEPRINT FOR AN INFORMATION-THEORETIC THEORY OF EVERYTHING (ToE)",
+        "# THE UNIFIED BLUEPRINT FOR AN INFORMATION-THEORETIC THEORY OF EVERYTHING",
+        "# Theory of Everything",
+        "# ToE"
+      ],
+      "required_sections": [
+        "## What UPI is",
+        "## Boundary rules (non-negotiable)",
+        "## Quick start",
+        "## Repository map"
+      ],
+      "toe_content_policy": {
+        "allowed_only_under_heading_containing": "Example only",
+        "forbidden_outside_example": [
+          "participatory universe",
+          "Hope produces space and time"
+        ]
+      },
+      "min_bytes": 2500,
+      "max_bytes": 80000
+    },
+    "README.sv.md": {
+      "path": "README.sv.md",
+      "required_h1": "# Universal-Physics-Index-UPI",
+      "required_substrings": [
+        "Universal Physics Index",
+        "klassificering",
+        "`EST`",
+        "`SYM`",
+        "8 Hz",
+        "README.md"
+      ],
+      "forbidden_as_h1": [
+        "# THE UNIFIED BLUEPRINT FOR AN INFORMATION-THEORETIC THEORY OF EVERYTHING (ToE)",
+        "# Theory of Everything",
+        "# ToE"
+      ],
+      "required_sections": [
+        "## Vetenskapliga lager",
+        "## 8 Hz",
+        "## Validering"
+      ],
+      "min_bytes": 800,
+      "max_bytes": 40000
+    }
+  },
+  "change_policy": {
+    "summary": "README identity is protected. Do not wholesale-replace README.md with theory manifestos, product pitches, or unrelated projects.",
+    "allowed_changes": [
+      "Small factual fixes (links, version, install commands)",
+      "Adding a new section that preserves required H1 and anchors",
+      "Updating the collapsible ToE example while keeping it marked non-authoritative",
+      "Syncing README.sv.md with the same identity rules"
+    ],
+    "required_for_identity_edits": [
+      "Update config/readme_identity.json if anchors intentionally change",
+      "Keep tests/test_readme_identity.py green",
+      "Note the change in PR template checkbox for protected docs",
+      "Prefer CODEOWNERS review on README.md and config/readme_identity.json"
+    ],
+    "disallowed": [
+      "Replacing H1 with a ToE or third-party project title",
+      "Removing status-label table meaning (EST/DER/HYP/STOP/ERR/SYM)",
+      "Promoting SYM/HYP sketches to sound like EST in the README body",
+      "Deleting Boundary rules or Quick start without a reviewed identity-file update"
+    ]
+  }
+}

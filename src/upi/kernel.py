@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .constants import C, H
+from .constants import H
 from .graph import UPIGraph
 from .models import ScientificStatus
 from .physics import dna_sequence_to_frequencies, frequency_from_mass, mass_from_frequency
@@ -153,6 +153,7 @@ class UPIKernel:
     def evaluate_vrasi_helical_physics(self, radius_m: float = 0.1, axial_speed: float = 0.4, frequency_hz: float = 8.0) -> dict[str, Any]:
         """Evaluate VR-ASI 3D helical motion invariants."""
         import math
+
         import vrasi_physics
         helix = vrasi_physics.evaluate_helical_motion(radius_m, axial_speed, 2.0 * math.pi * frequency_hz)
         return {

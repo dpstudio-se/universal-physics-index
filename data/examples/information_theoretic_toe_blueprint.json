@@ -1,0 +1,35 @@
+{
+  "address": "UPI<SYMBOLIC,1,INFORMATION_TOE,UNIFIED_BLUEPRINT_SKETCH>",
+  "title": "Information-theoretic ToE blueprint sketch (example only)",
+  "description": "Non-authoritative conceptual scaffold that maps information-layer bookkeeping ideas onto familiar physics vocabulary. Status is SYM: illustrative sketch only — not an established theory, not peer-reviewed, and not a claim of experimental verification. Do not treat as UPI core physics identity.",
+  "status": "SYM",
+  "information_layer": "PUBLIC",
+  "definitions": [
+    "information_layer: bookkeeping view of constraints, labels, and relations used by UPI tooling — not a substitute for laboratory physics",
+    "blueprint_sketch: a high-level map of how symbolic nodes might relate; intentionally incomplete",
+    "SYM: symbolic / illustrative status in UPI; must not be read as EST or DER without separate evidence"
+  ],
+  "assumptions": [
+    "This record is a symbolic example for tooling and documentation demos.",
+    "No claim is made that the sketch is complete, unique, or experimentally verified.",
+    "Physical constants and established theories remain authoritative over this sketch."
+  ],
+  "evidence": [
+    {
+      "type": "other",
+      "source": "docs and README identity surfaces: this file is an example fixture only",
+      "notes": "Preserved as a non-authoritative sketch for validate/CLI demos."
+    }
+  ],
+  "claims_experimental_verification": false,
+  "confusion_guard": "Example-only SYM blueprint. Not UPI identity, not an accepted ToE, not experimental fact. Core project identity remains Universal Physics Index machine-readable physics indexing.",
+  "verification_type": "none",
+  "tags": [
+    "symbolic",
+    "example-only",
+    "information-layer",
+    "toe-sketch",
+    "non-authoritative"
+  ],
+  "version": "0.1.0"
+}

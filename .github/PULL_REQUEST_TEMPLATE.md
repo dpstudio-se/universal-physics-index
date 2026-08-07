@@ -13,9 +13,9 @@
 
 ## Evidence and primary sources
 
-## Assumptions
+## Assumptions and domain of validity
 
-## Falsification or failure condition
+## Falsification / failure condition
 
 ## Confusion guard
 
@@ -26,5 +26,7 @@
 - [ ] Provenance information included when applicable
 - [ ] Documentation updated when behavior changes
 - [ ] External sources are traceable
+- [ ] README identity unchanged, **or** `config/readme_identity.json` updated with reviewed rationale (`docs/README_IDENTITY.md`)
+- [ ] No wholesale README rewrite into ToE/manifesto as project title
 
 ## Tests

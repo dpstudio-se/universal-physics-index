@@ -1,5 +1,14 @@
 # Review ownership guidance
+# (GitHub uses the last matching pattern; keep identity rules explicit.)
 
 # Schema, validation and workflow changes should receive maintainer review
 /schemas/ @maintainers
 /.github/ @maintainers
+
+# Protected project identity — do not rubber-stamp wholesale README rewrites
+/README.md @maintainers
+/README.sv.md @maintainers
+/config/readme_identity.json @maintainers
+/docs/README_IDENTITY.md @maintainers
+/tests/test_readme_identity.py @maintainers
+/AGENTS.md @maintainers

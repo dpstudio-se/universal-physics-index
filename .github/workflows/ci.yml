@@ -68,6 +68,9 @@ jobs:
           mypy modules/upi-puter-ui/src/upi_puter_ui
           mypy modules/upi-odysseus-bridge/src/upi_odysseus_bridge
 
+      - name: Protect README identity anchors
+        run: python -m pytest tests/test_readme_identity.py -v --tb=short
+
       - name: Run tests with pytest
         id: pytest
         continue-on-error: true
